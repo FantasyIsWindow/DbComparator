@@ -196,7 +196,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Icons\Add_db.png" />
     <Resource Include="Resources\Icons\Delete_db.png" />
   </ItemGroup>
   <ItemGroup>
@@ -213,7 +212,9 @@
     <Resource Include="Resources\Icons\Connected.png" />
     <Resource Include="Resources\Icons\Reference_connected.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Update.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\Disconected.png" />
   </ItemGroup>
@@ -222,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Bd.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AddNew.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
