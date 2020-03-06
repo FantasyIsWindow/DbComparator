@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="DbComparator.App.Views.ViewControls.AddNewDbInfoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Grid.Column" Value="1"/>
+            <Setter Property="Grid.ColumnSpan" Value="2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="MinHeight" Value="25" />
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Height="330" Width="500" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Information for connection with new data base (* Fields are required)" Grid.ColumnSpan="3"/>
+
+        <Label Grid.Row="1" Content="Data Source"/>
+        <TextBox Grid.Row="1" Text="{Binding DbInfoModel.DataSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="2" Content="Server Name*"/>
+        <TextBox Grid.Row="2" Text="{Binding DbInfoModel.ServerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="3" Content="Data Base Name*"/>
+        <TextBox Grid.Row="3" Text="{Binding DbInfoModel.DbName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="4" Content="Login"/>
+        <TextBox Grid.Row="4" Text="{Binding DbInfoModel.Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="5" Content="Password"/>
+        <TextBox Grid.Row="5" Text="{Binding DbInfoModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="6" Content="Data Base Type*"/>
+        <ComboBox Grid.Row="6" 
+                  Grid.Column="1"
+                  Grid.ColumnSpan="2"
+                  Margin="5"
+                  IsEditable="True"
+                  ItemsSource="{Binding DbTypes}" Text="{Binding DbInfoModel.DbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Label Grid.Row="7" Content="Reference*"/>
+        <ComboBox Grid.Row="7" 
+                  Grid.Column="1" 
+                  Margin="5" 
+                  VerticalContentAlignment="Center" 
+                  IsEnabled="{Binding IsEnabled}"
+                  ItemsSource="{Binding ReferencesType}" 
+                  SelectedValue="{Binding DbInfoModel.Reference}" 
+                  SelectedIndex="{Binding SelectedIndex}"/>
+
+        <StackPanel Grid.Row="8" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{Binding Content}" Margin="10" Command="{Binding OkCommand}"/>
+            <Button Content="Cancel" Margin="10" Command="{Binding CloseCommand}"/>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

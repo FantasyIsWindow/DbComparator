@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type Button}" x:Key="autoCompareButtonStyle">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontFamily" Value="Calibry"/>
+        <Setter Property="MinHeight" Value="25"/>
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="Foreground" Value="{StaticResource ButtonForegroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="comonStates">
+                                <VisualState x:Name="normal"/>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rect" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonHoverBackgroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rect" Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonHoverBorderBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentControl" Storyboard.TargetProperty="Foreground" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource LightForegroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rect" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonPressedBackgroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rect" Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonPressedBorderBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentControl" Storyboard.TargetProperty="Foreground" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonPressedForegroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rect" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonDisabledBackgroundBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentControl" Storyboard.TargetProperty="Foreground" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{StaticResource ButtonDisabledBrush}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusState">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard >
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="focusedVisualElement" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="UnFocused"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rect"
+                                   Fill="{StaticResource ButtonBackgroundBrush}" 
+                                   Stroke="{StaticResource ButtonBorderBrush}" 
+                                   StrokeThickness="1"/>
+                        <ContentControl x:Name="contentControl" 
+                                        Foreground="{TemplateBinding Foreground}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                        Margin="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="contentPresenter"/>
+                        </ContentControl>
+                        <Rectangle x:Name="disabledVisualElement" Stroke="{StaticResource DisabledVisualElement}" Visibility="Collapsed"/>
+                        <Rectangle x:Name="focusedVisualElement" Stroke="{StaticResource ButtonPressedBorderBrush}" Visibility="Collapsed" StrokeThickness="2"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+    
+    
+</ResourceDictionary>

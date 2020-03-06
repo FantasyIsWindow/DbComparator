@@ -1,0 +1,111 @@
+﻿<Window x:Class="DbComparator.App.Views.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:Converters="clr-namespace:DbComparator.App.Infrastructure.Converters"
+        xmlns:ViewModels="clr-namespace:DbComparator.App.ViewModels"
+        xmlns:Views="clr-namespace:DbComparator.App.Views.ViewControls"
+        xmlns:Selectors="clr-namespace:DbComparator.App.Resources.Selectors"
+        mc:Ignorable="d"
+        Title="Comparator" 
+        Height="600" 
+        Width="800" 
+        MinHeight="550" 
+        MinWidth="600" 
+        x:Name="window">
+    <Window.Resources>
+        <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit" Click="Close_Command"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Add new db" Command="{Binding AddNewDbInfoCommand}"/>
+            </MenuItem>
+            <MenuItem Header="About"/>
+        </Menu>
+
+        <ComboBox Grid.Row="1"  
+                  Margin="5, 5, 0, 5" 
+                  ItemsSource="{Binding DbTypes}" 
+                  SelectedItem="{Binding SelectedDbType}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ChoiseDbTypeCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+
+        <Views:ShowDbInfoView Grid.Row="1" 
+                              Grid.RowSpan="3" 
+                              Grid.Column="2" 
+                              DataContext="{Binding InfoViewModel}"/>
+
+        <GroupBox Grid.Row="2" Header="References">
+            <ListBox Grid.Row="2"
+                 HorizontalAlignment="Stretch"
+                 HorizontalContentAlignment="Stretch"
+                 ItemsSource="{Binding ReferenceInfoDbs}"
+                 SelectedItem="{Binding SelectedReferenceModel}">
+                <ListBox.ItemTemplateSelector>
+                    <Selectors:DbListBoxSelector Connected="{StaticResource referenceConnected}"
+                                                 Disconected="{StaticResource referenceDisconected}"
+                                                 AddNew="{StaticResource addNewReference}"/>
+                </ListBox.ItemTemplateSelector>
+            </ListBox>
+        </GroupBox>
+
+        <GroupBox Grid.Row="3" Header="NotReferences">
+            <ListBox 
+                 HorizontalContentAlignment="Stretch"
+                 HorizontalAlignment="Stretch"
+                 ItemsSource="{Binding NotReferenceInfoDbs}" 
+                 SelectedItem="{Binding SelectedNotReferenceModel}">
+                <ListBox.ItemTemplateSelector>
+                    <Selectors:DbListBoxSelector Connected="{StaticResource connected}"
+                                                 Disconected="{StaticResource disconected}"
+                                                 AddNew="{StaticResource addNew}"/>
+                </ListBox.ItemTemplateSelector>
+            </ListBox>
+        </GroupBox>      
+
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
+            <Label Content="123"/>
+        </StatusBar>
+
+        <Border Grid.Row="1" 
+                Grid.RowSpan="4" 
+                Grid.ColumnSpan="4" 
+                Background="#3F000000" 
+                Visibility="{Binding ElementName=presenter, Path=Content, Converter={StaticResource viewsVisibilityConverter}}">
+            <ContentPresenter Content="{Binding CurrentPageContent}" 
+                              x:Name="presenter">
+                <ContentPresenter.Resources>
+                    <DataTemplate DataType="{x:Type ViewModels:AddNewDbInfoViewModel}">
+                        <Views:AddNewDbInfoControl/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type ViewModels:ShowMessageViewModel}">
+                        <Views:ShowMessageView/>
+                    </DataTemplate>
+                </ContentPresenter.Resources>
+            </ContentPresenter>
+        </Border>
+
+    </Grid>
+</Window>

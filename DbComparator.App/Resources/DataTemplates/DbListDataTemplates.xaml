@@ -1,0 +1,195 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:Controls="clr-namespace:DbComparator.App.Views.CustomControls">
+
+    <DataTemplate x:Key="connected">
+        <Border x:Name="border" Height="100" BorderBrush="Aquamarine" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>                
+                <Controls:DbInfoControl Grid.Row="0" 
+                                        Grid.RowSpan="3" 
+                                        Icon="/Resources/Icons/Connected.png" 
+                                        Margin="5"/>
+                <Button Grid.Row="0" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.UpdateNotReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Add_db.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="1" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.RemoveNotReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Delete_db.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="disconected">
+        <Border x:Name="border" 
+                Height="100" 
+                BorderBrush="Aquamarine" 
+                BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <Controls:DbInfoControl Grid.Row="0" 
+                                        Grid.RowSpan="3" 
+                                        Icon="/Resources/Icons/Disconected.png" 
+                                        Margin="5"/>
+                <Button Grid.Row="0" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.UpdateNotReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Add_db.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="1" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.RemoveNotReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Delete_db.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="addNew">
+        <Border x:Name="border" HorizontalAlignment="Center" Height="100">
+            <Image Source="/Resources/Icons/Add_db.png" 
+                   HorizontalAlignment="Center"
+                   Width="60">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding Path=DataContext.AddNewDbInfoCommand, 
+                                                        RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                        AncestorType={x:Type ListBox}}}"
+                                               CommandParameter="No"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Image>            
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="referenceConnected">
+        <Border x:Name="border" Height="100" BorderBrush="Aquamarine" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <Controls:DbInfoControl Grid.Row="0" 
+                                        Grid.RowSpan="3" 
+                                        Icon="/Resources/Icons/Reference_connected.png" 
+                                        Margin="5"/>
+                <Button Grid.Row="0" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.UpdateReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Add_db.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="1" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.RemoveReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Delete_db.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="referenceDisconected">
+        <Border x:Name="border" Height="100" BorderBrush="Aquamarine" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="0.7*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <Controls:DbInfoControl Grid.Row="0" 
+                                        Grid.RowSpan="3" 
+                                        Icon="/Resources/Icons/Reference_disconect.png" 
+                                        Margin="5"/>
+                <Button Grid.Row="0" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.UpdateReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Add_db.png"/>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="1" 
+                        Grid.Column="1" 
+                        Margin="5" 
+                        Command="{Binding Path=DataContext.RemoveReferenceRecordCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                        CommandParameter="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}">
+                    <Button.Content>
+                        <Image Source="/Resources/Icons/Delete_db.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="addNewReference">
+        <Border x:Name="border" Height="100">
+            <Image Source="/Resources/Icons/Add_db.png" 
+                   Width="60">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding Path=DataContext.AddNewDbInfoCommand, 
+                                                        RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                        AncestorType={x:Type ListBox}}}"
+                                               CommandParameter="Yes"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Image>
+        </Border>
+    </DataTemplate>
+
+</ResourceDictionary>
+    
