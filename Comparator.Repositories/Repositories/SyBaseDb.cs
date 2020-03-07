@@ -3,6 +3,7 @@ using Comparator.Repositories.Models.DbModels;
 using Comparator.Repositories.Models.DtoModels;
 using Comparator.Repositories.Parsers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
@@ -66,7 +67,7 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Table>, IEnumerable<string>>(result);
         }
 
-        public bool IsConnection() =>
-            _db.CheckConection();
+        public async Task<bool> IsConnectionAsync() =>
+            await _db.CheckConectionAsync();
     }
 }

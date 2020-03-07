@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
@@ -35,14 +36,14 @@ namespace Comparator.Repositories.Repositories
             }            
         }
 
-        public bool CheckConection()
+        public async Task<bool> CheckConectionAsync()
         {
             try
             {
                 using (DbConnection connector = _factory.CreateConnection())
                 {
                     connector.ConnectionString = _connectionString;
-                    connector.Open();                    
+                    await connector.OpenAsync();                    
                 }
                 return true;
             }

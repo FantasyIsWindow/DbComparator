@@ -20,14 +20,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Content="Auto Compare" 
+        <Button Content="Auto Compare"
                 Grid.Column="1" 
-                MinWidth="100" 
                 Margin="0, 5, 10, 5" 
                 HorizontalAlignment="Right" 
-                
+                Style="{StaticResource autoCompareButtonStyle}"
                 Command="{Binding AutoCompareCommand}"/>
-        <!-- Style="{StaticResource autoCompareButtonStyle}" -->
 
         <GroupBox Grid.Row="1" Grid.Column="0" Header="Reference DataBase">
             <Grid>

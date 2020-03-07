@@ -1,6 +1,7 @@
 ﻿using Comparator.Repositories.Models.DbModels;
 using Comparator.Repositories.Models.DtoModels;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
@@ -15,8 +16,8 @@ namespace Comparator.Repositories.Repositories
         string GetProcedureSqript(string procedureName);
 
         IEnumerable<string> GetTables();
-               
-        bool IsConnection();
+
+        Task<bool> IsConnectionAsync();
     }
 }
  

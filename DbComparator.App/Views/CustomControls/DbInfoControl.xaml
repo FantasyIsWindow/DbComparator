@@ -8,6 +8,6 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Label Content="{Binding DataBase.DbName}" HorizontalAlignment="Center"/>
-        <Image Grid.Row="1" x:Name="img" Width="60"/>
+        <Image Grid.Row="1" x:Name="img" Width="35"/>
     </Grid>
 </UserControl>

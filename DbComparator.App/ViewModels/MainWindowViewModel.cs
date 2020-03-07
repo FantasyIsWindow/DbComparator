@@ -256,12 +256,12 @@ namespace DbComparator.App.ViewModels
             GetDbTypes(result, collection);
         }
 
-        private void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
+        private async void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
             foreach (var item in models)
             {
                 _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
-                var conn = _dbRepository.IsConnection();
+                var conn = await _dbRepository.IsConnectionAsync();
                 DbInfo db = new DbInfo()
                 {
                     DataBase = item,

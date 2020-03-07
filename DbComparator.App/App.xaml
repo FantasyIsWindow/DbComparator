@@ -7,7 +7,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/DataTemplates/DbListDataTemplates.xaml"/>
 
-                <ResourceDictionary Source="Resources/Style/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Style/ButtonStyles.xaml"/>
                 
                 
                 
