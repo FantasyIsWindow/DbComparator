@@ -189,14 +189,14 @@ namespace DbComparator.App.ViewModels
             get
             {
                 return _autoCompareCommand ??
-                    (_autoCompareCommand = new RellayCommand(obj =>
+                    (_autoCompareCommand = new RellayCommand(async obj =>
                     {
                         if (_leftDbInfoReceiver != null && _rightDbInfoReceiver != null)
                         {
                             if (MessageHandler != null)
                             {
                                 MessageEventArgs eventArgs = new MessageEventArgs();
-                                eventArgs.Message = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
+                                eventArgs.Message = await _autoComparator.CompareAsync(_primaryDbRepository, _secondaryDbRepository);
                                 MessageHandler(this, eventArgs);
                             }
                         }

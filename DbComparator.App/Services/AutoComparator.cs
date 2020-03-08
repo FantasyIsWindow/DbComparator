@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DbComparator.App.Services
 {
@@ -21,14 +22,14 @@ namespace DbComparator.App.Services
             _fieldsEqualizer = new FieldsEqualizer();
         }
 
-        public string Compare(IRepository primaryRep, IRepository secondarRep)
+        public async Task<string> CompareAsync(IRepository primaryRep, IRepository secondarRep)
         {
             _primaryRepository = primaryRep;
             _secondaryRepository = secondarRep;
 
             var tablesMismatches = TablesCompare();
             var proceduresMismatches = ProceduresCompare();
-            return CreateResultString(tablesMismatches, proceduresMismatches);
+            return await Task.Run(() => CreateResultString(tablesMismatches, proceduresMismatches));
         }
 
         private Dictionary<string, int> TablesCompare()

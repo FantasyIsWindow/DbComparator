@@ -59,8 +59,7 @@
 
         <GroupBox Grid.Row="2" Header="References">
             <ListBox Grid.Row="2"
-                 HorizontalAlignment="Stretch"
-                 HorizontalContentAlignment="Stretch"
+                 Style="{StaticResource listBoxStyle}"
                  ItemsSource="{Binding ReferenceInfoDbs}"
                  SelectedItem="{Binding SelectedReferenceModel}">
                 <ListBox.ItemTemplateSelector>
@@ -68,13 +67,17 @@
                                                  Disconected="{StaticResource referenceDisconected}"
                                                  AddNew="{StaticResource addNewReference}"/>
                 </ListBox.ItemTemplateSelector>
+                <ListBox.Resources>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Template" Value="{StaticResource scrollBarStyle}"/>
+                    </Style>
+                </ListBox.Resources>
             </ListBox>
         </GroupBox>
 
         <GroupBox Grid.Row="3" Header="NotReferences">
             <ListBox 
-                 HorizontalContentAlignment="Stretch"
-                 HorizontalAlignment="Stretch"
+                 Style="{StaticResource listBoxStyle}"
                  ItemsSource="{Binding NotReferenceInfoDbs}" 
                  SelectedItem="{Binding SelectedNotReferenceModel}">
                 <ListBox.ItemTemplateSelector>
@@ -82,6 +85,11 @@
                                                  Disconected="{StaticResource disconected}"
                                                  AddNew="{StaticResource addNew}"/>
                 </ListBox.ItemTemplateSelector>
+                <ListBox.Resources>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Template" Value="{StaticResource scrollBarStyle}"/>
+                    </Style>
+                </ListBox.Resources>
             </ListBox>
         </GroupBox>      
 

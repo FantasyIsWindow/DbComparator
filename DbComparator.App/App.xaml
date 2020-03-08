@@ -8,6 +8,8 @@
                 <ResourceDictionary Source="Resources/DataTemplates/DbListDataTemplates.xaml"/>
 
                 <ResourceDictionary Source="Resources/Style/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Style/ListBoxStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Style/ScrollBarStyle.xaml"/>
                 
                 
                 

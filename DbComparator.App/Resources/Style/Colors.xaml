@@ -1,20 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!--<Color x:Key="c_000">#16141a</Color> --><!-- Black --><!--
-    <Color x:Key="c_001">#1e1b22</Color> --><!-- Light Black --><!--
-    <Color x:Key="c_002">#25242c</Color> --><!-- Light Light Black --><!--
-    <Color x:Key="c_003">#a44bfa</Color> --><!-- Light Purple --><!--
-    <Color x:Key="c_004">#a64cfb</Color> --><!-- Purple --><!--
-    <Color x:Key="c_005">#ffffff</Color> --><!-- White -->
-
-
     <Color x:Key="c_000">#323232</Color>
     <Color x:Key="c_001">#9A885B</Color>
     <Color x:Key="c_002">#E6D8B8</Color>
     <Color x:Key="c_003">#BCAB81</Color>
     <Color x:Key="c_004">#726138</Color>
     <Color x:Key="c_005">#624F1F</Color>
+    <Color x:Key="c_006">#ffffff</Color>
+    
 
 
     <!-- Buttons Brush -->
@@ -30,6 +24,20 @@
     <SolidColorBrush x:Key="ButtonDisabledBackgroundBrush" Color="{StaticResource c_004}"/>
     <SolidColorBrush x:Key="ButtonDisabledForegroundBrush" Color="{StaticResource c_003}"/>
     <SolidColorBrush x:Key="DisabledVisualElement" Color="{StaticResource c_001}" Opacity="0.6"/>
+    <SolidColorBrush x:Key="WhiteBorderBrush" Color="{StaticResource c_006}"/>
+    
+    <!-- ListBox -->
+    <SolidColorBrush x:Key="SelectedItemListBoxBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="ListBoxBackgroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="ListBoxBorderBrush" Color="{StaticResource c_003}"/>
+        
+    <!-- ScrollBar -->
+    <SolidColorBrush x:Key="ScrollBarRepeatButtonBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="ScrollBarBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="{StaticResource c_003}"/>
+    
+
 
 
 
