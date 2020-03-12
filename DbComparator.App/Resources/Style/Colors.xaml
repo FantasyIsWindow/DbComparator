@@ -7,11 +7,10 @@
     <Color x:Key="c_003">#BCAB81</Color>
     <Color x:Key="c_004">#726138</Color>
     <Color x:Key="c_005">#624F1F</Color>
-    <Color x:Key="c_006">#ffffff</Color>
-    
+    <Color x:Key="c_006">#FFF9EE</Color>
+    <Color x:Key="c_007">#000000</Color>
 
-
-    <!-- Buttons Brush -->
+    <!-- Buttons Brushes -->
     <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource c_005}"/>
     <SolidColorBrush x:Key="LightForegroundBrush" Color="{StaticResource c_004}"/>
@@ -24,20 +23,106 @@
     <SolidColorBrush x:Key="ButtonDisabledBackgroundBrush" Color="{StaticResource c_004}"/>
     <SolidColorBrush x:Key="ButtonDisabledForegroundBrush" Color="{StaticResource c_003}"/>
     <SolidColorBrush x:Key="DisabledVisualElement" Color="{StaticResource c_001}" Opacity="0.6"/>
-    <SolidColorBrush x:Key="WhiteBorderBrush" Color="{StaticResource c_006}"/>
-    
-    <!-- ListBox -->
+    <SolidColorBrush x:Key="WhiteBorderBrush" Color="{StaticResource c_002}"/>
+
+    <!-- ListBox Brushes -->
     <SolidColorBrush x:Key="SelectedItemListBoxBrush" Color="{StaticResource c_001}"/>
     <SolidColorBrush x:Key="ListBoxBackgroundBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="ListBoxBorderBrush" Color="{StaticResource c_003}"/>
-        
-    <!-- ScrollBar -->
+
+    <!-- ScrollBar Brushes -->
     <SolidColorBrush x:Key="ScrollBarRepeatButtonBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="ScrollBarBrush" Color="{StaticResource c_003}"/>
     <SolidColorBrush x:Key="ScrollBarBackgroundBrush" Color="{StaticResource c_003}"/>
     
+    <!-- Menu Brushes -->
+    <SolidColorBrush x:Key="MenuBackgroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="MenuItemForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="MenuItemBackgroundBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="MenuItemHoverBackgroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="MenuItemHoverForegroundBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="MenuItemHoverBorderBrush" Color="{StaticResource c_004}"/>
+    <SolidColorBrush x:Key="MenuItemEnabledForegroundBrush" Color="{StaticResource c_007}"/>
 
+    <!-- Window Brushes -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource c_000}"/>
+
+    <!-- Page Brushes -->
+    <SolidColorBrush x:Key="UserControlBackgroundBrush" Color="{StaticResource c_000}"/>
+
+    <!-- Label Brushes -->
+    <SolidColorBrush x:Key="LabelForegroundBrush" Color="{StaticResource c_002}"/>  
+    
+    <!-- TitleLabel Brushes -->
+    <SolidColorBrush x:Key="TitleLabelForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="TitleLabelBackgroundBrush" Color="{StaticResource c_005}"/>
+
+    <!-- TextBox Brushes -->
+    <SolidColorBrush x:Key="TextBoxForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="TextBoxBorderBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="TextBoxHoverBackgroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="TextBoxHoverBorderBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="TextBoxFocusedBrush" Color="{StaticResource c_000}" Opacity="0.4"/>
+    <SolidColorBrush x:Key="TextBoxReadOnlyBackgroundBrush" Color="{StaticResource c_003}"/>
+
+    <!-- TextBlock Brushes -->
+    <SolidColorBrush x:Key="TextBlockForegroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="TextBlockBackgroundBrush" Color="{StaticResource c_001}"/>
+
+    <!-- GroupBox Brushes -->
+    <SolidColorBrush x:Key="GroupBoxBorderBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="GroupBoxForegroundBrush" Color="{StaticResource c_002}"/>
+
+    <!-- ComboBox Brushes -->
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource c_002}"/>  
+    <SolidColorBrush x:Key="ComboBoxToggleButtonBackgroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="ComboBoxArrowBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="ComboBoxEnabledForegroundBrush" Color="{StaticResource c_000}"/>    
+    <SolidColorBrush x:Key="ComboBoxHoverToggleBackgroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="ComboBoxHoverBorderBrush" Color="{StaticResource c_001}"/>    
+    <SolidColorBrush x:Key="ComboBoxHoverItemBrush" Color="{StaticResource c_003}"/>    
+    <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="CombobBoxDisabledBorderBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="{StaticResource c_004}"/>
+    <SolidColorBrush x:Key="ComboBoxDiasbledArrowBrush" Color="{StaticResource c_004}"/>    
+    <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="ComboBoxPopupBackgroundBrush" Color="{StaticResource c_002}"/>
+
+    <!-- DbReceiver Brushes -->
+    <SolidColorBrush x:Key="DbReceiverBackgroundBrush" Color="{StaticResource c_002}"/>  
+    
+    <!-- DbReceiver Brushes -->
+    <SolidColorBrush x:Key="RichTextBoxBackgroundDrush" Color="{StaticResource c_006}"/>   
+
+    <!-- DataGrid Brushes -->
+    <SolidColorBrush x:Key="DataGridHeaderForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="DataGridHeaderBackgroundBrush" Color="{StaticResource c_004}"/>
+    <SolidColorBrush x:Key="DataGridHeaderBorderBrush" Color="{StaticResource c_001}"/>
+    
+    <SolidColorBrush x:Key="DataGridHeaderSortedBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="DataGridHeaderSortedBorderBrush" Color="{StaticResource c_002}"/>
+    
+    <SolidColorBrush x:Key="DataGridHeaderHoverBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="DataGridHeaderHoverBorderBrush" Color="{StaticResource c_002}"/>
+    
+    <SolidColorBrush x:Key="DataGridRowBackgroundBrush" Color="{StaticResource c_006}"/>
+    
+    <SolidColorBrush x:Key="DataGridRowHoverBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="DataGridCellHoverForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="DataGridRowHoverForegroundBrush" Color="{StaticResource c_004}"/>
+    
+     <SolidColorBrush x:Key="DataGridSelectedBackgroundBrush" Color="{StaticResource c_000}"/>   
+    <SolidColorBrush x:Key="DataGridSelectedForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="DataGridAltRowBackgroundBrush" Color="{StaticResource c_004}"/>
+
+    <!-- DbReceiver Brushes -->
+    <SolidColorBrush x:Key="TreeViewBackgroundBrush" Color="{StaticResource c_006}"/>
+    <SolidColorBrush x:Key="TreeViewBorderBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="TreeViewDisabledBackgroundBrush" Color="{StaticResource c_000}"/>
 
 
 

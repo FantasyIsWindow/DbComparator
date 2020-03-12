@@ -22,7 +22,7 @@
 
         <Button Content="Auto Compare"
                 Grid.Column="1" 
-                Margin="0, 5, 10, 5" 
+                Margin="0, 5, 10, 2" 
                 HorizontalAlignment="Right" 
                 Style="{StaticResource autoCompareButtonStyle}"
                 Command="{Binding AutoCompareCommand}"/>
@@ -35,12 +35,13 @@
                 </Grid.RowDefinitions>
 
                 <Controls:DbReceiver Grid.Row="0"
-                                     Background="Aqua" 
+                                     Style="{StaticResource dbReceiverStyle}"
                                      DataContext="{Binding LeftDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TreeView Grid.Row="1" 
                           ItemsSource="{Binding GeneralInfoDbLeft}" 
-                          x:Name="leftTreeView">
+                          x:Name="leftTreeView"
+                          Style="{StaticResource treeViewStyle}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Entitys}">
                             <HierarchicalDataTemplate.ItemTemplate>
@@ -91,17 +92,18 @@
                 </Grid.RowDefinitions>
 
                 <Controls:DbReceiver Grid.Row="0"
-                                     Background="Orange"
+                                     Style="{StaticResource dbReceiverStyle}"
                                      DataContext="{Binding RightDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TreeView Grid.Row="1" 
                           ItemsSource="{Binding GeneralInfoDbRight}" 
-                          x:Name="rightTreeView">
+                          x:Name="rightTreeView"
+                          Style="{StaticResource treeViewStyle}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Entitys}">
                             <HierarchicalDataTemplate.ItemTemplate>
                                 <HierarchicalDataTemplate ItemsSource="{Binding Properties}">
-                                    <TextBlock x:Name="tb" 
+                                    <TextBlock x:Name="tb"
                                                Text="{Binding Name}" 
                                                Foreground="{Binding ElementName=tb, Path=Text, Converter={StaticResource treeColorConverter}}"/>
                                 </HierarchicalDataTemplate>
@@ -142,18 +144,16 @@
         <Button Grid.Row="1" 
                 Grid.ColumnSpan="2" 
                 VerticalAlignment="Top"
-                Margin="0, 25, 0, 0"
-                Content="Compare" 
-                BorderBrush="White"
+                Margin="0, 38, 0, 0"
+                Content="COMPARE"               
                 Style="{StaticResource compareButton}"
                 Command="{Binding CompareCommand}"/>
 
         <Button Grid.Row="1" 
                 Grid.ColumnSpan="2" 
                 VerticalAlignment="Top"
-                Margin="0, 25, 0, 0"
-                Content="Back" 
-                BorderBrush="White"
+                Margin="0, 38, 0, 0"
+                Content="BACK"           
                 Style="{StaticResource compareButton}"
                 Command="{Binding BackCommand}">
             <Button.Visibility>

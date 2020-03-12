@@ -8,12 +8,12 @@
         xmlns:ViewModels="clr-namespace:DbComparator.App.ViewModels"
         xmlns:Views="clr-namespace:DbComparator.App.Views.ViewControls"
         xmlns:Selectors="clr-namespace:DbComparator.App.Resources.Selectors"
+        xmlns:Controls="clr-namespace:DbComparator.App.Views.CustomControls"
         mc:Ignorable="d"
-        Title="Comparator" 
+        Title="Comparator"
         Height="600" 
         Width="800" 
-        MinHeight="550" 
-        MinWidth="600" 
+        Style="{StaticResource windowStyle}"
         x:Name="window">
     <Window.Resources>
         <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
@@ -38,11 +38,14 @@
             <MenuItem Header="Edit">
                 <MenuItem Header="Add new db" Command="{Binding AddNewDbInfoCommand}"/>
             </MenuItem>
-            <MenuItem Header="About"/>
+            <MenuItem Header="Help">
+                <MenuItem Header="About"/>
+            </MenuItem>
         </Menu>
 
         <ComboBox Grid.Row="1"  
                   Margin="5, 5, 0, 5" 
+                  Style="{StaticResource comboBoxStyle}" 
                   ItemsSource="{Binding DbTypes}" 
                   SelectedItem="{Binding SelectedDbType}">
             <i:Interaction.Triggers>
@@ -58,40 +61,28 @@
                               DataContext="{Binding InfoViewModel}"/>
 
         <GroupBox Grid.Row="2" Header="References">
-            <ListBox Grid.Row="2"
-                 Style="{StaticResource listBoxStyle}"
-                 ItemsSource="{Binding ReferenceInfoDbs}"
-                 SelectedItem="{Binding SelectedReferenceModel}">
+            <ListBox Style="{StaticResource listBoxStyle}"
+                     ItemsSource="{Binding ReferenceInfoDbs}"
+                     SelectedItem="{Binding SelectedReferenceModel}">
                 <ListBox.ItemTemplateSelector>
                     <Selectors:DbListBoxSelector Connected="{StaticResource referenceConnected}"
                                                  Disconected="{StaticResource referenceDisconected}"
                                                  AddNew="{StaticResource addNewReference}"/>
                 </ListBox.ItemTemplateSelector>
-                <ListBox.Resources>
-                    <Style TargetType="{x:Type ScrollBar}">
-                        <Setter Property="Template" Value="{StaticResource scrollBarStyle}"/>
-                    </Style>
-                </ListBox.Resources>
             </ListBox>
         </GroupBox>
 
         <GroupBox Grid.Row="3" Header="NotReferences">
-            <ListBox 
-                 Style="{StaticResource listBoxStyle}"
-                 ItemsSource="{Binding NotReferenceInfoDbs}" 
-                 SelectedItem="{Binding SelectedNotReferenceModel}">
+            <ListBox Style="{StaticResource listBoxStyle}"
+                     ItemsSource="{Binding NotReferenceInfoDbs}" 
+                     SelectedItem="{Binding SelectedNotReferenceModel}">
                 <ListBox.ItemTemplateSelector>
                     <Selectors:DbListBoxSelector Connected="{StaticResource connected}"
                                                  Disconected="{StaticResource disconected}"
                                                  AddNew="{StaticResource addNew}"/>
                 </ListBox.ItemTemplateSelector>
-                <ListBox.Resources>
-                    <Style TargetType="{x:Type ScrollBar}">
-                        <Setter Property="Template" Value="{StaticResource scrollBarStyle}"/>
-                    </Style>
-                </ListBox.Resources>
             </ListBox>
-        </GroupBox>      
+        </GroupBox>
 
         <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
             <Label Content="123"/>
@@ -100,7 +91,7 @@
         <Border Grid.Row="1" 
                 Grid.RowSpan="4" 
                 Grid.ColumnSpan="4" 
-                Background="#3F000000" 
+                Background="#3F000000"
                 Visibility="{Binding ElementName=presenter, Path=Content, Converter={StaticResource viewsVisibilityConverter}}">
             <ContentPresenter Content="{Binding CurrentPageContent}" 
                               x:Name="presenter">

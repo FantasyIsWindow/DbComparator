@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Page="clr-namespace:DbComparator.App.Views.ViewControls">
+
+    <Style TargetType="{x:Type Page:AddNewDbInfoControl}">
+        <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
+    </Style>
+
+    <Style TargetType="{x:Type Page:ShowMessageView}">
+        <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
+    </Style>
+
+</ResourceDictionary>

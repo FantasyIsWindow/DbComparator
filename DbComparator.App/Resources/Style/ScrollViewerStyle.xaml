@@ -1,0 +1,210 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- VerticalScrollBar -->
+
+    <Style TargetType="{x:Type RepeatButton}" x:Key="upRepeatButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Canvas Height="18">
+                        <Polygon Fill="{StaticResource ScrollBarRepeatButtonBrush}" Points="3,15 15,15 9,3"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type RepeatButton}" x:Key="downRepeatButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Canvas Height="18">
+                        <Polygon Fill="{StaticResource ScrollBarRepeatButtonBrush}" Points="3,3 9,15 15,3"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Thumb}" x:Key="verticalScrollThumbStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Rectangle Width="13" Fill="{StaticResource ScrollBarThumbBrush}" RadiusX="5" RadiusY="5" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- HorizontalScrollBar -->
+
+
+    <Style TargetType="{x:Type RepeatButton}" x:Key="leftRepeatButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Canvas Width="18">
+                        <Polygon Fill="{StaticResource ScrollBarRepeatButtonBrush}" Points="15,3 15,15 3,9"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type RepeatButton}" x:Key="rightRepeatButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Canvas Width="18">
+                        <Polygon Fill="{StaticResource ScrollBarRepeatButtonBrush}" Points="15,9 3,3 3,15"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Thumb}" x:Key="horizontalScrollThumbStyle">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Rectangle Height="13" Fill="{StaticResource ScrollBarThumbBrush}" RadiusX="5" RadiusY="5" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- ScrollViewer -->
+
+
+    <Style TargetType="{x:Type ScrollBar}" x:Key="horizontalScrollBoxStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid Height="18">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.ColumnSpan="3" 
+                                Margin="1, 0, 1, 1"
+                                Height="15" 
+                                VerticalAlignment="Center" 
+                                Background="{StaticResource ScrollBarBackgroundBrush}" 
+                                CornerRadius="2" />
+                        <RepeatButton Grid.Column="0" 
+                          Command="ScrollBar.LineLeftCommand" 
+                          Style="{StaticResource leftRepeatButtonStyle}"/>
+                        <Track Grid.Column="1"
+                               Name="PART_Track" 
+                               Height="{TemplateBinding Width}" 
+                               VerticalAlignment="Center" 
+                               IsDirectionReversed="False" 
+                               Maximum="{TemplateBinding Maximum}" 
+                               Minimum="{TemplateBinding Minimum}"
+                               Value="{TemplateBinding Value}">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource horizontalScrollThumbStyle}" />
+                            </Track.Thumb>
+                        </Track>
+                        <RepeatButton Grid.Column="2" 
+                                      Command="ScrollBar.LineRightCommand" 
+                                      Style="{StaticResource rightRepeatButtonStyle}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ScrollBar}" x:Key="verticalScrollBoxStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid Width="18">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.RowSpan="3" 
+                                Margin="0, 1, 1, 1"
+                                Width="15" 
+                                HorizontalAlignment="Center" 
+                                Background="{StaticResource ScrollBarBackgroundBrush}" 
+                                CornerRadius="2" />
+                        <RepeatButton Grid.Row="0" 
+                                      Command="ScrollBar.LineUpCommand" 
+                                      Style="{StaticResource upRepeatButtonStyle}"/>
+                        <Track Grid.Row="1" 
+                               Name="PART_Track" 
+                               Width="{TemplateBinding Width}" 
+                               HorizontalAlignment="Center" 
+                               IsDirectionReversed="true" 
+                               Maximum="{TemplateBinding Maximum}" 
+                               Minimum="{TemplateBinding Minimum}"
+                               Value="{TemplateBinding Value}">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource verticalScrollThumbStyle}" />
+                            </Track.Thumb>
+                        </Track>
+                        <RepeatButton Grid.Row="2" 
+                                      Command="ScrollBar.LineDownCommand" 
+                                      Style="{StaticResource downRepeatButtonStyle}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ScrollViewer}" x:Key="scrollViewerStyle">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="IsEnabled" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ScrollContentPresenter Grid.Row="0" Grid.Column="0"/>
+                        <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                   Grid.Column="1"                                   
+                                   Maximum="{TemplateBinding ScrollableHeight}" 
+                                   Orientation="Vertical"
+                                   Value="{TemplateBinding VerticalOffset}"
+                                   Style="{StaticResource verticalScrollBoxStyle}"
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                        <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                                   Grid.Row="1" 
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Maximum="{TemplateBinding ScrollableWidth}" 
+                                   Orientation="Horizontal" 
+                                   Value="{TemplateBinding HorizontalOffset}"
+                                   Style="{StaticResource horizontalScrollBoxStyle}" 
+                                   ViewportSize="{TemplateBinding ViewportWidth}" 
+                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

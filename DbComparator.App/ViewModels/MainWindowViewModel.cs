@@ -38,7 +38,8 @@ namespace DbComparator.App.ViewModels
         private ShowMessageViewModel _showMessage;
 
         private AddNewDbInfoViewModel _addNewDb;
- 
+
+
         public ShowDbInfoViewModel InfoViewModel
         {
             get => _infoViewModel;
@@ -124,7 +125,6 @@ namespace DbComparator.App.ViewModels
         private RellayCommand _choiseDbTypeCommand;
 
 
-
         public RellayCommand AddNewDbInfoCommand
         {
             get
@@ -195,13 +195,23 @@ namespace DbComparator.App.ViewModels
             }
         }
                                  
-        public RellayCommand ChoiseDbTypeCommand =>
-            _choiseDbTypeCommand = new RellayCommand(ChoiseType);
+        public RellayCommand ChoiseDbTypeCommand
+        {
+            get
+            {
+                return _choiseDbTypeCommand ??
+                    (_choiseDbTypeCommand = new RellayCommand(obj =>
+                    {
+                        _infoViewModel.ClearAll();
+                        ChoiseType();
+                    }));
+            }
+        }
 
         private void UpdateTypes()
         {
-            ChoiseType(null);
-            CurrentPageContent = null;
+            ChoiseType();
+            CurrentPageContent = null;            
         }
 
         private void UpdateRecord(DbInfoModel dbInfo)
@@ -213,15 +223,13 @@ namespace DbComparator.App.ViewModels
             }
             catch (Exception ex)
             {
-                ShowMessage(ex.Message);
+                ShowMessage("Warning", ex.Message, MbShowDialog.OkState);
             }
-
         }
 
         private void ShowQuastionMessage(DbInfoModel model)
         {
-            _showMessage.ShowMessageBox("Are you Sure?", MbShowDialog.OkCancelState);
-            CurrentPageContent = _showMessage;
+            ShowMessage("Warning", "Are you Sure?", MbShowDialog.OkCancelState);
             _showMessage.OkHandler += (() => { RemoveRecord(model); });
         }
                        
@@ -232,7 +240,7 @@ namespace DbComparator.App.ViewModels
             UpdateTypes();
         }
 
-        private void ChoiseType(object obj)
+        private void ChoiseType()
         {
             _dbRepository = CreateRepository();
             GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
@@ -258,29 +266,39 @@ namespace DbComparator.App.ViewModels
 
         private async void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
-            foreach (var item in models)
+            try
             {
-                _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
-                var conn = await _dbRepository.IsConnectionAsync();
-                DbInfo db = new DbInfo()
+                foreach (var item in models)
                 {
-                    DataBase = item,
-                    IsConnect = conn
-                };
-                target.Add(db);
+                    _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
+                    var conn = await _dbRepository.IsConnectionAsync();
+                    DbInfo db = new DbInfo()
+                    {
+                        DataBase = item,
+                        IsConnect = conn
+                    };
+                    target.Add(db);
+                }
+                if (target.Count != 0)
+                {
+                    target.Add(new DbInfo() { DataBase = null });
+                }
             }
-            target.Add(new DbInfo() { DataBase = null });
+            catch (Exception ex)
+            {
+                ShowMessage("Warning", ex.Message, MbShowDialog.OkState);
+            }
         }
 
         private void GetMessage(object sender, EventArgs e)
         {
             var message = (MessageEventArgs)e;
-            ShowMessage(message.Message);           
+            ShowMessage("Warning", message.Message, MbShowDialog.OkState);           
         }
 
-        private void ShowMessage(string message)
+        private void ShowMessage(string title, string message, MbShowDialog state)
         {
-            _showMessage.ShowMessageBox(message, MbShowDialog.OkState);
+            _showMessage.ShowMessageBox(title, message, state);
             CurrentPageContent = _showMessage;
         }
     }

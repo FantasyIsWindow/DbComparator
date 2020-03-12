@@ -6,6 +6,7 @@
     <DataGrid AutoGenerateColumns="True" 
               CanUserSortColumns="False" 
               IsReadOnly="True" 
+              Style="{StaticResource dataGridStyle}"
               x:Name="dataGrid" />
     
 </UserControl>

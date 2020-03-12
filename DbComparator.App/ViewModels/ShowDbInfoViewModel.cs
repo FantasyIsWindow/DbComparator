@@ -22,7 +22,7 @@ namespace DbComparator.App.ViewModels
         private AutoComparator _autoComparator;
 
 
-                     
+
         private IRepository _primaryDbRepository;
 
         private IRepository _secondaryDbRepository;
@@ -74,7 +74,7 @@ namespace DbComparator.App.ViewModels
                 SetProperty(ref _rightDbInfoReceiver, value, "RightDbInfoReceiver");
             }
         }
-        
+
 
         public ObservableCollection<GeneralDbInfo> GeneralInfoDbLeft
         {
@@ -169,15 +169,18 @@ namespace DbComparator.App.ViewModels
                 return _itemSelectCommand ??
                     (_itemSelectCommand = new RellayCommand(obj =>
                     {
-                        if (obj is Property property)
+                        if (CheckingDbSelection()) // убрать когда разберусь с очисткой окна
                         {
-                            if (property.PropertyType == "Table")
+                            if (obj is Property property)
                             {
-                                FetchTableFields(property.Name);
-                            }
-                            else if (property.PropertyType == "Procedure")
-                            {
-                                FetchProcedure(property.Name);
+                                if (property.PropertyType == "Table")
+                                {
+                                    FetchTableFields(property.Name);
+                                }
+                                else if (property.PropertyType == "Procedure")
+                                {
+                                    FetchProcedure(property.Name);
+                                }
                             }
                         }
                     }));
@@ -191,17 +194,25 @@ namespace DbComparator.App.ViewModels
                 return _autoCompareCommand ??
                     (_autoCompareCommand = new RellayCommand(async obj =>
                     {
-                        if (_leftDbInfoReceiver != null && _rightDbInfoReceiver != null)
+                        if (CheckingDbSelection())
                         {
-                            if (MessageHandler != null)
-                            {
-                                MessageEventArgs eventArgs = new MessageEventArgs();
-                                eventArgs.Message = await _autoComparator.CompareAsync(_primaryDbRepository, _secondaryDbRepository);
-                                MessageHandler(this, eventArgs);
-                            }
+                            var result = await _autoComparator.CompareAsync(_primaryDbRepository, _secondaryDbRepository);
+                            SendMessage(result);
                         }
                     }));
             }
+        }
+
+        public void ClearAll()
+        {
+            LeftDbFieldsInfo = null;
+            RightDbFieldsInfo = null;
+            LeftDbInfoReceiver = null;
+            RightDbInfoReceiver = null;
+            LeftDbProcedureSqript = null;
+            RightDbProcedureSqript = null;
+            GeneralInfoDbLeft.ClearIfNotEmpty();
+            GeneralInfoDbRight.ClearIfNotEmpty();
         }
 
         public RellayCommand CompareCommand =>
@@ -209,7 +220,7 @@ namespace DbComparator.App.ViewModels
 
         private void CompareGeneralDbInfo(object obj)
         {
-            if (_leftDbInfoReceiver != null && _rightDbInfoReceiver != null)
+            if (CheckingDbSelection())
             {
                 var leftDbTables = _primaryDbRepository.GetTables().ToList();
                 var rightDbTables = _secondaryDbRepository.GetTables().ToList();
@@ -240,23 +251,23 @@ namespace DbComparator.App.ViewModels
         }
 
         private ObservableCollection<FullField> GetFieldsInfo(IRepository repository, string tableName) =>
-            tableName != "null" ? repository.GetFieldsInfo(tableName).ToObservableCollection() : null;  
+            tableName != "null" ? repository.GetFieldsInfo(tableName).ToObservableCollection() : null;
 
         private void FetchProcedure(string name)
         {
             LeftCompared = GetProcedureSquript(_primaryDbRepository, name);
             RightCompared = GetProcedureSquript(_secondaryDbRepository, name);
- 
+
             LeftDbProcedureSqript = LeftCompared;
             RightDbProcedureSqript = RightCompared;
         }
 
         private string GetProcedureSquript(IRepository repository, string procedureName) =>
-            procedureName != "null" ? repository.GetProcedureSqript(procedureName) : null;   
-                        
+            procedureName != "null" ? repository.GetProcedureSqript(procedureName) : null;
+
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
-            repository = CreateRepository(db.DataBase.DbType);            
+            repository = CreateRepository(db.DataBase.DbType);
             repository.CreateConnectionString(db.DataBase.DataSource, db.DataBase.ServerName,
                                               db.DataBase.DbName, db.DataBase.Login,
                                               db.DataBase.Password);
@@ -267,7 +278,7 @@ namespace DbComparator.App.ViewModels
             switch (SelectedDbType)
             {
                 case "Microsoft Sql": { return new MicrosoftDb(); }
-                case "SyBase":        { return new SyBaseDb(); }
+                case "SyBase": { return new SyBaseDb(); }
             }
             return null;
         }
@@ -291,7 +302,7 @@ namespace DbComparator.App.ViewModels
             GeneralDbInfo dataBase = new GeneralDbInfo()
             {
                 Name = dbName,
-                Entitys = new List<Entity>() 
+                Entitys = new List<Entity>()
                 {
                     new Entity() { Name = "Tables", Properties = tempTables },
                     new Entity() { Name = "Procedures", Properties = tempProcedures }
@@ -299,6 +310,28 @@ namespace DbComparator.App.ViewModels
             };
 
             return dataBase;
+        }
+
+        private bool CheckingDbSelection()
+        {
+            if (_leftDbInfoReceiver != null && _rightDbInfoReceiver != null)
+            {
+                if (_leftDbInfoReceiver.IsConnect && _rightDbInfoReceiver.IsConnect)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void SendMessage(string message)
+        {
+            if (MessageHandler != null)
+            {
+                MessageEventArgs eventArgs = new MessageEventArgs();
+                eventArgs.Message = message;
+                MessageHandler(this, eventArgs);
+            }
         }
     }
 }
