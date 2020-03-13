@@ -122,6 +122,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Style\StatusBarStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Style\TextBlockStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -186,13 +190,17 @@
     <Compile Include="Infrastructure\Converters\ViewsVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Enums\MbShowDialog.cs" />
     <Compile Include="Infrastructure\Enums\OpenStatus.cs" />
+    <Compile Include="Infrastructure\Enums\SizingAction.cs" />
     <Compile Include="Infrastructure\Extensions\EnumerableExtension.cs" />
+    <Compile Include="Infrastructure\Extensions\ObjectExtension.cs" />
     <Compile Include="Infrastructure\Extensions\ObservableCollectionExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\WindowExtensions.cs" />
     <Compile Include="Models\DbInfo.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\GeneralDbInfo.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Resources\Selectors\DbListBoxSelector.cs" />
+    <Compile Include="Resources\Style\Generic.cs" />
     <Compile Include="Services\AutoComparator.cs" />
     <Compile Include="Services\CollectionEqualizer.cs" />
     <Compile Include="Services\FieldsEqualizer.cs" />

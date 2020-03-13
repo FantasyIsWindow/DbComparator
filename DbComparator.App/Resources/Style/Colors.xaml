@@ -47,6 +47,10 @@
 
     <!-- Window Brushes -->
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="WindowTitleBarBackgroundBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="WindowTitleBarForegroundBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="WindowTitleBarDisabledBackgroundBrush" Color="{StaticResource c_001}"/>
 
     <!-- Page Brushes -->
     <SolidColorBrush x:Key="UserControlBackgroundBrush" Color="{StaticResource c_000}"/>
@@ -122,7 +126,13 @@
     <!-- DbReceiver Brushes -->
     <SolidColorBrush x:Key="TreeViewBackgroundBrush" Color="{StaticResource c_006}"/>
     <SolidColorBrush x:Key="TreeViewBorderBrush" Color="{StaticResource c_003}"/>
-    <SolidColorBrush x:Key="TreeViewDisabledBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="TreeViewDisabledBackgroundBrush" Color="{StaticResource c_000}"/>  
+    
+    <!-- StatusBar Brushes -->
+    <SolidColorBrush x:Key="StatusBarBorderBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="StatusBarBackgroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="StatusBarSeparatorFillBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="StatusBarDisabledForegroundBrush" Color="{StaticResource c_002}"/>
 
 
 

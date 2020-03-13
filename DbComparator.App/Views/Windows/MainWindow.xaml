@@ -8,12 +8,12 @@
         xmlns:ViewModels="clr-namespace:DbComparator.App.ViewModels"
         xmlns:Views="clr-namespace:DbComparator.App.Views.ViewControls"
         xmlns:Selectors="clr-namespace:DbComparator.App.Resources.Selectors"
-        xmlns:Controls="clr-namespace:DbComparator.App.Views.CustomControls"
         mc:Ignorable="d"
         Title="Comparator"
         Height="600" 
         Width="800" 
         Style="{StaticResource windowStyle}"
+        Icon="pack://application:,,,/Bd.ico"
         x:Name="window">
     <Window.Resources>
         <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
@@ -84,8 +84,8 @@
             </ListBox>
         </GroupBox>
 
-        <StatusBar Grid.Row="4" Grid.ColumnSpan="2">
-            <Label Content="123"/>
+        <StatusBar Grid.Row="4" Grid.ColumnSpan="2" >
+            <Label Content="123" Style="{StaticResource lableStyle}"/>
         </StatusBar>
 
         <Border Grid.Row="1" 
