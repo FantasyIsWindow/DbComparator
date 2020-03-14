@@ -27,8 +27,11 @@ namespace DbComparator.App.Resources.Style
             sender.ForWindowFromTemplate(w => w.WindowState = (w.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized);
         
 
-        private void closeBtn_Click(object sender, RoutedEventArgs e) =>
+        private void closeBtn_Click(object sender, RoutedEventArgs e)
+        {
             CloseWindow(sender);
+        }
+
 
 
         private void window_move(object sender, MouseButtonEventArgs e)

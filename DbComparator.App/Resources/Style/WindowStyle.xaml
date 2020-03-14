@@ -2,6 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      x:Class="DbComparator.App.Resources.Style.Generic">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+     
     <Style TargetType="{x:Type Window}" x:Key="windowStyle">
         <Setter Property="MinWidth" Value="600"/>
         <Setter Property="MinHeight" Value="600"/>
@@ -38,8 +42,8 @@
                                                Source="{TemplateBinding Icon}" 
                                                Margin="5" Stretch="Fill" 
                                                HorizontalAlignment="Right"
-                                               Width="23" 
-                                               Height="23"                                                
+                                               Width="20" 
+                                               Height="20"                                                
                                                MouseLeftButtonDown="titleIcon_Click"/>
                                         <TextBlock Grid.Column="1" 
                                                    Margin="10, 0, 0, 0"
@@ -54,23 +58,45 @@
                                                 x:Name="minBtn" 
                                                 VerticalAlignment="Center" 
                                                 Margin="5"
-                                                Width="25" 
-                                                Height="25" 
-                                                Click="minimizeBtn_Click"/>
+                                                Width="20" 
+                                                Height="20"                                                 
+                                                Click="minimizeBtn_Click"
+                                                Style="{StaticResource windowHeaderButtonStyle}">
+                                            <Path Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                  StrokeThickness="1"
+                                                  Stretch="None"
+                                                  RenderOptions.EdgeMode="Aliased"
+                                                  Data="M0,8 H8 M0,7 H8 M0,6 H8"/>
+                                        </Button>
                                         <Button Grid.Column="3" 
                                                 x:Name="maxBtn"
                                                 VerticalAlignment="Center" 
                                                 Margin="5"
-                                                Width="25" 
-                                                Height="25" 
-                                                Click="maximizeBtn_Click"/>
+                                                Width="20" 
+                                                Height="20" 
+                                                Click="maximizeBtn_Click"
+                                                Style="{StaticResource windowHeaderButtonStyle}">
+                                            <Path x:Name="maximizedPathIcon" Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                  StrokeThickness="1"
+                                                  Stretch="None"
+                                                  RenderOptions.EdgeMode="Aliased"
+                                                  Data="M0,0 H8 V8 H0 V0 M0,1 H8 M0,2 H8"/>
+                                        </Button>
                                         <Button Grid.Column="4" 
                                                 x:Name="closeBtn"
                                                 VerticalAlignment="Center" 
+                                                VerticalContentAlignment="Center"
                                                 Margin="5"
-                                                Width="25" 
-                                                Height="25" 
-                                                Click="closeBtn_Click"/>
+                                                Width="20" 
+                                                Height="20" 
+                                                Click="closeBtn_Click"
+                                                Style="{StaticResource windowHeaderButtonStyle}">
+                                            <Path Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                  StrokeThickness="2"
+                                                  Stretch="None"
+                                                  RenderOptions.EdgeMode="Aliased"
+                                                  Data="M0,0 L8,8 M0,8 L8,0"/>
+                                        </Button>
                                     </Grid>
                                 </Border>
                                 <ContentPresenter/>
@@ -149,6 +175,9 @@
                                    HorizontalAlignment="Right"/>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="maximizedPathIcon" Property="Data" Value="M0,3 H5 V8 H0 V3 M0,4 H5 M3,0 H8 V5 H7 M3,1 H8"/>
+                        </Trigger>
                         <Trigger Property="IsActive" Value="False">
                             <Setter TargetName="border" Property="Background" Value="{StaticResource WindowTitleBarDisabledBackgroundBrush}"/>
                         </Trigger>

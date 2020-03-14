@@ -44,6 +44,9 @@
         </Menu>
 
         <ComboBox Grid.Row="1"  
+                  Grid.ColumnSpan="2"
+                  Width="250"
+                  HorizontalAlignment="Left"
                   Margin="5, 5, 0, 5" 
                   Style="{StaticResource comboBoxStyle}" 
                   ItemsSource="{Binding DbTypes}" 
