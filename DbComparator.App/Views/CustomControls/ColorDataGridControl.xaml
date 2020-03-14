@@ -6,7 +6,9 @@
     <DataGrid AutoGenerateColumns="True" 
               CanUserSortColumns="False" 
               IsReadOnly="True" 
-              Style="{StaticResource dataGridStyle}"
+              Style="{StaticResource dataGridStyle}" 
+              ScrollViewer.ScrollChanged="dataGrid_ScrollChanged"
+              RowHeaderWidth="0"
               x:Name="dataGrid" />
     
 </UserControl>

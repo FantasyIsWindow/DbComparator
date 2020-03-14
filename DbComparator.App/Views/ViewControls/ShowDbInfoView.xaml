@@ -73,7 +73,9 @@
                                                Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource visibilityConverter}}" 
                                                x:Name="leftDataGrid"
                                                FieldsCollection="{Binding LeftDbFieldsInfo}"
-                                               FieldsToCompareCollection="{Binding RightDbFieldsInfo}"/>
+                                               FieldsToCompareCollection="{Binding RightDbFieldsInfo}" 
+                                               SetCellsWidth="{Binding ElementName=rightDataGrid, Path=GetCellsWidth}"
+                                               HorizontalScrollOffset="{Binding ElementName=rightDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=leftTextBox, Path=MainText, Converter={StaticResource textBoxVisibilityConverter}}" 
@@ -130,7 +132,9 @@
                                                Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource visibilityConverter}}" 
                                                x:Name="rightDataGrid" 
                                                FieldsCollection="{Binding RightDbFieldsInfo}" 
-                                               FieldsToCompareCollection="{Binding LeftDbFieldsInfo}"/>
+                                               FieldsToCompareCollection="{Binding LeftDbFieldsInfo}" 
+                                               SetCellsWidth="{Binding ElementName=leftDataGrid, Path=GetCellsWidth}"
+                                               HorizontalScrollOffset="{Binding ElementName=leftDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=rightTextBox, Path=MainText, Converter={StaticResource textBoxVisibilityConverter}}" 

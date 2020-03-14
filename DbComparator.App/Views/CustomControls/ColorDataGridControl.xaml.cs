@@ -14,7 +14,9 @@ namespace DbComparator.App.Views.CustomControls
 
         private bool _isUpdate;
 
-        public static DependencyProperty FieldsCollectionProperty = DependencyProperty.Register
+        private bool _isResize;
+
+        public static readonly DependencyProperty FieldsCollectionProperty = DependencyProperty.Register
             (
                 "FieldsCollection",
                 typeof(ObservableCollection<FullField>),
@@ -26,7 +28,7 @@ namespace DbComparator.App.Views.CustomControls
                 )
             );
 
-        public static DependencyProperty FieldsToCompareCollectionProperty = DependencyProperty.Register
+        public static readonly DependencyProperty FieldsToCompareCollectionProperty = DependencyProperty.Register
             (
                 "FieldsToCompareCollection",
                 typeof(ObservableCollection<FullField>),
@@ -37,6 +39,39 @@ namespace DbComparator.App.Views.CustomControls
                     new PropertyChangedCallback(SetFieldsToCompareCollection)
                 )
             );
+
+        public static readonly DependencyProperty HorizontalScrollOffsetProperty = DependencyProperty.Register
+            (
+                "HorizontalScrollOffset",
+                typeof(double),
+                typeof(ColorDataGridControl),
+                new FrameworkPropertyMetadata
+                (
+                    0.0,
+                    new PropertyChangedCallback(SetHorizontalScrollBarPosition)
+                )
+            );
+
+        public static readonly DependencyProperty CurrentHorizontalScrollOffsetProperty = DependencyProperty.Register
+            (
+                "CurrentHorizontalScrollOffset",
+                typeof(double),
+                typeof(ColorDataGridControl)
+            );
+
+        public static readonly DependencyProperty SetCellsWidthProperty = DependencyProperty.Register
+            (
+                "SetCellsWidth",
+                typeof(double[]),
+                typeof(ColorDataGridControl)
+            );
+
+        public static readonly DependencyProperty GetCellsWidthProperty = DependencyProperty.Register
+        (
+            "GetCellsWidth",
+            typeof(double[]),
+            typeof(ColorDataGridControl)
+        );
 
         public ObservableCollection<FullField> FieldsCollection
         {
@@ -50,15 +85,41 @@ namespace DbComparator.App.Views.CustomControls
             set => SetValue(FieldsToCompareCollectionProperty, value);
         }
 
-        private static void SetFieldsCollection(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public double HorizontalScrollOffset
         {
-            ((ColorDataGridControl)d).SetItemSource();
+            get => (double)GetValue(HorizontalScrollOffsetProperty);
+            set => SetValue(HorizontalScrollOffsetProperty, value);
+        }     
+        
+        public double CurrentHorizontalScrollOffset
+        {
+            get => (double)GetValue(CurrentHorizontalScrollOffsetProperty);
+            set => SetValue(CurrentHorizontalScrollOffsetProperty, value);
         }
 
-        private static void SetFieldsToCompareCollection(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public double[] SetCellsWidth
         {
-            ((ColorDataGridControl)d).SetFieldsToCompare();
+            get => (double[])GetValue(SetCellsWidthProperty);
+            set => SetValue(SetCellsWidthProperty, value);
+        }       
+        
+        public double[] GetCellsWidth
+        {
+            get => (double[])GetValue(GetCellsWidthProperty);
+            set => SetValue(GetCellsWidthProperty, value);
         }
+
+        private static void SetFieldsCollection(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            ((ColorDataGridControl)d).SetItemSource();
+        
+
+        private static void SetFieldsToCompareCollection(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+            ((ColorDataGridControl)d).SetFieldsToCompare();
+        
+
+        private static void SetHorizontalScrollBarPosition(DependencyObject d, DependencyPropertyChangedEventArgs e) => 
+            ((ColorDataGridControl)d).SetHorizontalOffsetValue(); 
+        
 
         private void SetFieldsToCompare()
         {
@@ -70,13 +131,14 @@ namespace DbComparator.App.Views.CustomControls
 
         public ColorDataGridControl()
         {
-            InitializeComponent();
+            InitializeComponent();          
         }
 
         public void SetItemSource()
         {
             dataGrid.ItemsSource = FieldsCollection;
             _isUpdate = false;
+            _isResize = false;
         }
 
         private void UserControl_LayoutUpdated(object sender, System.EventArgs e)
@@ -84,8 +146,18 @@ namespace DbComparator.App.Views.CustomControls
             if (!_isUpdate)
             {
                 CellColorize();
+                GetCurrentCellsWidth();
+            }
+
+            if(_isUpdate && !_isResize && CellWith())
+            {                
+                CellWidthAlignment();
             }
         }
+
+        private bool CellWith() => 
+            SetCellsWidth != null && SetCellsWidth.Length > 0 ? true : false;    
+        
 
         private void CellColorize()
         {
@@ -96,7 +168,7 @@ namespace DbComparator.App.Views.CustomControls
 
                 for (int i = 0; i < dataGrid.Items.Count; i++)
                 {
-                    for (int f = 0; f < 10; f++)
+                    for (int f = 0; f < dataGrid.Columns.Count; f++)
                     {
                         DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex(i) as DataGridRow;
                         var cell = GetCells(row, f);
@@ -171,5 +243,57 @@ namespace DbComparator.App.Views.CustomControls
             return false;
         }
 
+        private void dataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e) =>
+            CurrentHorizontalScrollOffset = e.HorizontalOffset;
+        
+
+        private void SetHorizontalOffsetValue() =>
+             SetHorizontalOffset(dataGrid, HorizontalScrollOffset);
+        
+
+        private bool SetHorizontalOffset(DependencyObject obj, double offset)
+        {
+            bool terminate = false;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(obj, i);
+                if(child is ScrollViewer scrollV)
+                {
+                    scrollV.ScrollToHorizontalOffset(offset);
+                    return true;
+                }
+            }
+
+            if(!terminate)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+                {
+                    terminate = SetHorizontalOffset(VisualTreeHelper.GetChild(obj, i), offset);                  
+                }
+            }
+            return false;
+        }
+
+        private void GetCurrentCellsWidth()
+        {
+            GetCellsWidth = new double[dataGrid.Columns.Count];
+
+            for (int i = 0; i < dataGrid.Columns.Count; i++)
+            {
+                GetCellsWidth[i] = dataGrid.Columns[i].ActualWidth;
+            }
+        }
+
+        private void CellWidthAlignment()
+        {
+            for (int i = 0; i < dataGrid.Columns.Count; i++)
+            {
+                if(dataGrid.Columns[i].ActualWidth < SetCellsWidth[i])
+                {
+                    dataGrid.Columns[i].Width = SetCellsWidth[i];
+                }
+            }
+            _isResize = true;
+        }
     }
 }
