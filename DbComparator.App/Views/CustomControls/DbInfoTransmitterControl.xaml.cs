@@ -6,10 +6,20 @@ using System.Windows.Media.Imaging;
 
 namespace DbComparator.App.Views.CustomControls
 {
-    public partial class DbInfoControl : UserControl
+    public partial class DbInfoTransmitterControl : UserControl
     {
         public static readonly DependencyProperty IconProperty =
-            DependencyProperty.Register("Icon", typeof(string), typeof(DbInfoControl), new FrameworkPropertyMetadata("", new PropertyChangedCallback(GetIcon)));      
+            DependencyProperty.Register
+            (
+                "Icon", 
+                typeof(string), 
+                typeof(DbInfoTransmitterControl), 
+                new FrameworkPropertyMetadata
+                (
+                    "", 
+                    new PropertyChangedCallback(GetIcon)
+                )
+            );      
 
         public string Icon
         {
@@ -17,13 +27,13 @@ namespace DbComparator.App.Views.CustomControls
             set => SetValue(IconProperty, value); 
         }
 
-        public DbInfoControl()
+        public DbInfoTransmitterControl()
         {
             InitializeComponent();
         }                          
 
         private static void GetIcon(DependencyObject d, DependencyPropertyChangedEventArgs e) => 
-            ((DbInfoControl)d).InstallingIcon();
+            ((DbInfoTransmitterControl)d).InstallingIcon();
         
         private void InstallingIcon()
         {
@@ -32,7 +42,7 @@ namespace DbComparator.App.Views.CustomControls
             img.Source = image;
         }
 
-        protected override void OnMouseMove(MouseEventArgs e) // упаковка данных
+        protected override void OnMouseMove(MouseEventArgs e) 
         {
             base.OnMouseMove(e);
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -45,7 +55,7 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
-        protected override void OnGiveFeedback(GiveFeedbackEventArgs e) // вид курсора
+        protected override void OnGiveFeedback(GiveFeedbackEventArgs e) 
         {
             base.OnGiveFeedback(e);
             if (e.Effects.HasFlag(DragDropEffects.Copy))

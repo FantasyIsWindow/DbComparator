@@ -17,10 +17,10 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="0.2*"/>
-                </Grid.ColumnDefinitions>                
-                <Controls:DbInfoControl Grid.Row="0" 
-                                        Grid.RowSpan="3" 
-                                        Icon="/Resources/Icons/Connected.png"/>
+                </Grid.ColumnDefinitions>
+                <Controls:DbInfoTransmitterControl Grid.Row="0" 
+                                                   Grid.RowSpan="3" 
+                                                   Icon="/Resources/Icons/Connected.png"/>
                 <Button Grid.Row="0" 
                         Grid.Column="1"
                         Margin="1" 
@@ -58,9 +58,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
-                <Controls:DbInfoControl Grid.Row="0" 
-                                        Grid.RowSpan="3" 
-                                        Icon="/Resources/Icons/Disconected.png"/>
+                <Controls:DbInfoTransmitterControl Grid.Row="0" 
+                                                   Grid.RowSpan="3" 
+                                                   Icon="/Resources/Icons/Disconected.png"/>
                 <Button Grid.Row="0" 
                         Grid.Column="1"  
                         Margin="1" 
@@ -117,9 +117,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
-                <Controls:DbInfoControl Grid.Row="0" 
-                                        Grid.RowSpan="3" 
-                                        Icon="/Resources/Icons/Reference_connected.png"/>
+                <Controls:DbInfoTransmitterControl Grid.Row="0" 
+                                                   Grid.RowSpan="3" 
+                                                   Icon="/Resources/Icons/Reference_connected.png"/>
                 <Button Grid.Row="0" 
                         Grid.Column="1" 
                         Margin="1" 
@@ -154,9 +154,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="0.2*"/>
                 </Grid.ColumnDefinitions>
-                <Controls:DbInfoControl Grid.Row="0" 
-                                        Grid.RowSpan="3" 
-                                        Icon="/Resources/Icons/Reference_disconect.png"/>
+                <Controls:DbInfoTransmitterControl Grid.Row="0" 
+                                                   Grid.RowSpan="3" 
+                                                   Icon="/Resources/Icons/Reference_disconect.png"/>
                 <Button Grid.Row="0" 
                         Grid.Column="1" 
                         Margin="1" 

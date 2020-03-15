@@ -7,12 +7,12 @@ using System.Windows.Media.Imaging;
 
 namespace DbComparator.App.Views.CustomControls
 {
-    public partial class DbReceiver : UserControl
+    public partial class DbInfoReceiverControl : UserControl
     {
         private readonly string _pathToDefaultIcon = @"/Resources/Icons/DefaultDbIcon.png";
         private readonly string _defaultMessage = "Drag here";
 
-        public DbReceiver()
+        public DbInfoReceiverControl()
         {
             InitializeComponent();
             SetDefaultValues();

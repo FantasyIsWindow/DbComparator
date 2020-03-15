@@ -154,15 +154,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomControls\DbInfoControl.xaml">
+    <Page Include="Views\CustomControls\DbInfoTransmitterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CustomControls\DbReceiver.xaml">
+    <Page Include="Views\CustomControls\DbInfoReceiverControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ViewControls\AddNewDbInfoControl.xaml">
+    <Page Include="Views\ViewControls\NewDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,6 +183,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Commands\RellayCommand.cs" />
+    <Compile Include="Infrastructure\Converters\EnabledButtonMultiConverter.cs" />
     <Compile Include="Infrastructure\Converters\MessageBoxVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\MultyVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TextControlVisibilityConverter.cs" />
@@ -223,14 +224,14 @@
     <Compile Include="Views\CustomControls\ColorizeTextControl.xaml.cs">
       <DependentUpon>ColorizeTextControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomControls\DbInfoControl.xaml.cs">
-      <DependentUpon>DbInfoControl.xaml</DependentUpon>
+    <Compile Include="Views\CustomControls\DbInfoTransmitterControl.xaml.cs">
+      <DependentUpon>DbInfoTransmitterControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CustomControls\DbReceiver.xaml.cs">
-      <DependentUpon>DbReceiver.xaml</DependentUpon>
+    <Compile Include="Views\CustomControls\DbInfoReceiverControl.xaml.cs">
+      <DependentUpon>DbInfoReceiverControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewControls\AddNewDbInfoControl.xaml.cs">
-      <DependentUpon>AddNewDbInfoControl.xaml</DependentUpon>
+    <Compile Include="Views\ViewControls\NewDbInfoView.xaml.cs">
+      <DependentUpon>NewDbInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
       <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>

@@ -165,20 +165,18 @@ namespace DbComparator.App.ViewModels
                 return _itemSelectCommand ??
                     (_itemSelectCommand = new RellayCommand(obj =>
                     {
-                        if (CheckingDbSelection()) // убрать когда разберусь с очисткой окна
+                        if (obj is Property property)
                         {
-                            if (obj is Property property)
+                            if (property.PropertyType == "Table")
                             {
-                                if (property.PropertyType == "Table")
-                                {
-                                    FetchTableFields(property.Name);
-                                }
-                                else if (property.PropertyType == "Procedure")
-                                {
-                                    FetchProcedure(property.Name);
-                                }
+                                FetchTableFields(property.Name);
+                            }
+                            else if (property.PropertyType == "Procedure")
+                            {
+                                FetchProcedure(property.Name);
                             }
                         }
+
                     }));
             }
         }
@@ -190,14 +188,9 @@ namespace DbComparator.App.ViewModels
                 return _autoCompareCommand ??
                     (_autoCompareCommand = new RellayCommand(obj =>
                     {
-                        if (CheckingDbSelection())
-                        {
-                            var result = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
-                            SendMessage(result);
-                        }
-                    },
-                        (obj) => CheckingDbSelection()
-                    ));
+                        var result = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
+                        SendMessage(result);
+                    }));
             }
         }
 
@@ -218,19 +211,16 @@ namespace DbComparator.App.ViewModels
 
         private void CompareGeneralDbInfo(object obj)
         {
-            if (CheckingDbSelection())
-            {
-                var leftDbTables = _primaryDbRepository.GetTables().ToList();
-                var rightDbTables = _secondaryDbRepository.GetTables().ToList();
-                _collectionEqualizer.CollectionsEquation(leftDbTables, rightDbTables);
+            var leftDbTables = _primaryDbRepository.GetTables().ToList();
+            var rightDbTables = _secondaryDbRepository.GetTables().ToList();
+            _collectionEqualizer.CollectionsEquation(leftDbTables, rightDbTables);
 
-                var leftDbProcedures = _primaryDbRepository.GetProcedures().ToList();
-                var rightDbProcedures = _secondaryDbRepository.GetProcedures().ToList();
-                _collectionEqualizer.CollectionsEquation(leftDbProcedures, rightDbProcedures);
+            var leftDbProcedures = _primaryDbRepository.GetProcedures().ToList();
+            var rightDbProcedures = _secondaryDbRepository.GetProcedures().ToList();
+            _collectionEqualizer.CollectionsEquation(leftDbProcedures, rightDbProcedures);
 
-                FillColection(_generalInfoDbLeft, leftDbTables, leftDbProcedures, _leftDbInfoReceiver);
-                FillColection(_generalInfoDbRight, rightDbTables, rightDbProcedures, _rightDbInfoReceiver);
-            }
+            FillColection(_generalInfoDbLeft, leftDbTables, leftDbProcedures, _leftDbInfoReceiver);
+            FillColection(_generalInfoDbRight, rightDbTables, rightDbProcedures, _rightDbInfoReceiver);
         }
 
         private void FillColection(ObservableCollection<GeneralDbInfo> collection, List<string> tables, List<string> procedures, DbInfo db)
@@ -308,18 +298,6 @@ namespace DbComparator.App.ViewModels
             };
 
             return dataBase;
-        }
-
-        private bool CheckingDbSelection()
-        {
-            if (_leftDbInfoReceiver != null && _rightDbInfoReceiver != null)
-            {
-                if (_leftDbInfoReceiver.IsConnect && _rightDbInfoReceiver.IsConnect)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         private void SendMessage(string message)

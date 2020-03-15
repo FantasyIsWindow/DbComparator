@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DbComparator.App.Views.CustomControls.DbInfoControl"
+﻿<UserControl x:Class="DbComparator.App.Views.CustomControls.DbInfoTransmitterControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              AllowDrop="True">

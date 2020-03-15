@@ -100,7 +100,7 @@
                               x:Name="presenter">
                 <ContentPresenter.Resources>
                     <DataTemplate DataType="{x:Type ViewModels:DbInfoManagerViewModel}">
-                        <Views:AddNewDbInfoControl/>
+                        <Views:NewDbInfoView/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type ViewModels:MessagerViewModel}">
                         <Views:MessagerView/>
