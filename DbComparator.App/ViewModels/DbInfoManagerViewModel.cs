@@ -1,4 +1,5 @@
 ﻿using DbComparator.App.Infrastructure.Commands;
+using DbComparator.App.Infrastructure.Delegates;
 using DbComparator.App.Infrastructure.Enums;
 using DbComparator.App.Services;
 using DbConectionInfoRepository.Models;
@@ -9,16 +10,16 @@ using System.Linq;
 
 namespace DbComparator.App.ViewModels
 { 
-    public class AddNewDbInfoViewModel : ModelBase
+    public class DbInfoManagerViewModel : ModelBase, IDbInfoManagerVM
     {
-        public delegate void NotifyDelegate();
         public event NotifyDelegate OkHandler;
+
         public event NotifyDelegate CloseHandler;
 
         public event EventHandler MessageHandler;
 
 
-        private readonly InfoDbConnection _repository;  
+        private readonly IInfoDbRepository _repository;  
         
         private OpenStatus _openStatus;
 
@@ -70,7 +71,7 @@ namespace DbComparator.App.ViewModels
         }
 
 
-        public AddNewDbInfoViewModel(InfoDbConnection repository)
+        public DbInfoManagerViewModel(IInfoDbRepository repository)
         {
             _repository = repository;
             _referencesType = new string[] { "Yes", "No" };
@@ -90,7 +91,7 @@ namespace DbComparator.App.ViewModels
             _okCommand = new RellayCommand(AddInfoToDb, CanAddInfoToDb);
         
 
-        public void ShowMessage(OpenStatus status, string isReference, DbInfoModel dbInfo = null)
+        public void ShowManagerWindow(OpenStatus status, string isReference, DbInfoModel dbInfo = null)
         {
             _openStatus = status;
             _dbInfoModel = dbInfo ?? new DbInfoModel();

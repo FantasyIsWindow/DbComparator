@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace DbComparator.App.Services
 {
-    public class FieldsEqualizer
+    public class FieldsEqualizer : IFieldsEqualizer
     {
         public void CollectionsEquation(ObservableCollection<FullField> primaryCol, ObservableCollection<FullField> secondaryCol)
         {

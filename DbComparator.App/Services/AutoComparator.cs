@@ -5,31 +5,34 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DbComparator.App.Services
 {
-    public class AutoComparator
-    {
-        private CollectionEqualizer _collectionEqualizer;
-        private FieldsEqualizer _fieldsEqualizer;
+    public class AutoComparator : IAutoComparator
+    { 
+        private ICollectionEqualizer _collectionEqualizer;
+
+        private IFieldsEqualizer _fieldsEqualizer;
+
         private IRepository _primaryRepository;
+
         private IRepository _secondaryRepository;
 
-        public AutoComparator()
+
+        public AutoComparator(ICollectionEqualizer collectionEqualizer, IFieldsEqualizer fieldsEqualizer)
         {
-            _collectionEqualizer = new CollectionEqualizer();
-            _fieldsEqualizer = new FieldsEqualizer();
+            _collectionEqualizer = collectionEqualizer;
+            _fieldsEqualizer = fieldsEqualizer;
         }
 
-        public async Task<string> CompareAsync(IRepository primaryRep, IRepository secondarRep)
+        public string Compare(IRepository primaryRep, IRepository secondarRep)
         {
             _primaryRepository = primaryRep;
             _secondaryRepository = secondarRep;
 
             var tablesMismatches = TablesCompare();
             var proceduresMismatches = ProceduresCompare();
-            return await Task.Run(() => CreateResultString(tablesMismatches, proceduresMismatches));
+            return  CreateResultString(tablesMismatches, proceduresMismatches);
         }
 
         private Dictionary<string, int> TablesCompare()

@@ -1,4 +1,7 @@
-﻿using DbComparator.App.Views.Windows;
+﻿using DbComparator.App.Services;
+using DbComparator.App.ViewModels;
+using DbComparator.App.Views.Windows;
+using DbConectionInfoRepository.Repositories;
 using Ninject;
 using System.Windows;
 
@@ -6,25 +9,24 @@ namespace DbComparator.App
 {
     public partial class App : Application
     {
-        private IKernel container;
-
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-            ConfigureContainer();
-            ComposeObjects();
-            Current.MainWindow.Show();
-        }
+            IKernel kernel = new StandardKernel();
+            kernel.Bind<IInfoDbRepository>().To<InfoDbConnection>();
 
-        private void ConfigureContainer()
-        {
-            this.container = new StandardKernel();
-        }
+            kernel.Bind<IMessagerVM>().To<MessagerViewModel>();
+            kernel.Bind<IDbInfoManagerVM>().To<DbInfoManagerViewModel>();
+            kernel.Bind<IGeneralDbInfoVM>().To<GeneralDbInfoViewModel>();
+            kernel.Bind<ICollectionEqualizer>().To<CollectionEqualizer>();
+            kernel.Bind<IFieldsEqualizer>().To<FieldsEqualizer>();
+            kernel.Bind<IAutoComparator>().To<AutoComparator>();
 
-        private void ComposeObjects()
-        {
-            Current.MainWindow = this.container.Get<MainWindow>();
-            Current.MainWindow.Title = "DataBase Comparator";
+            var mainVM = kernel.Get<MainWindowViewModel>();
+
+            MainWindow = new MainWindow();
+            MainWindow.DataContext = mainVM;
+            MainWindow.Show();
+
         }
     }
 }

@@ -6,7 +6,7 @@
         <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
     </Style>
 
-    <Style TargetType="{x:Type Page:ShowMessageView}">
+    <Style TargetType="{x:Type Page:MessagerView}">
         <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
     </Style>
 

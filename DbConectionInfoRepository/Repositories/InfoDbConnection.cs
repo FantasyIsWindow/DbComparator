@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DbConectionInfoRepository.Repositories
 {
-    public class InfoDbConnection
+    public class InfoDbConnection : IInfoDbRepository
     {
         private DbRepository _db;
 

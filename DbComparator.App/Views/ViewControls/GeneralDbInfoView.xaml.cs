@@ -4,9 +4,9 @@ using System.Windows.Controls;
 
 namespace DbComparator.App.Views.ViewControls
 {
-    public partial class ShowDbInfoView : UserControl
+    public partial class GeneralDbInfoView : UserControl
     {
-        public ShowDbInfoView()
+        public GeneralDbInfoView()
         {
             InitializeComponent();
         }

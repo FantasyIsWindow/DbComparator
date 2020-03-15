@@ -11,17 +11,15 @@ using System.Linq;
 
 namespace DbComparator.App.ViewModels
 {
-    public class ShowDbInfoViewModel : ModelBase
+    public class GeneralDbInfoViewModel : ModelBase, IGeneralDbInfoVM
     {
         public event EventHandler MessageHandler;
 
-        private CollectionEqualizer _collectionEqualizer;
+        private ICollectionEqualizer _collectionEqualizer;
 
-        private FieldsEqualizer _fieldsEqualizer;
+        private IFieldsEqualizer _fieldsEqualizer;
 
-        private AutoComparator _autoComparator;
-
-
+        private IAutoComparator _autoComparator;
 
         private IRepository _primaryDbRepository;
 
@@ -124,16 +122,14 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _rightCompared, value, "RightCompared");
         }
 
-        public ShowDbInfoViewModel()
+        public GeneralDbInfoViewModel(ICollectionEqualizer collectionEqualizer, IFieldsEqualizer fieldsEqualizer, IAutoComparator autoComparator)
         {
             _generalInfoDbLeft = new ObservableCollection<GeneralDbInfo>();
             _generalInfoDbRight = new ObservableCollection<GeneralDbInfo>();
-            _collectionEqualizer = new CollectionEqualizer();
-            _fieldsEqualizer = new FieldsEqualizer();
-            _autoComparator = new AutoComparator();
+            _collectionEqualizer = collectionEqualizer;
+            _fieldsEqualizer = fieldsEqualizer;
+            _autoComparator = autoComparator;
         }
-
-
 
 
         private RellayCommand _backCommand;
@@ -192,14 +188,16 @@ namespace DbComparator.App.ViewModels
             get
             {
                 return _autoCompareCommand ??
-                    (_autoCompareCommand = new RellayCommand(async obj =>
+                    (_autoCompareCommand = new RellayCommand(obj =>
                     {
                         if (CheckingDbSelection())
                         {
-                            var result = await _autoComparator.CompareAsync(_primaryDbRepository, _secondaryDbRepository);
+                            var result = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
                             SendMessage(result);
                         }
-                    }));
+                    },
+                        (obj) => CheckingDbSelection()
+                    ));
             }
         }
 
@@ -283,7 +281,7 @@ namespace DbComparator.App.ViewModels
             return null;
         }
 
-        public GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, string dbName)
+        private GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, string dbName)
         {
             var tempTables = (from t in tables
                               select new Property()

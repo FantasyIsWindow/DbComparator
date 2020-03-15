@@ -8,7 +8,6 @@ namespace DbComparator.App.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
         }
 
         private void Close_Command(object sender, RoutedEventArgs e) =>

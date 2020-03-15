@@ -58,7 +58,7 @@
             </i:Interaction.Triggers>
         </ComboBox>
 
-        <Views:ShowDbInfoView Grid.Row="1" 
+        <Views:GeneralDbInfoView Grid.Row="1" 
                               Grid.RowSpan="3" 
                               Grid.Column="2" 
                               DataContext="{Binding InfoViewModel}"/>
@@ -99,11 +99,11 @@
             <ContentPresenter Content="{Binding CurrentPageContent}" 
                               x:Name="presenter">
                 <ContentPresenter.Resources>
-                    <DataTemplate DataType="{x:Type ViewModels:AddNewDbInfoViewModel}">
+                    <DataTemplate DataType="{x:Type ViewModels:DbInfoManagerViewModel}">
                         <Views:AddNewDbInfoControl/>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type ViewModels:ShowMessageViewModel}">
-                        <Views:ShowMessageView/>
+                    <DataTemplate DataType="{x:Type ViewModels:MessagerViewModel}">
+                        <Views:MessagerView/>
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>

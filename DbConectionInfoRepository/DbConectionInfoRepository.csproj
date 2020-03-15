@@ -53,6 +53,7 @@
     <Compile Include="Enums\IsReference.cs" />
     <Compile Include="Models\DbInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IInfoDbRepository.cs" />
     <Compile Include="Repositories\InfoDbConnection.cs" />
     <Compile Include="Repositories\DbRepository.cs" />
   </ItemGroup>

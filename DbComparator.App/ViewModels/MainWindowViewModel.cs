@@ -15,9 +15,15 @@ namespace DbComparator.App.ViewModels
 {
     public class MainWindowViewModel : ModelBase
     {
-        private InfoDbConnection _connectionDb;
+        private IInfoDbRepository _connectionDb;
 
         private IRepository _dbRepository;
+
+        private IGeneralDbInfoVM _infoViewModel; 
+
+        private IMessagerVM _showMessage;
+
+        private IDbInfoManagerVM _addNewDb;
 
         private object _currentPageContent; 
 
@@ -33,14 +39,7 @@ namespace DbComparator.App.ViewModels
 
         private ObservableCollection<DbInfo> _referenceInfoDbs; 
 
-        private ShowDbInfoViewModel _infoViewModel; 
-
-        private ShowMessageViewModel _showMessage;
-
-        private AddNewDbInfoViewModel _addNewDb;
-
-
-        public ShowDbInfoViewModel InfoViewModel
+        public IGeneralDbInfoVM InfoViewModel
         {
             get => _infoViewModel;
             set => SetProperty(ref _infoViewModel, value, "InfoViewModel");
@@ -89,22 +88,21 @@ namespace DbComparator.App.ViewModels
         }
 
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoManagerVM dbInfoManager)
         {
-            _connectionDb = new InfoDbConnection();
+            _connectionDb = connectionDb;
 
             _dbTypes = new ObservableCollection<string>(_connectionDb.GetAllTypes());
-
             _referenceInfoDbs = new ObservableCollection<DbInfo>();
             _notReferenceInfoDbs = new ObservableCollection<DbInfo>();
 
-            _infoViewModel = new ShowDbInfoViewModel();
+            _infoViewModel = generalDbInfo;
             _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
 
-            _showMessage = new ShowMessageViewModel();
+            _showMessage = messager;
             _showMessage.CloseHandler += (() => { CurrentPageContent = null; });
 
-            _addNewDb = new AddNewDbInfoViewModel(new InfoDbConnection());
+            _addNewDb = dbInfoManager;
             _addNewDb.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
@@ -133,7 +131,7 @@ namespace DbComparator.App.ViewModels
                     (_addNewDbInfoCommand = new RellayCommand(obj =>
                     {
                         var reference = obj as string;
-                        _addNewDb.ShowMessage(OpenStatus.Add, reference);
+                        _addNewDb.ShowManagerWindow(OpenStatus.Add, reference);
                         CurrentPageContent = _addNewDb;
                     }));
             }
@@ -218,7 +216,7 @@ namespace DbComparator.App.ViewModels
         {
             try
             {
-                _addNewDb.ShowMessage(OpenStatus.Update, null, dbInfo);
+                _addNewDb.ShowManagerWindow(OpenStatus.Update, null, dbInfo);
                 CurrentPageContent = _addNewDb;
             }
             catch (Exception ex)

@@ -166,11 +166,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ViewControls\ShowDbInfoView.xaml">
+    <Page Include="Views\ViewControls\GeneralDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ViewControls\ShowMessageView.xaml">
+    <Page Include="Views\ViewControls\MessagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,6 +188,7 @@
     <Compile Include="Infrastructure\Converters\TextControlVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TreeColorConverter.cs" />
     <Compile Include="Infrastructure\Converters\ViewsVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\Delegates\NotifyDelegate.cs" />
     <Compile Include="Infrastructure\Enums\MbShowDialog.cs" />
     <Compile Include="Infrastructure\Enums\OpenStatus.cs" />
     <Compile Include="Infrastructure\Enums\SizingAction.cs" />
@@ -204,12 +205,18 @@
     <Compile Include="Services\AutoComparator.cs" />
     <Compile Include="Services\CollectionEqualizer.cs" />
     <Compile Include="Services\FieldsEqualizer.cs" />
+    <Compile Include="Services\IAutoComparator.cs" />
+    <Compile Include="Services\ICollectionEqualizer.cs" />
+    <Compile Include="Services\IFieldsEqualizer.cs" />
     <Compile Include="Services\MessageEventArgs.cs" />
-    <Compile Include="ViewModels\AddNewDbInfoViewModel.cs" />
+    <Compile Include="ViewModels\DbInfoManagerViewModel.cs" />
+    <Compile Include="ViewModels\IDbInfoManagerVM.cs" />
+    <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
+    <Compile Include="ViewModels\IMessageVM.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ShowMessageViewModel.cs" />
+    <Compile Include="ViewModels\MessagerViewModel.cs" />
     <Compile Include="ViewModels\ModelBase.cs" />
-    <Compile Include="ViewModels\ShowDbInfoViewModel.cs" />
+    <Compile Include="ViewModels\GeneralDbInfoViewModel.cs" />
     <Compile Include="Views\CustomControls\ColorDataGridControl.xaml.cs">
       <DependentUpon>ColorDataGridControl.xaml</DependentUpon>
     </Compile>
@@ -225,11 +232,11 @@
     <Compile Include="Views\ViewControls\AddNewDbInfoControl.xaml.cs">
       <DependentUpon>AddNewDbInfoControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewControls\ShowDbInfoView.xaml.cs">
-      <DependentUpon>ShowDbInfoView.xaml</DependentUpon>
+    <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
+      <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewControls\ShowMessageView.xaml.cs">
-      <DependentUpon>ShowMessageView.xaml</DependentUpon>
+    <Compile Include="Views\ViewControls\MessagerView.xaml.cs">
+      <DependentUpon>MessagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

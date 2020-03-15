@@ -1,12 +1,13 @@
 ﻿using DbComparator.App.Infrastructure.Commands;
+using DbComparator.App.Infrastructure.Delegates;
 using DbComparator.App.Infrastructure.Enums;
 
 namespace DbComparator.App.ViewModels
 {
-    public class ShowMessageViewModel : ModelBase
+    public class MessagerViewModel : ModelBase, IMessagerVM
     {
-        public delegate void NotifyDelegate();
         public event NotifyDelegate OkHandler;
+
         public event NotifyDelegate CloseHandler;
 
         private string _title;

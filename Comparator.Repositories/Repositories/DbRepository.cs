@@ -26,7 +26,6 @@ namespace Comparator.Repositories.Repositories
                     connector.ConnectionString = _connectionString;
                     connector.Open();
                     var result = connector.Query<T>(query);
-                    var qwe = connector.Query(query);
                     return result;
                 }
             }

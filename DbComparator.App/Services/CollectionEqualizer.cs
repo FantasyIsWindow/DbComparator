@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DbComparator.App.Services
 {
-    public class CollectionEqualizer
+    public class CollectionEqualizer : ICollectionEqualizer
     {
         private List<string> _generalTemplate;
 
