@@ -46,7 +46,6 @@
                   Grid.Column="1"
                   Grid.ColumnSpan="2"
                   Margin="5"
-                  IsEditable="True"
                   Style="{StaticResource comboBoxStyle}"
                   ItemsSource="{Binding DbTypes}" Text="{Binding DbInfoModel.DbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
         </ComboBox>

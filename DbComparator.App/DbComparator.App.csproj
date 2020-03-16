@@ -162,6 +162,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ViewControls\LoadView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ViewControls\NewDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +218,7 @@
     <Compile Include="ViewModels\IDbInfoManagerVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
     <Compile Include="ViewModels\IMessageVM.cs" />
+    <Compile Include="ViewModels\LoadViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MessagerViewModel.cs" />
     <Compile Include="ViewModels\ModelBase.cs" />
@@ -229,6 +234,9 @@
     </Compile>
     <Compile Include="Views\CustomControls\DbInfoReceiverControl.xaml.cs">
       <DependentUpon>DbInfoReceiverControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewControls\LoadView.xaml.cs">
+      <DependentUpon>LoadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\NewDbInfoView.xaml.cs">
       <DependentUpon>NewDbInfoView.xaml</DependentUpon>

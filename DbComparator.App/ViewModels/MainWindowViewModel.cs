@@ -19,25 +19,26 @@ namespace DbComparator.App.ViewModels
 
         private IRepository _dbRepository;
 
-        private IGeneralDbInfoVM _infoViewModel; 
+        private IGeneralDbInfoVM _infoViewModel;
 
         private IMessagerVM _showMessage;
 
         private IDbInfoManagerVM _addNewDb;
 
-        private object _currentPageContent; 
+        private object _currentPageContent;
 
-        private ObservableCollection<string> _dbTypes; 
+        private ObservableCollection<string> _dbTypes;
 
-        private string _selectedDbType; 
+        private string _selectedDbType;
 
-        private DbInfo _selectedReferenceModel; 
+        private DbInfo _selectedReferenceModel;
 
-        private DbInfo _selectedNotReferenceModel; 
+        private DbInfo _selectedNotReferenceModel;
 
-        private ObservableCollection<DbInfo> _notReferenceInfoDbs; 
+        private ObservableCollection<DbInfo> _notReferenceInfoDbs;
 
-        private ObservableCollection<DbInfo> _referenceInfoDbs; 
+        private ObservableCollection<DbInfo> _referenceInfoDbs;
+
 
         public IGeneralDbInfoVM InfoViewModel
         {
@@ -54,7 +55,7 @@ namespace DbComparator.App.ViewModels
         public ObservableCollection<string> DbTypes
         {
             get => _dbTypes;
-            set =>_dbTypes = value;
+            set => _dbTypes = value;
         }
 
         public string SelectedDbType
@@ -78,7 +79,7 @@ namespace DbComparator.App.ViewModels
         public ObservableCollection<DbInfo> NotReferenceInfoDbs
         {
             get => _notReferenceInfoDbs;
-            set =>_notReferenceInfoDbs = value;
+            set => _notReferenceInfoDbs = value;
         }
 
         public ObservableCollection<DbInfo> ReferenceInfoDbs
@@ -107,7 +108,6 @@ namespace DbComparator.App.ViewModels
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
         }
-
 
 
         private RellayCommand _addNewDbInfoCommand;
@@ -145,7 +145,7 @@ namespace DbComparator.App.ViewModels
                     (_updateNotReferenceRecordCommand = new RellayCommand(obj =>
                     {
                         UpdateRecord(SelectedNotReferenceModel.DataBase);
-                    }, 
+                    },
                         (obj) => obj != null ? SelectedNotReferenceModel != null && (bool)obj : false
                     ));
             }
@@ -192,7 +192,7 @@ namespace DbComparator.App.ViewModels
                     ));
             }
         }
-                                 
+
         public RellayCommand ChoiseDbTypeCommand
         {
             get
@@ -209,7 +209,7 @@ namespace DbComparator.App.ViewModels
         private void UpdateTypes()
         {
             ChoiseType();
-            CurrentPageContent = null;            
+            CurrentPageContent = null;
         }
 
         private void UpdateRecord(DbInfoModel dbInfo)
@@ -230,7 +230,7 @@ namespace DbComparator.App.ViewModels
             ShowMessage("Warning", "Are you Sure?", MbShowDialog.OkCancelState);
             _showMessage.OkHandler += (() => { RemoveRecord(model); });
         }
-                       
+
         private void RemoveRecord(DbInfoModel dbInfo)
         {
             InfoDbConnection _repository = new InfoDbConnection();
@@ -250,7 +250,7 @@ namespace DbComparator.App.ViewModels
             switch (SelectedDbType)
             {
                 case "Microsoft Sql": { return new MicrosoftDb(); }
-                case "SyBase":        { return new SyBaseDb();    }
+                case "SyBase": { return new SyBaseDb(); }
             }
             return null;
         }
@@ -264,34 +264,31 @@ namespace DbComparator.App.ViewModels
 
         private async void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
-            try
+            CurrentPageContent = new LoadViewModel();
+
+            foreach (var item in models)
             {
-                foreach (var item in models)
+                _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
+                var conn = await _dbRepository.IsConnectionAsync();
+                DbInfo db = new DbInfo()
                 {
-                    _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
-                    var conn = await _dbRepository.IsConnectionAsync();
-                    DbInfo db = new DbInfo()
-                    {
-                        DataBase = item,
-                        IsConnect = conn
-                    };
-                    target.Add(db);
-                }
-                if (target.Count != 0)
-                {
-                    target.Add(new DbInfo() { DataBase = null });
-                }
+                    DataBase = item,
+                    IsConnect = conn
+                };
+                target.Add(db);
             }
-            catch (Exception ex)
+            if (target.Count >= 0)
             {
-                ShowMessage("Warning", ex.Message, MbShowDialog.OkState);
+                target.Add(new DbInfo() { DataBase = null });
             }
+
+            CurrentPageContent = null;
         }
 
         private void GetMessage(object sender, EventArgs e)
         {
             var message = (MessageEventArgs)e;
-            ShowMessage("Warning", message.Message, MbShowDialog.OkState);           
+            ShowMessage("Warning", message.Message, MbShowDialog.OkState);
         }
 
         private void ShowMessage(string title, string message, MbShowDialog state)
