@@ -23,7 +23,7 @@ namespace DbComparator.App.ViewModels
 
         private IMessagerVM _showMessage;
 
-        private IDbInfoManagerVM _addNewDb;
+        private IDbInfoCreatorVM _addNewDb;
 
         private object _currentPageContent;
 
@@ -39,6 +39,8 @@ namespace DbComparator.App.ViewModels
 
         private ObservableCollection<DbInfo> _referenceInfoDbs;
 
+        private bool _loadViewVisibility;
+                     
 
         public IGeneralDbInfoVM InfoViewModel
         {
@@ -88,8 +90,13 @@ namespace DbComparator.App.ViewModels
             set => _referenceInfoDbs = value;
         }
 
+        public bool LoadViewVisibility
+        {
+            get => _loadViewVisibility;
+            set => SetProperty(ref _loadViewVisibility, value, "LoadViewVisibility");
+        }
 
-        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoManagerVM dbInfoManager)
+        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoCreatorVM dbInfoManager)
         {
             _connectionDb = connectionDb;
 
@@ -264,7 +271,7 @@ namespace DbComparator.App.ViewModels
 
         private async void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
-            CurrentPageContent = new LoadViewModel();
+            LoadViewVisibility = true;
 
             foreach (var item in models)
             {
@@ -282,7 +289,7 @@ namespace DbComparator.App.ViewModels
                 target.Add(new DbInfo() { DataBase = null });
             }
 
-            CurrentPageContent = null;
+            LoadViewVisibility = false;
         }
 
         private void GetMessage(object sender, EventArgs e)

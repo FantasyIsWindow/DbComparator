@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace DbComparator.App.ViewModels
 { 
-    public class DbInfoManagerViewModel : ModelBase, IDbInfoManagerVM
+    public class DbInfoCreatorViewModel : ModelBase, IDbInfoCreatorVM
     {
         public event NotifyDelegate OkHandler;
 
@@ -71,7 +71,7 @@ namespace DbComparator.App.ViewModels
         }
 
 
-        public DbInfoManagerViewModel(IInfoDbRepository repository)
+        public DbInfoCreatorViewModel(IInfoDbRepository repository)
         {
             _repository = repository;
             _referencesType = new string[] { "Yes", "No" };

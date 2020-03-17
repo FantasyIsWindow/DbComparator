@@ -166,7 +166,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ViewControls\NewDbInfoView.xaml">
+    <Page Include="Views\ViewControls\DbInfoCreatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,9 +187,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Commands\RellayCommand.cs" />
-    <Compile Include="Infrastructure\Converters\EnabledButtonMultiConverter.cs" />
+    <Compile Include="Infrastructure\Converters\EnabledBtnMultiConverter.cs" />
+    <Compile Include="Infrastructure\Converters\LoadViewVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\MessageBoxVisibilityConverter.cs" />
-    <Compile Include="Infrastructure\Converters\MultyVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\Converters\BackBtnMultiVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TextControlVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TreeColorConverter.cs" />
     <Compile Include="Infrastructure\Converters\ViewsVisibilityConverter.cs" />
@@ -214,11 +215,10 @@
     <Compile Include="Services\ICollectionEqualizer.cs" />
     <Compile Include="Services\IFieldsEqualizer.cs" />
     <Compile Include="Services\MessageEventArgs.cs" />
-    <Compile Include="ViewModels\DbInfoManagerViewModel.cs" />
-    <Compile Include="ViewModels\IDbInfoManagerVM.cs" />
+    <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
+    <Compile Include="ViewModels\IDbInfoCreatorVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
     <Compile Include="ViewModels\IMessageVM.cs" />
-    <Compile Include="ViewModels\LoadViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MessagerViewModel.cs" />
     <Compile Include="ViewModels\ModelBase.cs" />
@@ -238,8 +238,8 @@
     <Compile Include="Views\ViewControls\LoadView.xaml.cs">
       <DependentUpon>LoadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewControls\NewDbInfoView.xaml.cs">
-      <DependentUpon>NewDbInfoView.xaml</DependentUpon>
+    <Compile Include="Views\ViewControls\DbInfoCreatorView.xaml.cs">
+      <DependentUpon>DbInfoCreatorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
       <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>

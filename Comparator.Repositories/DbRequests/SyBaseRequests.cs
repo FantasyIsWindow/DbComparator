@@ -66,3 +66,29 @@
             $"WHERE SysTable.TABLE_NAME = '{tableName}'";
     }
 }
+
+
+// SYSTRIGGER 
+// select * from sysobjects where deltrig=object_id('таблица')
+// select * from SYS.SYSTRIGGERS where owner='root' // полная инфа о тригерах
+// select * from SYS.SYSTRIGGER // другой вариант
+
+/*
+
+ CREATE TRIGGER TR_check
+BEFORE DELETE
+ON Customers
+REFERENCING OLD AS current_Customers
+FOR EACH ROW WHEN(current_Customers.Age IS NULL )
+BEGIN
+RAISERROR 30001 'You cannot delete an employee who has not been fired';
+END;
+
+ */
+
+
+/* - Список хранимых процедур
+ select so.name, text
+from sysobjects so, syscomments sc
+
+ */

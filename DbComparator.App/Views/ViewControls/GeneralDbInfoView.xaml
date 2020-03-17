@@ -5,11 +5,11 @@
              xmlns:Controls="clr-namespace:DbComparator.App.Views.CustomControls"
              xmlns:Converters="clr-namespace:DbComparator.App.Infrastructure.Converters">
     <UserControl.Resources>
-        <Converters:ViewsVisibilityConverter x:Key="visibilityConverter"/>
-        <Converters:TextControlVisibilityConverter x:Key="textBoxVisibilityConverter"/>
-        <Converters:MultyVisibilityConverter x:Key="multipleVisibilityConverter"/>
+        <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
+        <Converters:TextControlVisibilityConverter x:Key="textControlVisibilityConverter"/>
+        <Converters:BackBtnMultiVisibilityConverter x:Key="backBtnMultiVisibilityConverter"/>
         <Converters:TreeColorConverter x:Key="treeColorConverter"/>
-        <Converters:EnabledButtonMultiConverter x:Key="buttonEnableConverter"/>
+        <Converters:EnabledBtnMultiConverter x:Key="enabledBtnMultiConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,7 +28,7 @@
                 Style="{StaticResource autoCompareButtonStyle}"
                 Command="{Binding AutoCompareCommand}">
             <Button.IsEnabled>
-                <MultiBinding Converter="{StaticResource buttonEnableConverter}">
+                <MultiBinding Converter="{StaticResource enabledBtnMultiConverter}">
                     <Binding ElementName="leftDbInfoReceiver" Path="DataContext"/>
                     <Binding ElementName="rightDbInfoReceiver" Path="DataContext"/>
                 </MultiBinding>
@@ -79,7 +79,7 @@
                 </TreeView>
 
                 <Controls:ColorDataGridControl Grid.Row="1" 
-                                               Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource visibilityConverter}}" 
+                                               Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="leftDataGrid"
                                                FieldsCollection="{Binding LeftDbFieldsInfo}"
                                                FieldsToCompareCollection="{Binding RightDbFieldsInfo}" 
@@ -87,7 +87,7 @@
                                                HorizontalScrollOffset="{Binding ElementName=rightDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
-                                              Visibility="{Binding ElementName=leftTextBox, Path=MainText, Converter={StaticResource textBoxVisibilityConverter}}" 
+                                              Visibility="{Binding ElementName=leftTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
                                               MainText="{Binding LeftDbProcedureSqript}" 
                                               CompareText="{Binding RightCompared}" 
                                               x:Name="leftTextBox"/>
@@ -139,7 +139,7 @@
                 </TreeView>
 
                 <Controls:ColorDataGridControl Grid.Row="1" 
-                                               Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource visibilityConverter}}" 
+                                               Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="rightDataGrid" 
                                                FieldsCollection="{Binding RightDbFieldsInfo}" 
                                                FieldsToCompareCollection="{Binding LeftDbFieldsInfo}" 
@@ -147,7 +147,7 @@
                                                HorizontalScrollOffset="{Binding ElementName=leftDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
-                                              Visibility="{Binding ElementName=rightTextBox, Path=MainText, Converter={StaticResource textBoxVisibilityConverter}}" 
+                                              Visibility="{Binding ElementName=rightTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
                                               MainText="{Binding RightDbProcedureSqript}" 
                                               CompareText="{Binding LeftCompared}" 
                                               x:Name="rightTextBox"/>
@@ -163,7 +163,7 @@
                 Style="{StaticResource compareButton}"
                 Command="{Binding CompareCommand}">
             <Button.IsEnabled>
-                <MultiBinding Converter="{StaticResource buttonEnableConverter}">
+                <MultiBinding Converter="{StaticResource enabledBtnMultiConverter}">
                     <Binding ElementName="leftDbInfoReceiver" Path="DataContext"/>
                     <Binding ElementName="rightDbInfoReceiver" Path="DataContext"/>
                 </MultiBinding>
@@ -178,7 +178,7 @@
                 Style="{StaticResource compareButton}"
                 Command="{Binding BackCommand}">
             <Button.Visibility>
-                <MultiBinding Converter="{StaticResource multipleVisibilityConverter}">
+                <MultiBinding Converter="{StaticResource backBtnMultiVisibilityConverter}">
                     <Binding ElementName="rightDataGrid" Path="Visibility"/>
                     <Binding ElementName="rightTextBox" Path="Visibility"/>
                     <Binding ElementName="leftDataGrid" Path="Visibility"/>

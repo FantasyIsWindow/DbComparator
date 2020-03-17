@@ -17,6 +17,7 @@
         x:Name="window">
     <Window.Resources>
         <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
+        <Converters:LoadViewVisibilityConverter x:Key="loadViewVisibilityConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -99,18 +100,20 @@
             <ContentPresenter Content="{Binding CurrentPageContent}" 
                               x:Name="presenter">
                 <ContentPresenter.Resources>
-                    <DataTemplate DataType="{x:Type ViewModels:DbInfoManagerViewModel}">
-                        <Views:NewDbInfoView/>
+                    <DataTemplate DataType="{x:Type ViewModels:DbInfoCreatorViewModel}">
+                        <Views:DbInfoCreatorView/>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type ViewModels:MessagerViewModel}">
                         <Views:MessagerView/>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type ViewModels:LoadViewModel}">
-                        <Views:LoadView HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>
         </Border>
 
+        <Views:LoadView Grid.Row="0" 
+                        Grid.RowSpan="5" 
+                        Grid.ColumnSpan="4" 
+                        Background="#3F000000"
+                        Visibility="{Binding LoadViewVisibility, Converter={StaticResource loadViewVisibilityConverter}}"/>
     </Grid>
 </Window>

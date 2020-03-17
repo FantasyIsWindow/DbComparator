@@ -15,7 +15,7 @@ namespace DbComparator.App
             kernel.Bind<IInfoDbRepository>().To<InfoDbConnection>();
 
             kernel.Bind<IMessagerVM>().To<MessagerViewModel>();
-            kernel.Bind<IDbInfoManagerVM>().To<DbInfoManagerViewModel>();
+            kernel.Bind<IDbInfoCreatorVM>().To<DbInfoCreatorViewModel>();
             kernel.Bind<IGeneralDbInfoVM>().To<GeneralDbInfoViewModel>();
             kernel.Bind<ICollectionEqualizer>().To<CollectionEqualizer>();
             kernel.Bind<IFieldsEqualizer>().To<FieldsEqualizer>();

@@ -5,7 +5,7 @@ using System;
 
 namespace DbComparator.App.ViewModels
 {
-    public interface IDbInfoManagerVM
+    public interface IDbInfoCreatorVM
     {
         event NotifyDelegate OkHandler;
 

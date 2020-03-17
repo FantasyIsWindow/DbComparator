@@ -1,25 +1,24 @@
-﻿using System;
+﻿using DbComparator.App.Models;
+using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
 namespace DbComparator.App.Infrastructure.Converters
 {
-    class MultyVisibilityConverter : IMultiValueConverter
+    public class EnabledBtnMultiConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             foreach (var item in values)
             {
-                if (item is Visibility vis)
+                var db = item as DbInfo;
+
+                if (db == null || !db.IsConnect)
                 {
-                    if (vis == Visibility.Visible)
-                    {
-                        return Visibility.Visible;
-                    }
+                    return false;
                 }
             }
-            return Visibility.Collapsed;
+            return true;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

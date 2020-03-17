@@ -18,3 +18,8 @@
             $"EXEC sp_helptext {procedureName}";
     }
 }
+
+// EXEC sp_helptext Customers_Add_Update - скрипт 
+// EXEC sp_depends Customers_Add_Update - инфа
+// EXEC sp_helptrigger Customers - все триггеры в таблице
+
