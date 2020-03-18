@@ -162,15 +162,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CustomControls\SinhronizedTreeViewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewControls\GeneralDbInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ViewControls\LoadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ViewControls\DbInfoCreatorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ViewControls\GeneralDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -202,6 +206,7 @@
     <Compile Include="Infrastructure\Extensions\ObjectExtension.cs" />
     <Compile Include="Infrastructure\Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\WindowExtensions.cs" />
+    <Compile Include="Models\CompareResult.cs" />
     <Compile Include="Models\DbInfo.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\GeneralDbInfo.cs" />
@@ -218,7 +223,7 @@
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
     <Compile Include="ViewModels\IDbInfoCreatorVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
-    <Compile Include="ViewModels\IMessageVM.cs" />
+    <Compile Include="ViewModels\IMessagerVM.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MessagerViewModel.cs" />
     <Compile Include="ViewModels\ModelBase.cs" />
@@ -235,14 +240,17 @@
     <Compile Include="Views\CustomControls\DbInfoReceiverControl.xaml.cs">
       <DependentUpon>DbInfoReceiverControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CustomControls\SinhronizedTreeViewControl.xaml.cs">
+      <DependentUpon>SinhronizedTreeViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
+      <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewControls\LoadView.xaml.cs">
       <DependentUpon>LoadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\DbInfoCreatorView.xaml.cs">
       <DependentUpon>DbInfoCreatorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
-      <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\MessagerView.xaml.cs">
       <DependentUpon>MessagerView.xaml</DependentUpon>

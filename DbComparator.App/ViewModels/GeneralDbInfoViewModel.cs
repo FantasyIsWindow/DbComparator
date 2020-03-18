@@ -1,4 +1,4 @@
-﻿using Comparator.Repositories.Models.DbModels;
+﻿using Comparator.Repositories.Models.DtoModels;
 using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Extensions;
@@ -13,7 +13,11 @@ namespace DbComparator.App.ViewModels
 {
     public class GeneralDbInfoViewModel : ModelBase, IGeneralDbInfoVM
     {
+        public Action<Property> GetAction => ((x) => ItemSelection(x));
+        
         public event EventHandler MessageHandler;
+
+
 
         private ICollectionEqualizer _collectionEqualizer;
 
@@ -33,9 +37,9 @@ namespace DbComparator.App.ViewModels
 
         private ObservableCollection<GeneralDbInfo> _generalInfoDbRight;
 
-        private ObservableCollection<FullField> _leftDbFieldsInfo;
+        private ObservableCollection<DtoFullField> _leftDbFieldsInfo;
 
-        private ObservableCollection<FullField> _rightDbFieldsInfo;
+        private ObservableCollection<DtoFullField> _rightDbFieldsInfo;
 
         private string _leftDbProcedureSqript;
 
@@ -86,13 +90,13 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _generalInfoDbRight, value, "GeneralInfoDbRight");
         }
 
-        public ObservableCollection<FullField> LeftDbFieldsInfo
+        public ObservableCollection<DtoFullField> LeftDbFieldsInfo
         {
             get => _leftDbFieldsInfo;
             set => SetProperty(ref _leftDbFieldsInfo, value, "LeftDbFieldsInfo");
         }
 
-        public ObservableCollection<FullField> RightDbFieldsInfo
+        public ObservableCollection<DtoFullField> RightDbFieldsInfo
         {
             get => _rightDbFieldsInfo;
             set => SetProperty(ref _rightDbFieldsInfo, value, "RightDbFieldsInfo");
@@ -132,9 +136,8 @@ namespace DbComparator.App.ViewModels
         }
 
 
-        private RellayCommand _backCommand;
 
-        private RellayCommand _itemSelectCommand;
+        private RellayCommand _backCommand;
 
         private RellayCommand _autoCompareCommand;
 
@@ -158,29 +161,6 @@ namespace DbComparator.App.ViewModels
             }
         }
 
-        public RellayCommand ItemSelectCommand
-        {
-            get
-            {
-                return _itemSelectCommand ??
-                    (_itemSelectCommand = new RellayCommand(obj =>
-                    {
-                        if (obj is Property property)
-                        {
-                            if (property.PropertyType == "Table")
-                            {
-                                FetchTableFields(property.Name);
-                            }
-                            else if (property.PropertyType == "Procedure")
-                            {
-                                FetchProcedure(property.Name);
-                            }
-                        }
-
-                    }));
-            }
-        }
-
         public RellayCommand AutoCompareCommand
         {
             get
@@ -191,6 +171,22 @@ namespace DbComparator.App.ViewModels
                         var result = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
                         SendMessage(result);
                     }));
+            }
+        }
+
+        public RellayCommand CompareCommand =>
+            _compareCommand = new RellayCommand(CompareGeneralDbInfo);
+
+        private void ItemSelection(Property property)
+        {
+            if (property != null)
+            {
+                switch (property.PropertyType)
+                {
+                    case "Table": { FetchTableFields(property.Name); break; }
+                    case "Procedure": { FetchSqript(property.Name); break; }
+                    case "Trigger": { FetchSqript(property.Name); break; }
+                }
             }
         }
 
@@ -206,9 +202,6 @@ namespace DbComparator.App.ViewModels
             GeneralInfoDbRight.ClearIfNotEmpty();
         }
 
-        public RellayCommand CompareCommand =>
-            _compareCommand = new RellayCommand(CompareGeneralDbInfo);
-
         private void CompareGeneralDbInfo(object obj)
         {
             var leftDbTables = _primaryDbRepository.GetTables().ToList();
@@ -219,13 +212,17 @@ namespace DbComparator.App.ViewModels
             var rightDbProcedures = _secondaryDbRepository.GetProcedures().ToList();
             _collectionEqualizer.CollectionsEquation(leftDbProcedures, rightDbProcedures);
 
-            FillColection(_generalInfoDbLeft, leftDbTables, leftDbProcedures, _leftDbInfoReceiver);
-            FillColection(_generalInfoDbRight, rightDbTables, rightDbProcedures, _rightDbInfoReceiver);
+            var leftDbTriggers = _primaryDbRepository.GetTriggers().ToList();
+            var rightDbTriggers = _secondaryDbRepository.GetTriggers().ToList();
+            _collectionEqualizer.CollectionsEquation(leftDbTriggers, rightDbTriggers);
+
+            FillColection(_generalInfoDbLeft, leftDbTables, leftDbProcedures, leftDbTriggers, _leftDbInfoReceiver);
+            FillColection(_generalInfoDbRight, rightDbTables, rightDbProcedures, rightDbTriggers, _rightDbInfoReceiver);
         }
 
-        private void FillColection(ObservableCollection<GeneralDbInfo> collection, List<string> tables, List<string> procedures, DbInfo db)
+        private void FillColection(ObservableCollection<GeneralDbInfo> collection, List<string> tables, List<string> procedures, List<string> triggers, DbInfo db)
         {
-            var result = DesignOfCollection(tables, procedures, db.DataBase.DbName);
+            var result = DesignOfCollection(tables, procedures, triggers, db.DataBase.DbName);
             collection.ClearIfNotEmpty();
             collection.Add(result);
         }
@@ -238,20 +235,20 @@ namespace DbComparator.App.ViewModels
             _fieldsEqualizer.CollectionsEquation(LeftDbFieldsInfo, RightDbFieldsInfo);
         }
 
-        private ObservableCollection<FullField> GetFieldsInfo(IRepository repository, string tableName) =>
+        private ObservableCollection<DtoFullField> GetFieldsInfo(IRepository repository, string tableName) =>
             tableName != "null" ? repository.GetFieldsInfo(tableName).ToObservableCollection() : null;
 
-        private void FetchProcedure(string name)
+        private void FetchSqript(string name)
         {
-            LeftCompared = GetProcedureSquript(_primaryDbRepository, name);
-            RightCompared = GetProcedureSquript(_secondaryDbRepository, name);
+            LeftCompared = GetSqript(_primaryDbRepository, name);
+            RightCompared = GetSqript(_secondaryDbRepository, name);
 
             LeftDbProcedureSqript = LeftCompared;
             RightDbProcedureSqript = RightCompared;
         }
 
-        private string GetProcedureSquript(IRepository repository, string procedureName) =>
-            procedureName != "null" ? repository.GetProcedureSqript(procedureName) : null;
+        private string GetSqript(IRepository repository, string procedureName) =>
+            procedureName != "null" ? repository.GetSqript(procedureName) : null;
 
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
@@ -271,21 +268,11 @@ namespace DbComparator.App.ViewModels
             return null;
         }
 
-        private GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, string dbName)
+        private GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, List<string> triggers, string dbName)
         {
-            var tempTables = (from t in tables
-                              select new Property()
-                              {
-                                  Name = t,
-                                  PropertyType = "Table"
-                              }).ToList();
-
-            var tempProcedures = (from p in procedures
-                                  select new Property()
-                                  {
-                                      Name = p,
-                                      PropertyType = "Procedure"
-                                  }).ToList();
+            var tempTables = GetProperties(tables, "Table");
+            var tempProcedures = GetProperties(procedures, "Procedure");
+            var tempTriggers = GetProperties(triggers, "Trigger");
 
             GeneralDbInfo dataBase = new GeneralDbInfo()
             {
@@ -293,19 +280,24 @@ namespace DbComparator.App.ViewModels
                 Entitys = new List<Entity>()
                 {
                     new Entity() { Name = "Tables", Properties = tempTables },
-                    new Entity() { Name = "Procedures", Properties = tempProcedures }
+                    new Entity() { Name = "Procedures", Properties = tempProcedures },
+                    new Entity() { Name = "Triggers", Properties = tempTriggers }
                 }
             };
 
             return dataBase;
         }
 
-        private void SendMessage(string message)
+        private List<Property> GetProperties(List<string> collection, string propertyName) =>
+            (from c in collection select new Property { Name = c, PropertyType = propertyName }).ToList();
+
+
+        private void SendMessage(object package)
         {
             if (MessageHandler != null)
             {
                 MessageEventArgs eventArgs = new MessageEventArgs();
-                eventArgs.Message = message;
+                eventArgs.Message = package;
                 MessageHandler(this, eventArgs);
             }
         }

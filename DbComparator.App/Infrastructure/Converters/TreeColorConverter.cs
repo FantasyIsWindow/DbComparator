@@ -10,7 +10,7 @@ namespace DbComparator.App.Infrastructure.Converters
         {
             if (value is string str)
             {
-                if (str != "Tables" && str != "Procedures")
+                if (str != "Tables" && str != "Procedures" && str != "Triggers")
                 {
                     return str != "null" ? "Green" : "Red";
                 }                

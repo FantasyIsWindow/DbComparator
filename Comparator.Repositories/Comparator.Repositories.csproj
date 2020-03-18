@@ -56,12 +56,12 @@
     <Compile Include="Mappings\MappingProfile.cs" />
     <Compile Include="Models\DbModels\Constraint.cs" />
     <Compile Include="Models\DbModels\Fields.cs" />
-    <Compile Include="Models\DbModels\FullField.cs" />
     <Compile Include="Models\DbModels\Procedure.cs" />
     <Compile Include="Models\DbModels\SyBaseConstaintsModel.cs" />
     <Compile Include="Models\DbModels\SyBaseFieldsModel.cs" />
     <Compile Include="Models\DbModels\Table.cs" />
     <Compile Include="Models\DtoModels\DtoConstraint.cs" />
+    <Compile Include="Models\DtoModels\DtoFullField.cs" />
     <Compile Include="Models\DtoModels\DtoSyBaseConstaintsModel.cs" />
     <Compile Include="Parsers\MicrosoftFieldsInfoParser.cs" />
     <Compile Include="Parsers\ProcedureScriptParser.cs" />

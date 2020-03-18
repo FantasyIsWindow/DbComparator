@@ -1,6 +1,8 @@
 ﻿using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Delegates;
 using DbComparator.App.Infrastructure.Enums;
+using DbComparator.App.Models;
+using System.Collections.Generic;
 
 namespace DbComparator.App.ViewModels
 {
@@ -13,6 +15,8 @@ namespace DbComparator.App.ViewModels
         private string _title;
 
         private string _message;
+
+        private List<CompareResult> _compareResults;
 
         private MbShowDialog _currentState;
 
@@ -27,6 +31,12 @@ namespace DbComparator.App.ViewModels
         {
             get => _message; 
             set => SetProperty(ref _message, value, "Message"); 
+        }     
+        
+        public List<CompareResult> CompareResults
+        {
+            get => _compareResults; 
+            set => SetProperty(ref _compareResults, value, "CompareResults"); 
         }
 
         public MbShowDialog CurrentState
@@ -46,19 +56,32 @@ namespace DbComparator.App.ViewModels
             (
                 _okCommand = new RellayCommand(obj =>
                 {
+                    CompareResults = null;
                     OkHandler?.Invoke();
                     CloseHandler?.Invoke();
                 })
             );
 
-        public RellayCommand CloseCommand =>
-            _closeCommand = new RellayCommand((c) => CloseHandler?.Invoke());  
-        
-        public void ShowMessageBox(string title, string message, MbShowDialog state)
+        public RellayCommand CloseCommand => _closeCommand ??
+            (
+                _closeCommand = new RellayCommand(obj =>
+                {
+                    CloseHandler?.Invoke();
+                    OkHandler = null;
+                })
+            );
+
+
+        public void ShowMessageBox(string title, object package, MbShowDialog state)
         {
             Title = title;
-            Message = message;
             CurrentState = state;
+
+            switch (package)
+            {
+                case string str: Message = str; break;
+                case List<CompareResult> result: CompareResults = result; break;
+            }
         }
     }
 }

@@ -7,23 +7,23 @@ namespace Comparator.Repositories.Parsers
 {
     internal class SyBaseFieldsInfoParser
     {
-        public IEnumerable<FullField> GetFieldsCollection(IEnumerable<SyBaseFieldsModel> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
+        public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<SyBaseFieldsModel> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
         {
-            List<FullField> tempFieldsCollection = FieldsCollectionPreparation(fields);
-            List<FullField> tempConstraints = ConstraintsCollectionPreparation(tempFieldsCollection, constraints);
-            List<FullField> resultFullFieldsCollection = BuildingCollectionOfFields(tempFieldsCollection, tempConstraints);
+            List<DtoFullField> tempFieldsCollection = FieldsCollectionPreparation(fields);
+            List<DtoFullField> tempConstraints = ConstraintsCollectionPreparation(tempFieldsCollection, constraints);
+            List<DtoFullField> resultFullFieldsCollection = BuildingCollectionOfFields(tempFieldsCollection, tempConstraints);
 
             NullValueToEmptyString(resultFullFieldsCollection);
             return resultFullFieldsCollection;
         }
 
-        private List<FullField> FieldsCollectionPreparation(IEnumerable<SyBaseFieldsModel> fields)
+        private List<DtoFullField> FieldsCollectionPreparation(IEnumerable<SyBaseFieldsModel> fields)
         {
-            List<FullField> tempCollection = new List<FullField>();
+            List<DtoFullField> tempCollection = new List<DtoFullField>();
 
             foreach (var item in fields)
             {
-                FullField field = new FullField()
+                DtoFullField field = new DtoFullField()
                 {
                     TypeName = GetType(item.base_type_str),
                     IsNullable = item.nulls,
@@ -37,13 +37,13 @@ namespace Comparator.Repositories.Parsers
             return tempCollection;
         }
 
-        private List<FullField> ConstraintsCollectionPreparation(List<FullField> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
+        private List<DtoFullField> ConstraintsCollectionPreparation(List<DtoFullField> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
         {
-            List<FullField> tempConstraints = new List<FullField>();
+            List<DtoFullField> tempConstraints = new List<DtoFullField>();
 
             foreach (var item in constraints)
             {
-                FullField field = new FullField();
+                DtoFullField field = new DtoFullField();
 
                 if (item.ConstraintType == "Table Constraint")
                 {
@@ -68,13 +68,13 @@ namespace Comparator.Repositories.Parsers
             return tempConstraints;
         }
 
-        private List<FullField> BuildingCollectionOfFields(List<FullField> fields, List<FullField> consts)
+        private List<DtoFullField> BuildingCollectionOfFields(List<DtoFullField> fields, List<DtoFullField> consts)
         {
-            List<FullField> tempFullFieldsCollection = new List<FullField>();
+            List<DtoFullField> tempFullFieldsCollection = new List<DtoFullField>();
 
             foreach (var field in fields)
             {
-                FullField fullField = new FullField()
+                DtoFullField fullField = new DtoFullField()
                 {
                     FieldName = field.FieldName,
                     TypeName = field.TypeName,
@@ -100,7 +100,7 @@ namespace Comparator.Repositories.Parsers
                     }
                     else if (con.FieldName == field.FieldName && flag)
                     {
-                        FullField temp = new FullField()
+                        DtoFullField temp = new DtoFullField()
                         {
                             ConstraintKeys = con.ConstraintKeys,
                             ConstraintName = con.ConstraintName,
@@ -181,7 +181,7 @@ namespace Comparator.Repositories.Parsers
             return null;
         }
 
-        private string GetConstraintField(string constraint, List<FullField> fields)
+        private string GetConstraintField(string constraint, List<DtoFullField> fields)
         {
             if (constraint != null)
             {
@@ -238,7 +238,7 @@ namespace Comparator.Repositories.Parsers
             return null;
         }
 
-        private void NullValueToEmptyString(List<FullField> collection)
+        private void NullValueToEmptyString(List<DtoFullField> collection)
         {
             foreach (var item in collection)
             {

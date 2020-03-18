@@ -30,7 +30,7 @@ namespace Comparator.Repositories.Mappings
                 .ForMember(dest => dest.OnDelete, send => send.MapFrom(d => d.on_delete))
                 .ForMember(dest => dest.OnUpdate, send => send.MapFrom(u => u.on_update))
                 .ForMember(dest => dest.OtherColumns, send => send.MapFrom(o => o.other_columns))
-                .ForMember(dest => dest.OtherTable, send => send.MapFrom(y => y.other_table));
+                .ForMember(dest => dest.OtherTable, send => send.MapFrom(y => y.other_table));            
         }
     }
 }

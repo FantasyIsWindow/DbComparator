@@ -1,11 +1,12 @@
 ﻿using Comparator.Repositories.Models.DbModels;
+using Comparator.Repositories.Models.DtoModels;
 using System.Collections.ObjectModel;
 
 namespace DbComparator.App.Services
 {
     public class FieldsEqualizer : IFieldsEqualizer
     {
-        public void CollectionsEquation(ObservableCollection<FullField> primaryCol, ObservableCollection<FullField> secondaryCol)
+        public void CollectionsEquation(ObservableCollection<DtoFullField> primaryCol, ObservableCollection<DtoFullField> secondaryCol)
         {
             if (primaryCol == null || secondaryCol == null)
             {
@@ -22,13 +23,13 @@ namespace DbComparator.App.Services
             }
         }
 
-        private void EqualizerCollections(ObservableCollection<FullField> primaryCol, ObservableCollection<FullField> secondaryCol)
+        private void EqualizerCollections(ObservableCollection<DtoFullField> primaryCol, ObservableCollection<DtoFullField> secondaryCol)
         {
             int size = primaryCol.Count - secondaryCol.Count;
 
             for (int i = 0; i < size; i++)
             {
-                var field = new FullField()
+                var field = new DtoFullField()
                 {
                     ConstraintKeys = "",
                     ConstraintType = "",

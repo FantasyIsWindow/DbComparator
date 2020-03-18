@@ -11,7 +11,7 @@
         public string GetProceduresRequest(string ownerName) =>
             $"EXEC sp_stored_procedures @sp_owner = '{ownerName}'";
 
-        public string GetProcedureSqriptRequest(string procedureName) =>
+        public string GetSqriptRequest(string procedureName) =>
             $"EXEC sp_helptext '{procedureName}'";
 
         public string GetConstraintsRequest(string tableName) =>
@@ -64,6 +64,9 @@
             $"JOIN \"SYSCONSTRAINT\" SC ON SysTable.object_id = SC.table_object_id " +
             $"LEFT OUTER JOIN \"SYSINDEX\" SIUnique ON SC.ref_object_id = SIUnique.object_id " +
             $"WHERE SysTable.TABLE_NAME = '{tableName}'";
+
+        public string GetTreggersRequest() => 
+            $"Select r.trigger_name from sys.systable as t join sys.systrigger r on r.table_id = t.table_id";
     }
 }
 
@@ -90,5 +93,28 @@ END;
 /* - Список хранимых процедур
  select so.name, text
 from sysobjects so, syscomments sc
+ 
+ */
+
+
+/*
+
+Select user_name(t.creator) as tcreator
+            ,t.table_name
+            ,r.trigger_name
+            ,isnull(r.source, r.trigger_defn)  as t_text
+from sys.systable  as t
+        join sys.systrigger r 
+           on r.table_id = t.table_id
+           
+
+Select r.trigger_name, t.table_name from sys.systable as t join sys.systrigger r on r.table_id = t.table_id where t.table_name = 'Customers'
+
+ */
+
+/*
+
+         public string GetTriggerSqript(string triggerName) =>
+        $"select trigdefn from SYS.SYSTRIGGERS where trigname = '{triggerName}'";
 
  */

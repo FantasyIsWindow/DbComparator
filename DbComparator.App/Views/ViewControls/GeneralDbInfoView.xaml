@@ -1,7 +1,6 @@
 ﻿<UserControl x:Class="DbComparator.App.Views.ViewControls.GeneralDbInfoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:Controls="clr-namespace:DbComparator.App.Views.CustomControls"
              xmlns:Converters="clr-namespace:DbComparator.App.Infrastructure.Converters">
     <UserControl.Resources>
@@ -47,36 +46,11 @@
                                                 Style="{StaticResource dbReceiverStyle}"
                                                 DataContext="{Binding LeftDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TreeView Grid.Row="1" 
-                          ItemsSource="{Binding GeneralInfoDbLeft}" 
-                          x:Name="leftTreeView"
-                          Style="{StaticResource treeViewStyle}">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Entitys}">
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Properties}">
-                                    <TextBlock x:Name="tb" 
-                                               Text="{Binding Name}" 
-                                               Foreground="{Binding ElementName=tb, Path=Text, Converter={StaticResource treeColorConverter}}"/>
-                                </HierarchicalDataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                            <TextBlock Text="{Binding Name}" 
-                                       Foreground="{Binding Color}"/>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectedItemChanged">
-                            <i:InvokeCommandAction Command="{Binding ItemSelectCommand}" 
-                                                   CommandParameter="{Binding SelectedValue, ElementName=leftTreeView}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TreeView>
+                <Controls:SinhronizedTreeViewControl Grid.Row="1" 
+                                                     TVItemsSource="{Binding GeneralInfoDbLeft}"
+                                                     VerticalScrollOffset="{Binding ElementName=rightTreeView, Path=CurrentVerticalScrollOffset}"
+                                                     SetSelectedItem="{Binding GetAction}"
+                                                     x:Name="leftTreeView"/>
 
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
@@ -107,36 +81,13 @@
                                                 x:Name="rightDbInfoReceiver"
                                                 DataContext="{Binding RightDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TreeView Grid.Row="1" 
-                          ItemsSource="{Binding GeneralInfoDbRight}" 
-                          x:Name="rightTreeView"
-                          Style="{StaticResource treeViewStyle}">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Entitys}">
-                            <HierarchicalDataTemplate.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding Properties}">
-                                    <TextBlock x:Name="tb"
-                                               Text="{Binding Name}" 
-                                               Foreground="{Binding ElementName=tb, Path=Text, Converter={StaticResource treeColorConverter}}"/>
-                                </HierarchicalDataTemplate>
-                            </HierarchicalDataTemplate.ItemTemplate>
-                            <TextBlock Text="{Binding Name}" 
-                                       Foreground="{Binding Color}"/>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}">
-                            <Setter Property="TreeViewItem.IsExpanded" Value="True"/>
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectedItemChanged">
-                            <i:InvokeCommandAction Command="{Binding ItemSelectCommand}" 
-                                                   CommandParameter="{Binding SelectedValue, ElementName=rightTreeView}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TreeView>
+
+                <Controls:SinhronizedTreeViewControl Grid.Row="1" 
+                                                     TVItemsSource="{Binding GeneralInfoDbRight}"
+                                                     VerticalScrollOffset="{Binding ElementName=leftTreeView, Path=CurrentVerticalScrollOffset}"
+                                                     SetSelectedItem="{Binding GetAction}"
+                                                     x:Name="rightTreeView"/>
+
 
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
@@ -189,4 +140,3 @@
 
     </Grid>
 </UserControl>
-

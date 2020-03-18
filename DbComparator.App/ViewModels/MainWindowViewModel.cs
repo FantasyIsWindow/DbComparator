@@ -298,7 +298,7 @@ namespace DbComparator.App.ViewModels
             ShowMessage("Warning", message.Message, MbShowDialog.OkState);
         }
 
-        private void ShowMessage(string title, string message, MbShowDialog state)
+        private void ShowMessage(string title, object message, MbShowDialog state)
         {
             _showMessage.ShowMessageBox(title, message, state);
             CurrentPageContent = _showMessage;

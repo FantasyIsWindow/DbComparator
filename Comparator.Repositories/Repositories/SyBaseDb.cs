@@ -33,7 +33,7 @@ namespace Comparator.Repositories.Repositories
             _dbOwner = login;
         }
         
-        public IEnumerable<FullField> GetFieldsInfo(string tableName)
+        public IEnumerable<DtoFullField> GetFieldsInfo(string tableName)
         {
             var fields = GetFields(tableName);
             var constraints = GetConstraints(tableName);
@@ -55,9 +55,9 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(result);
         }
 
-        public string GetProcedureSqript(string procedureName)
+        public string GetSqript(string procedureName)
         {
-            var sqript = _db.Select<string>(_request.GetProcedureSqriptRequest(procedureName));
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
             return _scriptParser.GetProcedureSquript(sqript);
         }        
 
@@ -67,6 +67,9 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Table>, IEnumerable<string>>(result);
         }
 
+        public IEnumerable<string> GetTriggers() => 
+            _db.Select<string>(_request.GetTreggersRequest());
+                
         public async Task<bool> IsConnectionAsync() =>
             await _db.CheckConectionAsync();
     }

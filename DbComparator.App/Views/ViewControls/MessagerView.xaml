@@ -5,7 +5,8 @@
              Width="300" 
              Height="250">
     <UserControl.Resources>
-        <Converters:MessageBoxVisibilityConverter x:Key="visibilityConverter"/>        
+        <Converters:MessageBoxVisibilityConverter x:Key="visibilityConverter"/>
+        <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
     </UserControl.Resources>
     
     <Grid>
@@ -22,13 +23,26 @@
                Content="{Binding Title}" 
                Style="{StaticResource titleLableStyle}"
                Margin="0"/>
-        <TextBlock Grid.ColumnSpan="2" 
+        <TextBlock Grid.Row="1"
+                   Grid.ColumnSpan="2"                    
                    Style="{StaticResource textBlockStyle}"
                    TextWrapping="Wrap"
-                   Padding="5"
-                   Grid.Row="1" 
+                   Padding="5"                    
                    Text="{Binding Message}" 
-                   Margin="10"/>
+                   Margin="10"
+                   Visibility="{Binding Message, Converter={StaticResource viewsVisibilityConverter}}"/>
+        <DataGrid Grid.Row="1" 
+                  Grid.ColumnSpan="2"
+                  ColumnWidth="*" 
+                  RowHeight="21"
+                  Padding="5"
+                  Margin="10"
+                  CanUserSortColumns="False" 
+                  IsReadOnly="True" 
+                  Style="{StaticResource dataGridStyle}" 
+                  RowHeaderWidth="0"
+                  ItemsSource="{Binding CompareResults}"
+                  Visibility="{Binding CompareResults, Converter={StaticResource viewsVisibilityConverter}}"/>
         <Button Grid.Row="2" 
                 Content="Ok" 
                 Width="80"

@@ -27,15 +27,19 @@ namespace DbComparator.App.Services
 
             for (int i = 0; i < _generalTemplate.Count; i++)
             {
-                if (tempCol.Contains(_generalTemplate[i]))
+                if (_generalTemplate[i] == null && tempCol.Contains(_generalTemplate[i]))
                 {
-                    writableCol.Add(_generalTemplate[i] );
+                    writableCol.Add("null");
+                }
+                else if (tempCol.Contains(_generalTemplate[i]))
+                {
+                    writableCol.Add(_generalTemplate[i]);
                 }
                 else
                 {
-                    writableCol.Add("null" );
+                    writableCol.Add("null");
                 }
             }
-        } 
+        }
     }
 }

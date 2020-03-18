@@ -1,10 +1,10 @@
-﻿using Comparator.Repositories.Models.DbModels;
+﻿using Comparator.Repositories.Models.DtoModels;
 using System.Collections.ObjectModel;
 
 namespace DbComparator.App.Services
 {
     public interface IFieldsEqualizer
     {
-        void CollectionsEquation(ObservableCollection<FullField> primaryCol, ObservableCollection<FullField> secondaryCol);
+        void CollectionsEquation(ObservableCollection<DtoFullField> primaryCol, ObservableCollection<DtoFullField> secondaryCol);
     }
 }

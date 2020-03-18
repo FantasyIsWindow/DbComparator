@@ -1,10 +1,10 @@
-﻿using Comparator.Repositories.Models.DbModels;
+﻿using Comparator.Repositories.Models.DtoModels;
 using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Extensions;
+using DbComparator.App.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace DbComparator.App.Services
 {
@@ -18,36 +18,36 @@ namespace DbComparator.App.Services
 
         private IRepository _secondaryRepository;
 
+        List<CompareResult> _results;
+
 
         public AutoComparator(ICollectionEqualizer collectionEqualizer, IFieldsEqualizer fieldsEqualizer)
         {
             _collectionEqualizer = collectionEqualizer;
             _fieldsEqualizer = fieldsEqualizer;
+            _results = new List<CompareResult>();
         }
 
-        public string Compare(IRepository primaryRep, IRepository secondarRep)
+        public List<CompareResult> Compare(IRepository primaryRep, IRepository secondarRep)
         {
+            _results.Clear();
             _primaryRepository = primaryRep;
             _secondaryRepository = secondarRep;
 
-            var tablesMismatches = TablesCompare();
-            var proceduresMismatches = ProceduresCompare();
-            return  CreateResultString(tablesMismatches, proceduresMismatches);
+            TablesCompare();
+            ProceduresCompare();
+            TriggersCompare();
+            return _results;
         }
 
-        private Dictionary<string, int> TablesCompare()
+        private void TablesCompare()
         {
-            Dictionary<string, int> comparesResults = new Dictionary<string, int>();
+            var prDbTables = GetTables(_primaryRepository);
+            var seDbTables = GetTables(_secondaryRepository);
+            _collectionEqualizer.CollectionsEquation(prDbTables, seDbTables);
 
-            var primaryDbTables = GetTables(_primaryRepository);
-            var secondaryDbTables = GetTables(_secondaryRepository);
-            _collectionEqualizer.CollectionsEquation(primaryDbTables, secondaryDbTables);
-
-
-            comparesResults.Add("Tables", DifferencesCounting(primaryDbTables, secondaryDbTables));
-            comparesResults.Add("Fields", FieldsCompare(primaryDbTables, secondaryDbTables));
-
-            return comparesResults;
+            _results.Add(new CompareResult { Entity = "Tables", NotCoincide = DifferencesCounting(prDbTables, seDbTables) });
+            _results.Add(new CompareResult { Entity = "Fields", NotCoincide = FieldsCompare(prDbTables, seDbTables) });
         }
 
         private List<string> GetTables(IRepository repository) =>
@@ -75,6 +75,8 @@ namespace DbComparator.App.Services
                                
                 _fieldsEqualizer.CollectionsEquation(firstTableFields, secondTableFields);
 
+                
+
                 for (int f = 0; f < firstTableFields.Count; f++)
                 {
                     if (!FieldEquals(firstTableFields[f], secondTableFields[f]))
@@ -86,10 +88,10 @@ namespace DbComparator.App.Services
             return count;
         }
 
-        private ObservableCollection<FullField> GetTableFields(IRepository repository, string tableName) =>
+        private ObservableCollection<DtoFullField> GetTableFields(IRepository repository, string tableName) =>
             repository.GetFieldsInfo(tableName).ToObservableCollection();
 
-        private bool FieldEquals(FullField left, FullField right)
+        private bool FieldEquals(DtoFullField left, DtoFullField right)
         {
             if (left.ConstraintKeys == right.ConstraintKeys &&
                 left.ConstraintName == right.ConstraintName &&
@@ -107,21 +109,32 @@ namespace DbComparator.App.Services
             return false;
         }
 
-        private Dictionary<string, int> ProceduresCompare()
+        private void ProceduresCompare()
         {
-            Dictionary<string, int> comparesResults = new Dictionary<string, int>();
-
             var prProcedures = GetProcedures(_primaryRepository);
             var seProcedures = GetProcedures(_secondaryRepository);
-            _collectionEqualizer.CollectionsEquation(prProcedures, seProcedures);
+            SqriptsCompare(prProcedures, seProcedures, "Procedures", "Procedures sqripts");
+        }
 
-            comparesResults.Add("Procedures", DifferencesCounting(prProcedures, seProcedures));
-            comparesResults.Add("Sqripts", ScriptsCompare(prProcedures, seProcedures));
-            return comparesResults;
+        private void TriggersCompare()
+        {
+            var prTriggers = GetTriggers(_primaryRepository);
+            var seTriggers = GetTriggers(_secondaryRepository);
+            SqriptsCompare(prTriggers, seTriggers, "Triggers", "Triggers sqripts");
         }
 
         private List<string> GetProcedures(IRepository repository) =>
             repository.GetProcedures().ToList();
+
+        private List<string> GetTriggers(IRepository repository) => 
+            repository.GetTriggers().ToList();
+
+        private void SqriptsCompare(List<string> prP, List<string> seP, string firstName, string secondName)
+        {
+            _collectionEqualizer.CollectionsEquation(prP, seP);
+            _results.Add(new CompareResult { Entity = firstName, NotCoincide = DifferencesCounting(prP, seP) });
+            _results.Add(new CompareResult { Entity = secondName, NotCoincide = ScriptsCompare(prP, seP) });
+        }
 
         private int ScriptsCompare(List<string> prProcedures, List<string> seProcedures)
         {
@@ -142,7 +155,7 @@ namespace DbComparator.App.Services
                 }
                 else if (procedure != null)
                 {
-                    var sqript = repository.GetProcedureSqript(procedure);
+                    var sqript = repository.GetSqript(procedure);
 
                     if (sqript != null)
                     {
@@ -164,17 +177,6 @@ namespace DbComparator.App.Services
                 }
             }
             return count;
-        }
-
-        private string CreateResultString(Dictionary<string, int> tablesMismatches, Dictionary<string, int> proceduresMismatches)
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append($"Tables:\r\n\tnot correspond - {tablesMismatches["Tables"]}.");
-            builder.Append($"\r\nTables fields:\r\n\tnot correspond - {tablesMismatches["Fields"]} rows.");
-            builder.Append($"\r\nProcedures:\r\n\tnot correspond - {proceduresMismatches["Procedures"]}.");
-            builder.Append($"\r\nProcedures sqripts:\r\n\tnot correspond - {proceduresMismatches["Sqripts"]}");
-
-            return builder.ToString();
         }
     }
 }

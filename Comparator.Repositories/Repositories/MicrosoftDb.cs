@@ -17,7 +17,7 @@ namespace Comparator.Repositories.Repositories
 
         private string _connectionString;
 
-        private MicrosoftDbRequests _requests;
+        private MicrosoftDbRequests _request;
 
         private DbRepository _db;
 
@@ -26,11 +26,11 @@ namespace Comparator.Repositories.Repositories
             _fieldsParser = new MicrosoftFieldsInfoParser();
             _scriptParser = new ProcedureScriptParser();
             _connectionString = $"server={server};Trusted_Connection=True;Database={dbName};Connect Timeout=5;";
-            _requests = new MicrosoftDbRequests();
+            _request = new MicrosoftDbRequests();
             _db = new DbRepository(_connectionString, _provider);
         }
 
-        public IEnumerable<FullField> GetFieldsInfo(string tableName)
+        public IEnumerable<DtoFullField> GetFieldsInfo(string tableName)
         {
             var fields = GetFields(tableName);
             var constraints = GetConstraints(tableName);
@@ -38,33 +38,36 @@ namespace Comparator.Repositories.Repositories
         }
 
         private IEnumerable<Fields> GetFields(string tableName) =>
-            _db.Select<Fields>(_requests.GetFieldsRequest(tableName));
+            _db.Select<Fields>(_request.GetFieldsRequest(tableName));
 
         private IEnumerable<DtoConstraint> GetConstraints(string tableName)
         {
-            var constraints = _db.Select<Constraint>(_requests.GetConstraintsRequest(tableName));
+            var constraints = _db.Select<Constraint>(_request.GetConstraintsRequest(tableName));
             return Mapper.Map.Map<IEnumerable<Constraint>, IEnumerable<DtoConstraint>>(constraints);
         }
 
         public IEnumerable<string> GetProcedures()
         {
-            var procedures = _db.Select<Procedure>(_requests.GetProceduresRequest("dbo"));
+            var procedures = _db.Select<Procedure>(_request.GetProceduresRequest("dbo"));
             ProcessingCollection(procedures);
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(procedures);
         }
 
-        public string GetProcedureSqript(string procedureName)
+        public string GetSqript(string procedureName)
         {
-            var sqript = _db.Select<string>(_requests.GetProcedureSqriptRequest(procedureName));
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
             return _scriptParser.GetProcedureSquript(sqript);
         }
                
         public IEnumerable<string> GetTables()
         {
-            var tables = _db.Select<Table>(_requests.GetTablesRequest("dbo"));
+            var tables = _db.Select<Table>(_request.GetTablesRequest("dbo"));
             return Mapper.Map.Map<IEnumerable<Table>, IEnumerable<string>>(tables);
-        }
-
+        } 
+        
+        public IEnumerable<string> GetTriggers() => 
+            _db.Select<string>(_request.GetTreggersRequest());
+        
         public async Task<bool> IsConnectionAsync() => 
             await _db.CheckConectionAsync();
 

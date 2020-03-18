@@ -9,6 +9,6 @@ namespace DbComparator.App.ViewModels
 
         event NotifyDelegate CloseHandler;
 
-        void ShowMessageBox(string title, string message, MbShowDialog state);
+        void ShowMessageBox(string title, object package, MbShowDialog state);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Comparator.Repositories.Models.DbModels
+﻿namespace Comparator.Repositories.Models.DtoModels
 {
-    public class FullField
+    public class DtoFullField
     {
         public string FieldName { get; set; }
 
@@ -20,6 +20,6 @@
 
         public string OnUpdate { get; set; }
 
-        public string OnDelete { get; set; }       
+        public string OnDelete { get; set; }
     }
 }

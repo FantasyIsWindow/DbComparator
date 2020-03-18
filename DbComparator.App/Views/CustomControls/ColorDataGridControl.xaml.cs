@@ -1,4 +1,5 @@
 ﻿using Comparator.Repositories.Models.DbModels;
+using Comparator.Repositories.Models.DtoModels;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -10,7 +11,7 @@ namespace DbComparator.App.Views.CustomControls
 {
     public partial class ColorDataGridControl : UserControl
     {
-        private ObservableCollection<FullField> _fields;
+        private ObservableCollection<DtoFullField> _fields;
 
         private bool _isUpdate;
 
@@ -19,7 +20,7 @@ namespace DbComparator.App.Views.CustomControls
         public static readonly DependencyProperty FieldsCollectionProperty = DependencyProperty.Register
             (
                 "FieldsCollection",
-                typeof(ObservableCollection<FullField>),
+                typeof(ObservableCollection<DtoFullField>),
                 typeof(ColorDataGridControl),
                 new FrameworkPropertyMetadata
                 (
@@ -31,7 +32,7 @@ namespace DbComparator.App.Views.CustomControls
         public static readonly DependencyProperty FieldsToCompareCollectionProperty = DependencyProperty.Register
             (
                 "FieldsToCompareCollection",
-                typeof(ObservableCollection<FullField>),
+                typeof(ObservableCollection<DtoFullField>),
                 typeof(ColorDataGridControl),
                 new FrameworkPropertyMetadata
                 (
@@ -73,15 +74,15 @@ namespace DbComparator.App.Views.CustomControls
                 typeof(ColorDataGridControl)
             );
 
-        public ObservableCollection<FullField> FieldsCollection
+        public ObservableCollection<DtoFullField> FieldsCollection
         {
-            get => (ObservableCollection<FullField>)GetValue(FieldsCollectionProperty);
+            get => (ObservableCollection<DtoFullField>)GetValue(FieldsCollectionProperty);
             set => SetValue(FieldsCollectionProperty, value);
         }
 
-        public ObservableCollection<FullField> FieldsToCompareCollection
+        public ObservableCollection<DtoFullField> FieldsToCompareCollection
         {
-            get => (ObservableCollection<FullField>)GetValue(FieldsToCompareCollectionProperty);
+            get => (ObservableCollection<DtoFullField>)GetValue(FieldsToCompareCollectionProperty);
             set => SetValue(FieldsToCompareCollectionProperty, value);
         }
 
