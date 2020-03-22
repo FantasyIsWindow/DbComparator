@@ -12,7 +12,9 @@ namespace Comparator.Repositories.Repositories
 
         IEnumerable<string> GetProcedures();
 
-        string GetSqript(string procedureName);
+        string GetProcedureSqript(string procedureName);
+
+        string GetTriggerSqript(string triggerName);
 
         IEnumerable<string> GetTables();
 

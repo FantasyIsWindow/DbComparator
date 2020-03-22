@@ -10,6 +10,7 @@ using DbConectionInfoRepository.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DbComparator.App.ViewModels
 {
@@ -136,9 +137,17 @@ namespace DbComparator.App.ViewModels
             {
                 return _addNewDbInfoCommand ??
                     (_addNewDbInfoCommand = new RellayCommand(obj =>
-                    {
+                    {                       
                         var reference = obj as string;
-                        _addNewDb.ShowManagerWindow(OpenStatus.Add, reference);
+                        if (reference != null)
+                        {
+                            DbInfoModel model = new DbInfoModel { Reference = reference, DbType = SelectedDbType };
+                            _addNewDb.ShowManagerWindow(OpenStatus.Add, model);
+                        }
+                        else
+                        {
+                            _addNewDb.ShowManagerWindow(OpenStatus.Add);
+                        }
                         CurrentPageContent = _addNewDb;
                     }));
             }
@@ -223,7 +232,7 @@ namespace DbComparator.App.ViewModels
         {
             try
             {
-                _addNewDb.ShowManagerWindow(OpenStatus.Update, null, dbInfo);
+                _addNewDb.ShowManagerWindow(OpenStatus.Update, dbInfo);
                 CurrentPageContent = _addNewDb;
             }
             catch (Exception ex)
@@ -245,11 +254,13 @@ namespace DbComparator.App.ViewModels
             UpdateTypes();
         }
 
-        private void ChoiseType()
+        private async void ChoiseType()
         {
+            LoadViewVisibility = true;
             _dbRepository = CreateRepository();
-            GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
-            GetDbInfo(NotReferenceInfoDbs, IsReference.No);
+            await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
+            await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
+            LoadViewVisibility = false;
         }
 
         private IRepository CreateRepository()
@@ -258,21 +269,20 @@ namespace DbComparator.App.ViewModels
             {
                 case "Microsoft Sql": { return new MicrosoftDb(); }
                 case "SyBase": { return new SyBaseDb(); }
+                case "MySql": { return new MySqlDb(); }
             }
             return null;
         }
 
-        private void GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
+        private async Task GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
         {
             collection.ClearIfNotEmpty();
             var result = _connectionDb.GetAllReferenceDbByType(SelectedDbType, reference);
-            GetDbTypes(result, collection);
+            await GetDbTypes(result, collection);
         }
 
-        private async void GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
+        private async Task GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
-            LoadViewVisibility = true;
-
             foreach (var item in models)
             {
                 _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
@@ -287,9 +297,7 @@ namespace DbComparator.App.ViewModels
             if (target.Count >= 0)
             {
                 target.Add(new DbInfo() { DataBase = null });
-            }
-
-            LoadViewVisibility = false;
+            }            
         }
 
         private void GetMessage(object sender, EventArgs e)

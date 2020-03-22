@@ -47,6 +47,8 @@
                   Grid.ColumnSpan="2"
                   Margin="5"
                   Style="{StaticResource comboBoxStyle}"
+                  IsEnabled="{Binding IsEnabled}"
+                  SelectedValue="{Binding DbInfoModel.DbType}" 
                   ItemsSource="{Binding DbTypes}" Text="{Binding DbInfoModel.DbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
         </ComboBox>
 
@@ -58,8 +60,7 @@
                   VerticalContentAlignment="Center"                   
                   IsEnabled="{Binding IsEnabled}"
                   ItemsSource="{Binding ReferencesType}" 
-                  SelectedValue="{Binding DbInfoModel.Reference}" 
-                  SelectedIndex="{Binding SelectedIndex}">
+                  SelectedValue="{Binding DbInfoModel.Reference}">
         </ComboBox>
 
         <Label Grid.Row="8" 

@@ -121,7 +121,10 @@ namespace DbComparator.App.Views.CustomControls
 
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            SetSelectedItem?.Invoke((Property)e.NewValue);
+            if (e.NewValue is Property value)
+            {
+                SetSelectedItem?.Invoke(value);
+            }
         }
     }
 }

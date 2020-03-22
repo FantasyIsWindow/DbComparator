@@ -1,5 +1,4 @@
-﻿using Comparator.Repositories.Models.DbModels;
-using Comparator.Repositories.Models.DtoModels;
+﻿using Comparator.Repositories.Models.DtoModels;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -124,10 +123,7 @@ namespace DbComparator.App.Views.CustomControls
 
         private void SetFieldsToCompare()
         {
-            if (FieldsToCompareCollection != null)
-            {
-                _fields = FieldsToCompareCollection;
-            }
+            _fields = FieldsToCompareCollection;
         }
 
         public ColorDataGridControl()
@@ -138,22 +134,44 @@ namespace DbComparator.App.Views.CustomControls
         public void SetItemSource()
         {
             dataGrid.ItemsSource = FieldsCollection;
-            _isUpdate = false;
             _isResize = false;
+            _isUpdate = false;
         }
 
         private void UserControl_LayoutUpdated(object sender, System.EventArgs e)
         {
+
             if (!_isUpdate)
             {
-                CellColorize();
-                GetCurrentCellsWidth();
+                if (IsEmpty(FieldsCollection) && IsEmpty(FieldsToCompareCollection))
+                {
+                    CellColorize();
+                    GetCurrentCellsWidth();
+                }
+                _isUpdate = true;
             }
 
             if (_isUpdate && !_isResize && CellWith())
             {
                 CellWidthAlignment();
             }
+        }
+
+        private bool IsEmpty(ObservableCollection<DtoFullField> fields)
+        {
+            if (fields == null)
+            {
+                return false;
+            }
+
+            foreach (var field in fields)
+            {
+                if (field.FieldName != "")
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool CellWith() =>
@@ -164,7 +182,7 @@ namespace DbComparator.App.Views.CustomControls
         {
             if (FieldsCollection?.Count() != 0 && FieldsToCompareCollection?.Count() != 0)
             {
-                var redColor = new SolidColorBrush(Colors.Red) { Opacity= 0.5 };
+                var redColor = new SolidColorBrush(Colors.Red) { Opacity = 0.5 };
                 var yellowColor = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
 
                 for (int i = 0; i < dataGrid.Items.Count; i++)
@@ -187,7 +205,6 @@ namespace DbComparator.App.Views.CustomControls
                     }
                 }
             }
-            _isUpdate = true;
         }
 
         private DataGridCell GetCells(DataGridRow row, int index)

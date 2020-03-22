@@ -23,12 +23,16 @@ namespace Comparator.Repositories.Repositories
 
         private string _dbOwner;
 
-        public void CreateConnectionString(string source, string server, string dbName, string login, string password)
+        public SyBaseDb()
         {
             _fieldsParser = new SyBaseFieldsInfoParser();
             _scriptParser = new ProcedureScriptParser();
-            _connectionString = $"Data Source=SQL Anywhere 17 Demo;Server={server};DatabaseName={dbName};Uid={login};Password={password};";
             _request = new SyBaseRequests();
+        }
+
+        public void CreateConnectionString(string source, string server, string dbName, string login, string password)
+        {
+            _connectionString = $"Data Source=SQL Anywhere 17 Demo;Server={server};DatabaseName={dbName};Uid={login};Password={password};";
             _db = new DbRepository(_connectionString, _provider);
             _dbOwner = login;
         }
@@ -55,11 +59,8 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(result);
         }
 
-        public string GetSqript(string procedureName)
-        {
-            var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
-            return _scriptParser.GetProcedureSquript(sqript);
-        }        
+        public string GetProcedureSqript(string procedureName) =>
+            GetSqript(procedureName);
 
         public IEnumerable<string> GetTables()
         {
@@ -72,5 +73,14 @@ namespace Comparator.Repositories.Repositories
                 
         public async Task<bool> IsConnectionAsync() =>
             await _db.CheckConectionAsync();
+
+        public string GetTriggerSqript(string triggerName) => 
+            GetSqript(triggerName);
+
+        private string GetSqript(string name)
+        {
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(name));
+            return _scriptParser.GetProcedureSquript(sqript);
+        }
     }
 }

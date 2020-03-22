@@ -51,11 +51,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbRequests\MicrosoftDbRequests.cs" />
+    <Compile Include="DbRequests\MySqlRequests.cs" />
     <Compile Include="DbRequests\SyBaseRequests.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="Mappings\MappingProfile.cs" />
     <Compile Include="Models\DbModels\Constraint.cs" />
     <Compile Include="Models\DbModels\Fields.cs" />
+    <Compile Include="Models\DbModels\MySqlCascadeOption.cs" />
+    <Compile Include="Models\DbModels\MySqlConstaintsModel.cs" />
+    <Compile Include="Models\DbModels\MySqlFields.cs" />
+    <Compile Include="Models\DbModels\MySqlProcedure.cs" />
+    <Compile Include="Models\DbModels\MySqlTrigger.cs" />
     <Compile Include="Models\DbModels\Procedure.cs" />
     <Compile Include="Models\DbModels\SyBaseConstaintsModel.cs" />
     <Compile Include="Models\DbModels\SyBaseFieldsModel.cs" />
@@ -64,6 +70,7 @@
     <Compile Include="Models\DtoModels\DtoFullField.cs" />
     <Compile Include="Models\DtoModels\DtoSyBaseConstaintsModel.cs" />
     <Compile Include="Parsers\MicrosoftFieldsInfoParser.cs" />
+    <Compile Include="Parsers\MySqlFieldsInfoParser.cs" />
     <Compile Include="Parsers\ProcedureScriptParser.cs" />
     <Compile Include="Parsers\ReservedKeyword.cs" />
     <Compile Include="Parsers\SyBaseFieldsInfoParser.cs" />
@@ -71,6 +78,7 @@
     <Compile Include="Repositories\DbRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\MicrosoftDb.cs" />
+    <Compile Include="Repositories\MySqlDb.cs" />
     <Compile Include="Repositories\SyBaseDb.cs" />
   </ItemGroup>
   <ItemGroup>

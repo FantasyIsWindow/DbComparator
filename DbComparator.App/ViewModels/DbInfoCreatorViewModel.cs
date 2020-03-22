@@ -5,8 +5,6 @@ using DbComparator.App.Services;
 using DbConectionInfoRepository.Models;
 using DbConectionInfoRepository.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DbComparator.App.ViewModels
 { 
@@ -25,15 +23,13 @@ namespace DbComparator.App.ViewModels
 
         private DbInfoModel _dbInfoModel;
 
-        private int? _selectedIndex;
-
         private string[] _referencesType;
 
         private string _content;
 
         private bool _isEnabled;
 
-        private List<string> _dbTypes;
+        private string[] _dbTypes;
 
 
 
@@ -41,12 +37,6 @@ namespace DbComparator.App.ViewModels
         {
             get => _dbInfoModel; 
             set => SetProperty(ref _dbInfoModel, value, "DbInfoModel"); 
-        }
-
-        public int? SelectedIndex
-        {
-            get => _selectedIndex; 
-            set => SetProperty(ref _selectedIndex, value, "SelectedIndex"); 
         }
 
         public string[] ReferencesType
@@ -64,10 +54,9 @@ namespace DbComparator.App.ViewModels
             get => _isEnabled; 
         }
 
-        public List<string> DbTypes
+        public string[] DbTypes
         {
             get => _dbTypes; 
-            set => SetProperty(ref _dbTypes, value, "DbTypes"); 
         }
 
 
@@ -75,6 +64,7 @@ namespace DbComparator.App.ViewModels
         {
             _repository = repository;
             _referencesType = new string[] { "Yes", "No" };
+            _dbTypes = new[] { "Microsoft Sql", "SyBase", "MySql" };
         }
         
         
@@ -90,20 +80,12 @@ namespace DbComparator.App.ViewModels
         public RellayCommand OkCommand =>
             _okCommand = new RellayCommand(AddInfoToDb, CanAddInfoToDb);
         
-
-        public void ShowManagerWindow(OpenStatus status, string isReference, DbInfoModel dbInfo = null)
+        public void ShowManagerWindow(OpenStatus status, DbInfoModel dbInfo = null)
         {
             _openStatus = status;
             _dbInfoModel = dbInfo ?? new DbInfoModel();
-            _content = _openStatus == OpenStatus.Add ? "Add" : "Update";
-
-            _selectedIndex = _openStatus == OpenStatus.Update || isReference != null ?
-                             _dbInfoModel.Reference == "Yes"  || isReference == "Yes" ?
-                           0 : 1 : -1;
-
-            _isEnabled = _selectedIndex == -1 || _openStatus == OpenStatus.Update;
-
-            DbTypes = _repository.GetAllTypes().ToList();
+            _content = _openStatus.ToString();
+            _isEnabled = (_openStatus == OpenStatus.Update || dbInfo != null) ? false : true;
         }
 
 

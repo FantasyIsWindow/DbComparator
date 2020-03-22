@@ -179,13 +179,13 @@ namespace DbComparator.App.ViewModels
 
         private void ItemSelection(Property property)
         {
-            if (property != null)
+            if (property != null && property.Name != "null")
             {
                 switch (property.PropertyType)
                 {
                     case "Table": { FetchTableFields(property.Name); break; }
-                    case "Procedure": { FetchSqript(property.Name); break; }
-                    case "Trigger": { FetchSqript(property.Name); break; }
+                    case "Procedure": { FetchProcedureSqript(property.Name); break; }
+                    case "Trigger": { FetchTriggerSqript(property.Name); break; }
                 }
             }
         }
@@ -238,18 +238,24 @@ namespace DbComparator.App.ViewModels
         private ObservableCollection<DtoFullField> GetFieldsInfo(IRepository repository, string tableName) =>
             tableName != "null" ? repository.GetFieldsInfo(tableName).ToObservableCollection() : null;
 
-        private void FetchSqript(string name)
+        private void FetchProcedureSqript(string name)
         {
-            LeftCompared = GetSqript(_primaryDbRepository, name);
-            RightCompared = GetSqript(_secondaryDbRepository, name);
+            LeftCompared  = _primaryDbRepository.GetProcedureSqript(name) ?? " ";
+            RightCompared = _secondaryDbRepository.GetProcedureSqript(name) ?? " ";
+
+            LeftDbProcedureSqript = LeftCompared;
+            RightDbProcedureSqript = RightCompared;
+        }     
+        
+        private void FetchTriggerSqript(string name)
+        {
+            LeftCompared  = _primaryDbRepository.GetTriggerSqript(name) ?? " ";
+            RightCompared = _secondaryDbRepository.GetTriggerSqript(name) ?? " ";
 
             LeftDbProcedureSqript = LeftCompared;
             RightDbProcedureSqript = RightCompared;
         }
-
-        private string GetSqript(IRepository repository, string procedureName) =>
-            procedureName != "null" ? repository.GetSqript(procedureName) : null;
-
+        
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
             repository = CreateRepository(db.DataBase.DbType);
@@ -264,6 +270,7 @@ namespace DbComparator.App.ViewModels
             {
                 case "Microsoft Sql": { return new MicrosoftDb(); }
                 case "SyBase": { return new SyBaseDb(); }
+                case "MySql": { return new MySqlDb(); }
             }
             return null;
         }

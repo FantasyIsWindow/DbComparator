@@ -13,6 +13,6 @@ namespace DbComparator.App.ViewModels
 
         event EventHandler MessageHandler;
 
-        void ShowManagerWindow(OpenStatus status, string isReference, DbInfoModel dbInfo = null);
+        void ShowManagerWindow(OpenStatus status, DbInfoModel dbInfo = null);
     }
 }

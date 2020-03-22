@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
@@ -33,6 +34,35 @@ namespace Comparator.Repositories.Repositories
             {
                 return null;
             }            
+        }
+
+        public string SelectForKey(string query, string key) 
+        {
+            try
+            {
+                using (DbConnection connector = _factory.CreateConnection())
+                {
+                    connector.ConnectionString = _connectionString;
+                    connector.Open();
+                    var result = connector.Query(query);
+                    foreach (IDictionary<string, object> row in result)
+                    {
+                        foreach (var pair in row)
+                        {
+                            if (pair.Key == key)
+                            {
+                                return pair.Value.ToString();
+                            }
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return "";
         }
 
         public async Task<bool> CheckConectionAsync()

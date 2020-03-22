@@ -2,6 +2,7 @@
 using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Extensions;
 using DbComparator.App.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -111,39 +112,47 @@ namespace DbComparator.App.Services
 
         private void ProceduresCompare()
         {
-            var prProcedures = GetProcedures(_primaryRepository);
-            var seProcedures = GetProcedures(_secondaryRepository);
-            SqriptsCompare(prProcedures, seProcedures, "Procedures", "Procedures sqripts");
+            var prProcedures = _primaryRepository.GetProcedures().ToList();
+            var seProcedures = _secondaryRepository.GetProcedures().ToList();
+            ProceduresSqriptCompare(prProcedures, seProcedures);
+        }
+
+        private void ProceduresSqriptCompare(List<string> prP, List<string> seP)
+        {
+            _collectionEqualizer.CollectionsEquation(prP, seP);
+            _results.Add(new CompareResult { Entity = "Procedures", NotCoincide = DifferencesCounting(prP, seP) });
+            _results.Add(new CompareResult { Entity = "Procedures sqripts", NotCoincide = ProcedureScriptCompare(prP, seP) });
+        }
+
+        private int ProcedureScriptCompare(List<string> prProcedures, List<string> seProcedures)
+        {
+            var leftDbScripts = GetScript(prProcedures, _primaryRepository.GetProcedureSqript);
+            var rightDbScripts = GetScript(seProcedures, _secondaryRepository.GetProcedureSqript);
+            return DifferencesCounting(leftDbScripts, rightDbScripts);
         }
 
         private void TriggersCompare()
         {
-            var prTriggers = GetTriggers(_primaryRepository);
-            var seTriggers = GetTriggers(_secondaryRepository);
-            SqriptsCompare(prTriggers, seTriggers, "Triggers", "Triggers sqripts");
+            var prTriggers = _primaryRepository.GetTriggers().ToList();
+            var seTriggers = _secondaryRepository.GetTriggers().ToList();
+            TriggersSqriptCompare(prTriggers, seTriggers);
         }
 
-        private List<string> GetProcedures(IRepository repository) =>
-            repository.GetProcedures().ToList();
-
-        private List<string> GetTriggers(IRepository repository) => 
-            repository.GetTriggers().ToList();
-
-        private void SqriptsCompare(List<string> prP, List<string> seP, string firstName, string secondName)
+        private void TriggersSqriptCompare(List<string> prT, List<string> seT)
         {
-            _collectionEqualizer.CollectionsEquation(prP, seP);
-            _results.Add(new CompareResult { Entity = firstName, NotCoincide = DifferencesCounting(prP, seP) });
-            _results.Add(new CompareResult { Entity = secondName, NotCoincide = ScriptsCompare(prP, seP) });
+            _collectionEqualizer.CollectionsEquation(prT, seT);
+            _results.Add(new CompareResult { Entity = "Triggers", NotCoincide = DifferencesCounting(prT, seT) });
+            _results.Add(new CompareResult { Entity = "Triggers sqripts", NotCoincide = TriggersScriptCompare(prT, seT) });
         }
 
-        private int ScriptsCompare(List<string> prProcedures, List<string> seProcedures)
+        private int TriggersScriptCompare(List<string> prProcedures, List<string> seProcedures)
         {
-            var leftDbScripts = GetProceduresScript(_primaryRepository, prProcedures);
-            var rightDbScripts = GetProceduresScript(_secondaryRepository, seProcedures);
+            var leftDbScripts = GetScript(prProcedures, _primaryRepository.GetTriggerSqript);
+            var rightDbScripts = GetScript(seProcedures, _secondaryRepository.GetTriggerSqript);
             return DifferencesCounting(leftDbScripts, rightDbScripts);
         }
 
-        private List<string> GetProceduresScript(IRepository repository, List<string> procedures)
+        private List<string> GetScript(List<string> procedures, Func<string, string> func)
         {
             List<string> scripts = new List<string>();
 
@@ -155,7 +164,7 @@ namespace DbComparator.App.Services
                 }
                 else if (procedure != null)
                 {
-                    var sqript = repository.GetSqript(procedure);
+                    var sqript = func(procedure);
 
                     if (sqript != null)
                     {

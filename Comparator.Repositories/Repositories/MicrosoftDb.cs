@@ -21,12 +21,16 @@ namespace Comparator.Repositories.Repositories
 
         private DbRepository _db;
 
-        public void CreateConnectionString(string source, string server, string dbName, string login, string password)
+        public MicrosoftDb()
         {
             _fieldsParser = new MicrosoftFieldsInfoParser();
             _scriptParser = new ProcedureScriptParser();
-            _connectionString = $"server={server};Trusted_Connection=True;Database={dbName};Connect Timeout=5;";
             _request = new MicrosoftDbRequests();
+        }
+
+        public void CreateConnectionString(string source, string server, string dbName, string login, string password)
+        {
+            _connectionString = $"server={server};Trusted_Connection=True;Database={dbName};Connect Timeout=5;";
             _db = new DbRepository(_connectionString, _provider);
         }
 
@@ -53,12 +57,12 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(procedures);
         }
 
-        public string GetSqript(string procedureName)
-        {
-            var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
-            return _scriptParser.GetProcedureSquript(sqript);
-        }
-               
+        public string GetProcedureSqript(string procedureName) =>
+            GetSqript(procedureName);
+
+        public string GetTriggerSqript(string triggerName) =>
+            GetSqript(triggerName);
+
         public IEnumerable<string> GetTables()
         {
             var tables = _db.Select<Table>(_request.GetTablesRequest("dbo"));
@@ -78,6 +82,12 @@ namespace Comparator.Repositories.Repositories
                 var tempArr = procedure.PROCEDURE_NAME.Split(';');
                 procedure.PROCEDURE_NAME = tempArr[0];
             }
+        }
+
+        private string GetSqript(string name)
+        {
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(name));
+            return _scriptParser.GetProcedureSquript(sqript);
         }
     }
 }

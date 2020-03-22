@@ -14,6 +14,12 @@ namespace Comparator.Repositories.Mappings
             CreateMap<Procedure, string>()
                 .ConvertUsing(send => send.PROCEDURE_NAME ?? string.Empty);
 
+            CreateMap<MySqlProcedure, string>()
+                .ConvertUsing(send => send.Name ?? string.Empty);
+
+            CreateMap<MySqlTrigger, string>()
+                .ConvertUsing(send => send.Trigger ?? string.Empty);
+
             CreateMap<Constraint, DtoConstraint>()
                 .ForMember(dest => dest.ConstraintType, send => send.MapFrom(t => t.constraint_type))
                 .ForMember(dest => dest.ConstraintName, send => send.MapFrom(n => n.constraint_name))

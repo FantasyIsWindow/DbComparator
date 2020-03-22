@@ -10,12 +10,12 @@ namespace DbComparator.App.Views.CustomControls
     {
         public static DependencyProperty MainTextProperty = DependencyProperty.Register
             (
-                "MainText", 
-                typeof(string), 
-                typeof(ColorizeTextControl), 
+                "MainText",
+                typeof(string),
+                typeof(ColorizeTextControl),
                 new FrameworkPropertyMetadata
                 (
-                    "", 
+                    "",
                     new PropertyChangedCallback(EnterMainText)
                 )
             );
@@ -30,8 +30,8 @@ namespace DbComparator.App.Views.CustomControls
 
         public string MainText
         {
-            get => (string)GetValue(MainTextProperty); 
-            set => SetValue(MainTextProperty, value); 
+            get => (string)GetValue(MainTextProperty);
+            set => SetValue(MainTextProperty, value);
         }
 
         public string CompareText
@@ -48,14 +48,18 @@ namespace DbComparator.App.Views.CustomControls
         private void SetTextToRichBox()
         {
             rtb.Document.Blocks.Clear();
-                      
-            if (!string.IsNullOrEmpty(MainText) && !string.IsNullOrEmpty(CompareText))
+
+            if (CompareText == " ")
             {
-                var mainText = MainText.Split(new char[] { ' ', ',' });                
+                TextColorize(MainText, "Black");
+            }
+            else if (!string.IsNullOrEmpty(MainText) && !string.IsNullOrEmpty(CompareText))
+            {
+                var mainText = MainText.Split(new char[] { ' ', ',' });
 
                 for (int i = 0; i < mainText.Length; i++)
                 {
-                    if(!IsWord(mainText[i]))
+                    if (!IsWord(mainText[i]))
                     {
                         TextColorize(mainText[i], "Red");
                     }
@@ -64,10 +68,6 @@ namespace DbComparator.App.Views.CustomControls
                         TextColorize(mainText[i], "Black");
                     }
                 }
-            }
-            else
-            {
-                TextColorize(MainText, "Black");
             }
         }
 
@@ -92,7 +92,7 @@ namespace DbComparator.App.Views.CustomControls
                 compareText.Remove(word);
                 return true;
             }
-            return false;          
+            return false;
         }
 
 

@@ -14,15 +14,14 @@ namespace Comparator.Repositories.Parsers
             _findWord = new ReservedKeyword();
         }
 
+        public string GetProcedureSquript(IEnumerable<string> str) =>
+            str != null ? GeSquript(ArrayToString(str)) : null;
 
-        public string GetProcedureSquript(IEnumerable<string> str)
+        public string GetProcedureSquript(string str) =>
+            str != null ? GeSquript(str) : null;        
+        
+        public string GeSquript(string squript)
         {
-            if (str == null)
-            {
-                return null;
-            }
-
-            string squript = string.Join(" ", str.ToArray());
             StringBuilder builder1 = new StringBuilder();
 
             for (int i = 0; i < squript.Length; i++)
@@ -96,5 +95,8 @@ namespace Comparator.Repositories.Parsers
 
             return builder.ToString();
         }
+
+        private string ArrayToString(IEnumerable<string> str) =>
+            string.Join(" ", str.ToArray());
     }
 }
