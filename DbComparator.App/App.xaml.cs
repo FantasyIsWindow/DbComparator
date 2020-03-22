@@ -20,6 +20,7 @@ namespace DbComparator.App
             kernel.Bind<ICollectionEqualizer>().To<CollectionEqualizer>();
             kernel.Bind<IFieldsEqualizer>().To<FieldsEqualizer>();
             kernel.Bind<IAutoComparator>().To<AutoComparator>();
+            kernel.Bind<IAboutVM>().To<AboutViewModel>();
 
             var mainVM = kernel.Get<MainWindowViewModel>();
 

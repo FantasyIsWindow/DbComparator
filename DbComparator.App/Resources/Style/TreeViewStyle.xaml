@@ -6,6 +6,10 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type TreeView}" x:Key="treeViewStyle">
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{StaticResource TreeViewSelectedItemBackgroundColorBrush}"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{StaticResource TreeViewSelectionItemBackgroundColorBrush}"/>
+        </Style.Resources>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -42,5 +46,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    
+    
     
 </ResourceDictionary>

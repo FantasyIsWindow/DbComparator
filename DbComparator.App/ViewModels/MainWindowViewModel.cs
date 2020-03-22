@@ -26,6 +26,8 @@ namespace DbComparator.App.ViewModels
 
         private IDbInfoCreatorVM _addNewDb;
 
+        private IAboutVM _aboutVM;
+
         private object _currentPageContent;
 
         private ObservableCollection<string> _dbTypes;
@@ -97,7 +99,7 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _loadViewVisibility, value, "LoadViewVisibility");
         }
 
-        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoCreatorVM dbInfoManager)
+        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoCreatorVM dbInfoManager, IAboutVM aboutVM)
         {
             _connectionDb = connectionDb;
 
@@ -115,6 +117,9 @@ namespace DbComparator.App.ViewModels
             _addNewDb.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
+
+            _aboutVM = aboutVM;
+            _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
 
 
@@ -129,6 +134,8 @@ namespace DbComparator.App.ViewModels
         private RellayCommand _removeReferenceRecordCommand;
 
         private RellayCommand _choiseDbTypeCommand;
+
+        private RellayCommand _aboutViewShowCommand;
 
 
         public RellayCommand AddNewDbInfoCommand
@@ -221,6 +228,9 @@ namespace DbComparator.App.ViewModels
                     }));
             }
         }
+
+        public RellayCommand AboutViewShowCommand =>
+            _aboutViewShowCommand = new RellayCommand((c) => { CurrentPageContent = _aboutVM; });
 
         private void UpdateTypes()
         {

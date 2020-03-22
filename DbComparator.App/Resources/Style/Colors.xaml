@@ -10,6 +10,13 @@
     <Color x:Key="c_006">#FFF9EE</Color>
     <Color x:Key="c_007">#000000</Color>
 
+    <!-- TreeView Brushes -->
+    <Color x:Key="TreeViewSelectedItemBackgroundColorBrush">#726138</Color>
+    <Color x:Key="TreeViewSelectionItemBackgroundColorBrush">#E6D8B8</Color>   
+    <SolidColorBrush x:Key="TreeViewBackgroundBrush" Color="{StaticResource c_006}"/>
+    <SolidColorBrush x:Key="TreeViewBorderBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="TreeViewDisabledBackgroundBrush" Color="{StaticResource c_000}"/>
+
     <!-- Buttons Brushes -->
     <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource c_005}"/>
@@ -55,6 +62,7 @@
 
     <!-- Page Brushes -->
     <SolidColorBrush x:Key="UserControlBackgroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="UserControlLightBackgroundBrush" Color="{StaticResource c_001}"/>
 
     <!-- Label Brushes -->
     <SolidColorBrush x:Key="LabelForegroundBrush" Color="{StaticResource c_002}"/>  
@@ -98,10 +106,10 @@
     <SolidColorBrush x:Key="ComboBoxPopupBackgroundBrush" Color="{StaticResource c_002}"/>
 
     <!-- DbReceiver Brushes -->
-    <SolidColorBrush x:Key="DbReceiverBackgroundBrush" Color="{StaticResource c_002}"/>  
-    
-    <!-- DbReceiver Brushes -->
-    <SolidColorBrush x:Key="RichTextBoxBackgroundDrush" Color="{StaticResource c_006}"/>   
+    <SolidColorBrush x:Key="DbReceiverBackgroundBrush" Color="{StaticResource c_002}"/>
+
+    <!-- RichText Brushes -->
+    <SolidColorBrush x:Key="RichTextBoxBackgroundBrush" Color="{StaticResource c_006}"/>   
 
     <!-- DataGrid Brushes -->
     <SolidColorBrush x:Key="DataGridHeaderForegroundBrush" Color="{StaticResource c_002}"/>
@@ -123,12 +131,8 @@
      <SolidColorBrush x:Key="DataGridSelectedBackgroundBrush" Color="{StaticResource c_000}"/>   
     <SolidColorBrush x:Key="DataGridSelectedForegroundBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="DataGridAltRowBackgroundBrush" Color="{StaticResource c_004}"/>
+  
 
-    <!-- DbReceiver Brushes -->
-    <SolidColorBrush x:Key="TreeViewBackgroundBrush" Color="{StaticResource c_006}"/>
-    <SolidColorBrush x:Key="TreeViewBorderBrush" Color="{StaticResource c_003}"/>
-    <SolidColorBrush x:Key="TreeViewDisabledBackgroundBrush" Color="{StaticResource c_000}"/>  
-    
     <!-- StatusBar Brushes -->
     <SolidColorBrush x:Key="StatusBarBorderBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="StatusBarBackgroundBrush" Color="{StaticResource c_005}"/>

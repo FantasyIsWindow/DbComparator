@@ -166,6 +166,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ViewControls\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ViewControls\GeneralDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -220,7 +224,9 @@
     <Compile Include="Services\ICollectionEqualizer.cs" />
     <Compile Include="Services\IFieldsEqualizer.cs" />
     <Compile Include="Services\MessageEventArgs.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
+    <Compile Include="ViewModels\IAboutVM.cs" />
     <Compile Include="ViewModels\IDbInfoCreatorVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
     <Compile Include="ViewModels\IMessagerVM.cs" />
@@ -242,6 +248,9 @@
     </Compile>
     <Compile Include="Views\CustomControls\SinhronizedTreeViewControl.xaml.cs">
       <DependentUpon>SinhronizedTreeViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewControls\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
       <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>

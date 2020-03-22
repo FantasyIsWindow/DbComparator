@@ -40,7 +40,7 @@
                 <MenuItem Header="Add new db" Command="{Binding AddNewDbInfoCommand}"/>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About"/>
+                <MenuItem Header="About" Command="{Binding AboutViewShowCommand}"/>
             </MenuItem>
         </Menu>
 
@@ -105,6 +105,9 @@
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type ViewModels:MessagerViewModel}">
                         <Views:MessagerView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type ViewModels:AboutViewModel}">
+                        <Views:AboutView/>
                     </DataTemplate>
                 </ContentPresenter.Resources>
             </ContentPresenter>
