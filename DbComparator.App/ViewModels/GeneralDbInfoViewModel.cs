@@ -1,6 +1,7 @@
 ﻿using Comparator.Repositories.Models.DtoModels;
 using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Commands;
+using DbComparator.App.Infrastructure.EventsArgs;
 using DbComparator.App.Infrastructure.Extensions;
 using DbComparator.App.Models;
 using DbComparator.App.Services;

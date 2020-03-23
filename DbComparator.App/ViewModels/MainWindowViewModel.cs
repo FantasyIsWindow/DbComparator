@@ -1,9 +1,9 @@
 ﻿using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Enums;
+using DbComparator.App.Infrastructure.EventsArgs;
 using DbComparator.App.Infrastructure.Extensions;
 using DbComparator.App.Models;
-using DbComparator.App.Services;
 using DbConectionInfoRepository.Enums;
 using DbConectionInfoRepository.Models;
 using DbConectionInfoRepository.Repositories;

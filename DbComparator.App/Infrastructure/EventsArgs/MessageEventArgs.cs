@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DbComparator.App.Services
+namespace DbComparator.App.Infrastructure.EventsArgs
 {
     public class MessageEventArgs : EventArgs
     {
