@@ -11,39 +11,42 @@ using System.Linq;
 
 namespace DbComparator.App.ViewModels
 {
+    public enum DepthOfCleaning { Low, Medium, High }
+
+
     public class GeneralDbInfoViewModel : ModelBase, IGeneralDbInfoVM
     {
         public Action<Property> GetAction => ((x) => ItemSelection(x));
-        
+
         public event EventHandler MessageHandler;
 
 
 
-        private ICollectionEqualizer _collectionEqualizer;
+        private CollectionEqualizer _collectionEqualizer;
 
-        private IFieldsEqualizer _fieldsEqualizer;
+        private FieldsEqualizer _fieldsEqualizer;
 
-        private IAutoComparator _autoComparator;
+        private AutoComparator _autoComparator;
 
-        private IRepository _primaryDbRepository;
+        private IRepository _lsRepository; 
 
-        private IRepository _secondaryDbRepository;
+        private IRepository _rsRepository;
 
-        private DbInfo _leftDbInfoReceiver;
+        private DbInfo _lsReceiver; 
 
-        private DbInfo _rightDbInfoReceiver;
+        private DbInfo _rsReceiver;
 
-        private ObservableCollection<GeneralDbInfo> _generalInfoDbLeft;
+        private ObservableCollection<GeneralDbInfo> _lsGeneralInfo; 
 
-        private ObservableCollection<GeneralDbInfo> _generalInfoDbRight;
+        private ObservableCollection<GeneralDbInfo> _rsGeneralInfo;
 
-        private ObservableCollection<DtoFullField> _leftDbFieldsInfo;
+        private ObservableCollection<DtoFullField> _lsTableFields;
 
-        private ObservableCollection<DtoFullField> _rightDbFieldsInfo;
+        private ObservableCollection<DtoFullField> _rsTableFields;
 
-        private string _leftDbProcedureSqript;
+        private string _lsSqript;
 
-        private string _rightDbProcedureSqript;
+        private string _rsSqript;
 
         private string _leftCompared;
 
@@ -51,67 +54,67 @@ namespace DbComparator.App.ViewModels
 
 
 
-        public DbInfo LeftDbInfoReceiver
+        public DbInfo LsReceiver
         {
-            get => _leftDbInfoReceiver;
+            get => _lsReceiver;
             set
             {
                 if (value != null)
                 {
-                    DataContextChanged(value, ref _primaryDbRepository);
+                    DataContextChanged(value, ref _lsRepository);
                 }
-                SetProperty(ref _leftDbInfoReceiver, value, "LeftDbInfoReceiver");
+                SetProperty(ref _lsReceiver, value, "LsReceiver");
             }
         }
 
-        public DbInfo RightDbInfoReceiver
+        public DbInfo RsReceiver
         {
-            get => _rightDbInfoReceiver;
+            get => _rsReceiver;
             set
             {
                 if (value != null)
                 {
-                    DataContextChanged(value, ref _secondaryDbRepository);
+                    DataContextChanged(value, ref _rsRepository);
                 }
-                SetProperty(ref _rightDbInfoReceiver, value, "RightDbInfoReceiver");
+                SetProperty(ref _rsReceiver, value, "RsReceiver");
             }
         }
 
 
-        public ObservableCollection<GeneralDbInfo> GeneralInfoDbLeft
+        public ObservableCollection<GeneralDbInfo> LsGeneralInfo
         {
-            get => _generalInfoDbLeft;
-            set => SetProperty(ref _generalInfoDbLeft, value, "GeneralInfoDbLeft");
+            get => _lsGeneralInfo;
+            set => SetProperty(ref _lsGeneralInfo, value, "LsGeneralInfo");
         }
 
-        public ObservableCollection<GeneralDbInfo> GeneralInfoDbRight
+        public ObservableCollection<GeneralDbInfo> RsGeneralInfo
         {
-            get => _generalInfoDbRight;
-            set => SetProperty(ref _generalInfoDbRight, value, "GeneralInfoDbRight");
+            get => _rsGeneralInfo;
+            set => SetProperty(ref _rsGeneralInfo, value, "RsGeneralInfo");
         }
 
-        public ObservableCollection<DtoFullField> LeftDbFieldsInfo
+        public ObservableCollection<DtoFullField> LsTableFields
         {
-            get => _leftDbFieldsInfo;
-            set => SetProperty(ref _leftDbFieldsInfo, value, "LeftDbFieldsInfo");
+            get => _lsTableFields;
+            set => SetProperty(ref _lsTableFields, value, "LsTableFields");
         }
 
-        public ObservableCollection<DtoFullField> RightDbFieldsInfo
+        public ObservableCollection<DtoFullField> RsTableFields
         {
-            get => _rightDbFieldsInfo;
-            set => SetProperty(ref _rightDbFieldsInfo, value, "RightDbFieldsInfo");
+            get => _rsTableFields;
+            set => SetProperty(ref _rsTableFields, value, "RsTableFields");
         }
 
-        public string LeftDbProcedureSqript
+        public string LsSqript
         {
-            get => _leftDbProcedureSqript;
-            set => SetProperty(ref _leftDbProcedureSqript, value, "LeftDbProcedureSqript");
+            get => _lsSqript;
+            set => SetProperty(ref _lsSqript, value, "LsSqript");
         }
 
-        public string RightDbProcedureSqript
+        public string RsSqript
         {
-            get => _rightDbProcedureSqript;
-            set => SetProperty(ref _rightDbProcedureSqript, value, "RightDbProcedureSqript");
+            get => _rsSqript;
+            set => SetProperty(ref _rsSqript, value, "RsSqript");
         }
 
         public string LeftCompared
@@ -126,13 +129,13 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _rightCompared, value, "RightCompared");
         }
 
-        public GeneralDbInfoViewModel(ICollectionEqualizer collectionEqualizer, IFieldsEqualizer fieldsEqualizer, IAutoComparator autoComparator)
+        public GeneralDbInfoViewModel()
         {
-            _generalInfoDbLeft = new ObservableCollection<GeneralDbInfo>();
-            _generalInfoDbRight = new ObservableCollection<GeneralDbInfo>();
-            _collectionEqualizer = collectionEqualizer;
-            _fieldsEqualizer = fieldsEqualizer;
-            _autoComparator = autoComparator;
+            _lsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
+            _rsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
+            _collectionEqualizer = new CollectionEqualizer();
+            _fieldsEqualizer = new FieldsEqualizer();
+            _autoComparator = new AutoComparator();
         }
 
 
@@ -144,22 +147,8 @@ namespace DbComparator.App.ViewModels
         private RellayCommand _compareCommand;
 
 
-
-        public RellayCommand BackCommand
-        {
-            get
-            {
-                return _backCommand ??
-                    (_backCommand = new RellayCommand(obj =>
-                    {
-                        LeftDbFieldsInfo = null;
-                        RightDbFieldsInfo = null;
-                        LeftDbProcedureSqript = null;
-                        RightDbProcedureSqript = null;
-
-                    }));
-            }
-        }
+        public RellayCommand BackCommand =>
+            _backCommand = new RellayCommand((c) => { ClearInfoObjects(DepthOfCleaning.Low); });
 
         public RellayCommand AutoCompareCommand
         {
@@ -168,7 +157,7 @@ namespace DbComparator.App.ViewModels
                 return _autoCompareCommand ??
                     (_autoCompareCommand = new RellayCommand(obj =>
                     {
-                        var result = _autoComparator.Compare(_primaryDbRepository, _secondaryDbRepository);
+                        var result = _autoComparator.Compare(_lsRepository, _rsRepository);
                         SendMessage(result);
                     }));
             }
@@ -190,34 +179,49 @@ namespace DbComparator.App.ViewModels
             }
         }
 
-        public void ClearAll()
+        public void ClearInfoObjects(DepthOfCleaning depth)
         {
-            LeftDbFieldsInfo = null;
-            RightDbFieldsInfo = null;
-            LeftDbInfoReceiver = null;
-            RightDbInfoReceiver = null;
-            LeftDbProcedureSqript = null;
-            RightDbProcedureSqript = null;
-            GeneralInfoDbLeft.ClearIfNotEmpty();
-            GeneralInfoDbRight.ClearIfNotEmpty();
+            switch (depth)
+            {
+                case DepthOfCleaning.High:
+                    {
+                        LsReceiver = null;
+                        RsReceiver = null;
+                        goto case DepthOfCleaning.Medium;
+                    }
+                case DepthOfCleaning.Medium:
+                    {
+                        LsGeneralInfo.ClearIfNotEmpty();
+                        RsGeneralInfo.ClearIfNotEmpty();
+                        goto case DepthOfCleaning.Low;
+                    }
+                case DepthOfCleaning.Low:
+                    {
+                        LsTableFields = null;
+                        RsTableFields = null;
+                        LsSqript = null;
+                        RsSqript = null;
+                        break;
+                    }
+            }
         }
 
         private void CompareGeneralDbInfo(object obj)
         {
-            var leftDbTables = _primaryDbRepository.GetTables().ToList();
-            var rightDbTables = _secondaryDbRepository.GetTables().ToList();
+            var leftDbTables = _lsRepository.GetTables().ToList();
+            var rightDbTables = _rsRepository.GetTables().ToList();
             _collectionEqualizer.CollectionsEquation(leftDbTables, rightDbTables);
 
-            var leftDbProcedures = _primaryDbRepository.GetProcedures().ToList();
-            var rightDbProcedures = _secondaryDbRepository.GetProcedures().ToList();
+            var leftDbProcedures = _lsRepository.GetProcedures().ToList();
+            var rightDbProcedures = _rsRepository.GetProcedures().ToList();
             _collectionEqualizer.CollectionsEquation(leftDbProcedures, rightDbProcedures);
 
-            var leftDbTriggers = _primaryDbRepository.GetTriggers().ToList();
-            var rightDbTriggers = _secondaryDbRepository.GetTriggers().ToList();
+            var leftDbTriggers = _lsRepository.GetTriggers().ToList();
+            var rightDbTriggers = _rsRepository.GetTriggers().ToList();
             _collectionEqualizer.CollectionsEquation(leftDbTriggers, rightDbTriggers);
 
-            FillColection(_generalInfoDbLeft, leftDbTables, leftDbProcedures, leftDbTriggers, _leftDbInfoReceiver);
-            FillColection(_generalInfoDbRight, rightDbTables, rightDbProcedures, rightDbTriggers, _rightDbInfoReceiver);
+            FillColection(_lsGeneralInfo, leftDbTables, leftDbProcedures, leftDbTriggers, _lsReceiver);
+            FillColection(_rsGeneralInfo, rightDbTables, rightDbProcedures, rightDbTriggers, _rsReceiver);
         }
 
         private void FillColection(ObservableCollection<GeneralDbInfo> collection, List<string> tables, List<string> procedures, List<string> triggers, DbInfo db)
@@ -229,10 +233,10 @@ namespace DbComparator.App.ViewModels
 
         private void FetchTableFields(string name)
         {
-            LeftDbFieldsInfo = GetFieldsInfo(_primaryDbRepository, name);
-            RightDbFieldsInfo = GetFieldsInfo(_secondaryDbRepository, name);
+            LsTableFields = GetFieldsInfo(_lsRepository, name);
+            RsTableFields = GetFieldsInfo(_rsRepository, name);
 
-            _fieldsEqualizer.CollectionsEquation(LeftDbFieldsInfo, RightDbFieldsInfo);
+            _fieldsEqualizer.CollectionsEquation(LsTableFields, RsTableFields);
         }
 
         private ObservableCollection<DtoFullField> GetFieldsInfo(IRepository repository, string tableName) =>
@@ -240,39 +244,33 @@ namespace DbComparator.App.ViewModels
 
         private void FetchProcedureSqript(string name)
         {
-            LeftCompared  = _primaryDbRepository.GetProcedureSqript(name) ?? " ";
-            RightCompared = _secondaryDbRepository.GetProcedureSqript(name) ?? " ";
+            GetSqript(_lsRepository.GetProcedureSqript, _rsRepository.GetProcedureSqript, name);
+            LsSqript = LeftCompared;
+            RsSqript = RightCompared;
+        }
 
-            LeftDbProcedureSqript = LeftCompared;
-            RightDbProcedureSqript = RightCompared;
-        }     
-        
         private void FetchTriggerSqript(string name)
         {
-            LeftCompared  = _primaryDbRepository.GetTriggerSqript(name) ?? " ";
-            RightCompared = _secondaryDbRepository.GetTriggerSqript(name) ?? " ";
-
-            LeftDbProcedureSqript = LeftCompared;
-            RightDbProcedureSqript = RightCompared;
+            GetSqript(_lsRepository.GetTriggerSqript, _rsRepository.GetTriggerSqript, name);
+            LsSqript = LeftCompared;
+            RsSqript = RightCompared;
         }
-        
+
+        private void GetSqript(Func<string, string> left, Func<string, string> right, string name)
+        {
+            LeftCompared = left(name) ?? " ";
+            RightCompared = right(name) ?? " ";
+        }
+
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
-            repository = CreateRepository(db.DataBase.DbType);
-            repository.CreateConnectionString(db.DataBase.DataSource, db.DataBase.ServerName,
-                                              db.DataBase.DbName, db.DataBase.Login,
-                                              db.DataBase.Password);
-        }
-
-        private IRepository CreateRepository(string SelectedDbType)
-        {
-            switch (SelectedDbType)
+            if (repository == null || db.DataBase.DbType != repository.DbType)
             {
-                case "Microsoft Sql": { return new MicrosoftDb(); }
-                case "SyBase": { return new SyBaseDb(); }
-                case "MySql": { return new MySqlDb(); }
+                repository = RepositoryFactory.GetRepository(db.DataBase.DbType);
             }
-            return null;
+            ClearInfoObjects(DepthOfCleaning.Medium);
+            repository.CreateConnectionString(db.DataBase.DataSource, 
+                db.DataBase.ServerName, db.DataBase.DbName, db.DataBase.Login, db.DataBase.Password);
         }
 
         private GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, List<string> triggers, string dbName)

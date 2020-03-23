@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
-    public class MySqlDb : IRepository
+    internal class MySqlDb : IRepository
     {
         private const string _provider = "MySql.Data.MySqlClient";
 
@@ -22,6 +22,12 @@ namespace Comparator.Repositories.Repositories
         private DbRepository _db;
 
         private string _dbName;
+
+
+        public string DbName => _dbName;
+
+        public string DbType => (Provider.MySql).ToString();
+
 
         public MySqlDb()
         {
@@ -78,7 +84,7 @@ namespace Comparator.Repositories.Repositories
 
         public string GetTriggerSqript(string triggerName)
         {
-            var sqript = _db.Select<string>(_request.GetTreggersSqriptRequest(triggerName));
+            var sqript = _db.Select<string>(_request.GetTreggersSqriptRequest(_dbName, triggerName));
             return _scriptParser.GetProcedureSquript(sqript);
         }
 

@@ -44,10 +44,10 @@
                 <Controls:DbInfoReceiverControl Grid.Row="0"
                                                 x:Name="leftDbInfoReceiver"
                                                 Style="{StaticResource dbReceiverStyle}"
-                                                DataContext="{Binding LeftDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                DataContext="{Binding LsReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Controls:SinhronizedTreeViewControl Grid.Row="1" 
-                                                     TVItemsSource="{Binding GeneralInfoDbLeft}"
+                                                     TVItemsSource="{Binding LsGeneralInfo}"
                                                      VerticalScrollOffset="{Binding ElementName=rightTreeView, Path=CurrentVerticalScrollOffset}"
                                                      SetSelectedItem="{Binding GetAction}"
                                                      x:Name="leftTreeView"/>
@@ -55,14 +55,14 @@
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="leftDataGrid"
-                                               FieldsCollection="{Binding LeftDbFieldsInfo}"
-                                               FieldsToCompareCollection="{Binding RightDbFieldsInfo}" 
+                                               FieldsCollection="{Binding LsTableFields}"
+                                               FieldsToCompareCollection="{Binding RsTableFields}" 
                                                SetCellsWidth="{Binding ElementName=rightDataGrid, Path=GetCellsWidth}"
                                                HorizontalScrollOffset="{Binding ElementName=rightDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=leftTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
-                                              MainText="{Binding LeftDbProcedureSqript}" 
+                                              MainText="{Binding LsSqript}" 
                                               CompareText="{Binding RightCompared}" 
                                               x:Name="leftTextBox"/>
 
@@ -79,11 +79,11 @@
                 <Controls:DbInfoReceiverControl Grid.Row="0"
                                                 Style="{StaticResource dbReceiverStyle}"
                                                 x:Name="rightDbInfoReceiver"
-                                                DataContext="{Binding RightDbInfoReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                DataContext="{Binding RsReceiver, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 
                 <Controls:SinhronizedTreeViewControl Grid.Row="1" 
-                                                     TVItemsSource="{Binding GeneralInfoDbRight}"
+                                                     TVItemsSource="{Binding RsGeneralInfo}"
                                                      VerticalScrollOffset="{Binding ElementName=leftTreeView, Path=CurrentVerticalScrollOffset}"
                                                      SetSelectedItem="{Binding GetAction}"
                                                      x:Name="rightTreeView"/>
@@ -92,14 +92,14 @@
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="rightDataGrid" 
-                                               FieldsCollection="{Binding RightDbFieldsInfo}" 
-                                               FieldsToCompareCollection="{Binding LeftDbFieldsInfo}" 
+                                               FieldsCollection="{Binding RsTableFields}" 
+                                               FieldsToCompareCollection="{Binding LsTableFields}" 
                                                SetCellsWidth="{Binding ElementName=leftDataGrid, Path=GetCellsWidth}"
                                                HorizontalScrollOffset="{Binding ElementName=leftDataGrid, Path=CurrentHorizontalScrollOffset}"/>
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=rightTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
-                                              MainText="{Binding RightDbProcedureSqript}" 
+                                              MainText="{Binding RsSqript}" 
                                               CompareText="{Binding LeftCompared}" 
                                               x:Name="rightTextBox"/>
 

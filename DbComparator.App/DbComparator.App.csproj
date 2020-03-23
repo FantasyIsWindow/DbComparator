@@ -205,7 +205,6 @@
     <Compile Include="Infrastructure\Delegates\NotifyDelegate.cs" />
     <Compile Include="Infrastructure\Enums\MbShowDialog.cs" />
     <Compile Include="Infrastructure\Enums\OpenStatus.cs" />
-    <Compile Include="Infrastructure\Enums\SizingAction.cs" />
     <Compile Include="Infrastructure\Extensions\EnumerableExtension.cs" />
     <Compile Include="Infrastructure\Extensions\ObjectExtension.cs" />
     <Compile Include="Infrastructure\Extensions\ObservableCollectionExtensions.cs" />
@@ -216,13 +215,10 @@
     <Compile Include="Models\GeneralDbInfo.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Resources\Selectors\DbListBoxSelector.cs" />
-    <Compile Include="Resources\Style\Generic.cs" />
+    <Compile Include="Resources\Style\MechanicsMainWindow.cs" />
     <Compile Include="Services\AutoComparator.cs" />
     <Compile Include="Services\CollectionEqualizer.cs" />
     <Compile Include="Services\FieldsEqualizer.cs" />
-    <Compile Include="Services\IAutoComparator.cs" />
-    <Compile Include="Services\ICollectionEqualizer.cs" />
-    <Compile Include="Services\IFieldsEqualizer.cs" />
     <Compile Include="Services\MessageEventArgs.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />

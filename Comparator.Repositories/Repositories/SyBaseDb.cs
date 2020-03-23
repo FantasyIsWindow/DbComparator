@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
-    public class SyBaseDb : IRepository
+    internal class SyBaseDb : IRepository
     {
         private const string _provider = "Sap.Data.SQLAnywhere";
 
@@ -23,6 +23,13 @@ namespace Comparator.Repositories.Repositories
 
         private string _dbOwner;
 
+        private string _dbName;
+
+
+        public string DbName => _dbName;
+
+        public string DbType => (Provider.SyBase).ToString();
+
         public SyBaseDb()
         {
             _fieldsParser = new SyBaseFieldsInfoParser();
@@ -35,6 +42,7 @@ namespace Comparator.Repositories.Repositories
             _connectionString = $"Data Source=SQL Anywhere 17 Demo;Server={server};DatabaseName={dbName};Uid={login};Password={password};";
             _db = new DbRepository(_connectionString, _provider);
             _dbOwner = login;
+            _dbName = dbName;
         }
         
         public IEnumerable<DtoFullField> GetFieldsInfo(string tableName)

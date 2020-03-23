@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Comparator.Repositories.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,15 @@ namespace Comparator.Repositories.Parsers
             _findWord = new ReservedKeyword();
         }
 
-        public string GetProcedureSquript(IEnumerable<string> str) =>
-            str != null ? GeSquript(ArrayToString(str)) : null;
+        public string GetProcedureSquript(IEnumerable<string> str)
+        {
+            if (str.IsNull())
+            {
+                var result = ArrayToString(str);
+                return GeSquript(ArrayToString(str));
+            }
+            return null;
+        }
 
         public string GetProcedureSquript(string str) =>
             str != null ? GeSquript(str) : null;        

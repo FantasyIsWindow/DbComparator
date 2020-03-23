@@ -53,6 +53,7 @@
     <Compile Include="DbRequests\MicrosoftDbRequests.cs" />
     <Compile Include="DbRequests\MySqlRequests.cs" />
     <Compile Include="DbRequests\SyBaseRequests.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="Mappings\MappingProfile.cs" />
     <Compile Include="Models\DbModels\Constraint.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\MicrosoftDb.cs" />
     <Compile Include="Repositories\MySqlDb.cs" />
+    <Compile Include="Repositories\RepositoryFactory.cs" />
     <Compile Include="Repositories\SyBaseDb.cs" />
   </ItemGroup>
   <ItemGroup>

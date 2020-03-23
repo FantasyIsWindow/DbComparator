@@ -67,7 +67,7 @@
         <GroupBox Grid.Row="2" Header="References">
             <ListBox Style="{StaticResource listBoxStyle}"
                      ItemsSource="{Binding ReferenceInfoDbs}"
-                     SelectedItem="{Binding SelectedReferenceModel}">
+                     SelectedItem="{Binding SelectedRefModel}">
                 <ListBox.ItemTemplateSelector>
                     <Selectors:DbListBoxSelector Connected="{StaticResource referenceConnected}"
                                                  Disconected="{StaticResource referenceDisconected}"
@@ -79,7 +79,7 @@
         <GroupBox Grid.Row="3" Header="NotReferences">
             <ListBox Style="{StaticResource listBoxStyle}"
                      ItemsSource="{Binding NotReferenceInfoDbs}" 
-                     SelectedItem="{Binding SelectedNotReferenceModel}">
+                     SelectedItem="{Binding SelectedNotRefModel}">
                 <ListBox.ItemTemplateSelector>
                     <Selectors:DbListBoxSelector Connected="{StaticResource connected}"
                                                  Disconected="{StaticResource disconected}"

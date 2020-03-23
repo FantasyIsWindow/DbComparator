@@ -32,15 +32,15 @@ namespace DbComparator.App.ViewModels
 
         private ObservableCollection<string> _dbTypes;
 
-        private string _selectedDbType;
+        private Provider _selectedDbType;
 
-        private DbInfo _selectedReferenceModel;
+        private DbInfo _selectedRefModel;
 
-        private DbInfo _selectedNotReferenceModel;
-
-        private ObservableCollection<DbInfo> _notReferenceInfoDbs;
+        private DbInfo _selectedNotRefModel;
 
         private ObservableCollection<DbInfo> _referenceInfoDbs;
+
+        private ObservableCollection<DbInfo> _notReferenceInfoDbs;
 
         private bool _loadViewVisibility;
                      
@@ -63,28 +63,22 @@ namespace DbComparator.App.ViewModels
             set => _dbTypes = value;
         }
 
-        public string SelectedDbType
+        public Provider SelectedDbType
         {
             get => _selectedDbType;
             set => SetProperty(ref _selectedDbType, value, "SelectedDbType");
         }
 
-        public DbInfo SelectedReferenceModel
+        public DbInfo SelectedRefModel
         {
-            get => _selectedReferenceModel;
-            set => SetProperty(ref _selectedReferenceModel, value, "SelectedReferenceModel");
+            get => _selectedRefModel;
+            set => SetProperty(ref _selectedRefModel, value, "SelectedRefModel");
         }
 
-        public DbInfo SelectedNotReferenceModel
+        public DbInfo SelectedNotRefModel
         {
-            get => _selectedNotReferenceModel;
-            set => SetProperty(ref _selectedNotReferenceModel, value, "SelectedNotReferenceModel");
-        }
-
-        public ObservableCollection<DbInfo> NotReferenceInfoDbs
-        {
-            get => _notReferenceInfoDbs;
-            set => _notReferenceInfoDbs = value;
+            get => _selectedNotRefModel;
+            set => SetProperty(ref _selectedNotRefModel, value, "SelectedNotRefModel");
         }
 
         public ObservableCollection<DbInfo> ReferenceInfoDbs
@@ -93,32 +87,43 @@ namespace DbComparator.App.ViewModels
             set => _referenceInfoDbs = value;
         }
 
+        public ObservableCollection<DbInfo> NotReferenceInfoDbs
+        {
+            get => _notReferenceInfoDbs;
+            set => _notReferenceInfoDbs = value;
+        }
+               
         public bool LoadViewVisibility
         {
             get => _loadViewVisibility;
             set => SetProperty(ref _loadViewVisibility, value, "LoadViewVisibility");
         }
 
-        public MainWindowViewModel(IInfoDbRepository connectionDb, IGeneralDbInfoVM generalDbInfo, IMessagerVM messager, IDbInfoCreatorVM dbInfoManager, IAboutVM aboutVM)
+        public MainWindowViewModel(IInfoDbRepository connectionDb, 
+                                   IGeneralDbInfoVM generalDbInfo,
+                                   IMessagerVM messager, 
+                                   IDbInfoCreatorVM dbInfoManager, 
+                                   IAboutVM aboutVM)
         {
             _connectionDb = connectionDb;
 
             _dbTypes = new ObservableCollection<string>(_connectionDb.GetAllTypes());
             _referenceInfoDbs = new ObservableCollection<DbInfo>();
             _notReferenceInfoDbs = new ObservableCollection<DbInfo>();
-
             _infoViewModel = generalDbInfo;
-            _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
-
             _showMessage = messager;
-            _showMessage.CloseHandler += (() => { CurrentPageContent = null; });
-
             _addNewDb = dbInfoManager;
+            _aboutVM = aboutVM;
+            Subscriptions();
+        }
+
+        private void Subscriptions()
+        {
+            _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
+            _showMessage.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
-
-            _aboutVM = aboutVM;
             _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
 
@@ -148,7 +153,7 @@ namespace DbComparator.App.ViewModels
                         var reference = obj as string;
                         if (reference != null)
                         {
-                            DbInfoModel model = new DbInfoModel { Reference = reference, DbType = SelectedDbType };
+                            DbInfoModel model = new DbInfoModel { Reference = reference, DbType = SelectedDbType.ToString() };
                             _addNewDb.ShowManagerWindow(OpenStatus.Add, model);
                         }
                         else
@@ -167,9 +172,9 @@ namespace DbComparator.App.ViewModels
                 return _updateNotReferenceRecordCommand ??
                     (_updateNotReferenceRecordCommand = new RellayCommand(obj =>
                     {
-                        UpdateRecord(SelectedNotReferenceModel.DataBase);
+                        UpdateRecord(SelectedNotRefModel.DataBase);
                     },
-                        (obj) => obj != null ? SelectedNotReferenceModel != null && (bool)obj : false
+                        (obj) => obj != null ? SelectedNotRefModel != null && (bool)obj : false
                     ));
             }
         }
@@ -181,9 +186,9 @@ namespace DbComparator.App.ViewModels
                 return _updateReferenceRecordCommand ??
                     (_updateReferenceRecordCommand = new RellayCommand(obj =>
                     {
-                        UpdateRecord(SelectedReferenceModel.DataBase);
+                        UpdateRecord(SelectedRefModel.DataBase);
                     },
-                        (obj) => obj != null ? SelectedReferenceModel != null && (bool)obj : false
+                        (obj) => obj != null ? SelectedRefModel != null && (bool)obj : false
                     ));
             }
         }
@@ -195,9 +200,9 @@ namespace DbComparator.App.ViewModels
                 return _removeNotReferenceRecordCommand ??
                     (_removeNotReferenceRecordCommand = new RellayCommand(obj =>
                     {
-                        ShowQuastionMessage(SelectedNotReferenceModel.DataBase);
+                        ShowQuastionMessage(SelectedNotRefModel.DataBase);
                     },
-                        (obj) => obj != null ? SelectedNotReferenceModel != null && (bool)obj : false
+                        (obj) => obj != null ? SelectedNotRefModel != null && (bool)obj : false
                     ));
             }
         }
@@ -209,9 +214,9 @@ namespace DbComparator.App.ViewModels
                 return _removeReferenceRecordCommand ??
                     (_removeReferenceRecordCommand = new RellayCommand(obj =>
                     {
-                        ShowQuastionMessage(SelectedReferenceModel.DataBase);
+                        ShowQuastionMessage(SelectedRefModel.DataBase);
                     },
-                        (obj) => obj != null ? SelectedReferenceModel != null && (bool)obj : false
+                        (obj) => obj != null ? SelectedRefModel != null && (bool)obj : false
                     ));
             }
         }
@@ -223,7 +228,7 @@ namespace DbComparator.App.ViewModels
                 return _choiseDbTypeCommand ??
                     (_choiseDbTypeCommand = new RellayCommand(obj =>
                     {
-                        _infoViewModel.ClearAll();
+                        _infoViewModel.ClearInfoObjects(DepthOfCleaning.High);
                         ChoiseType();
                     }));
             }
@@ -267,27 +272,16 @@ namespace DbComparator.App.ViewModels
         private async void ChoiseType()
         {
             LoadViewVisibility = true;
-            _dbRepository = CreateRepository();
+            _dbRepository = RepositoryFactory.GetRepository(SelectedDbType);
             await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
             await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
             LoadViewVisibility = false;
         }
 
-        private IRepository CreateRepository()
-        {
-            switch (SelectedDbType)
-            {
-                case "Microsoft Sql": { return new MicrosoftDb(); }
-                case "SyBase": { return new SyBaseDb(); }
-                case "MySql": { return new MySqlDb(); }
-            }
-            return null;
-        }
-
         private async Task GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
         {
             collection.ClearIfNotEmpty();
-            var result = _connectionDb.GetAllReferenceDbByType(SelectedDbType, reference);
+            var result = _connectionDb.GetAllReferenceDbByType(SelectedDbType.ToString(), reference);
             await GetDbTypes(result, collection);
         }
 

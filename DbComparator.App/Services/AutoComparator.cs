@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace DbComparator.App.Services
 {
-    public class AutoComparator : IAutoComparator
+    public class AutoComparator
     { 
-        private ICollectionEqualizer _collectionEqualizer;
+        private CollectionEqualizer _collectionEqualizer;
 
-        private IFieldsEqualizer _fieldsEqualizer;
+        private FieldsEqualizer _fieldsEqualizer;
 
         private IRepository _primaryRepository;
 
@@ -22,10 +22,10 @@ namespace DbComparator.App.Services
         List<CompareResult> _results;
 
 
-        public AutoComparator(ICollectionEqualizer collectionEqualizer, IFieldsEqualizer fieldsEqualizer)
+        public AutoComparator()
         {
-            _collectionEqualizer = collectionEqualizer;
-            _fieldsEqualizer = fieldsEqualizer;
+            _collectionEqualizer = new CollectionEqualizer();
+            _fieldsEqualizer = new FieldsEqualizer();
             _results = new List<CompareResult>();
         }
 

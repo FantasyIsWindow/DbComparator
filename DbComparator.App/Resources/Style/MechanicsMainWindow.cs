@@ -3,18 +3,19 @@ using System.Windows.Input;
 using System.Windows;
 using System.Runtime.InteropServices;
 using DbComparator.App.Infrastructure.Extensions;
-using DbComparator.App.Infrastructure.Enums;
 
 namespace DbComparator.App.Resources.Style
 {
-    public partial class Generic : ResourceDictionary
+    public enum SizingAction { Left = 1, Right, Top, TopLeft, TopRight, Bottom, BottomLeft, BottomRight };
+
+    public partial class MechanicsMainWindow : ResourceDictionary
     {
         private const int WM_SYSCOMMAND = 0x112;
         private const int SC_SIZE = 0xF000;
         private const int SC_KEYMENU = 0xF100;
 
 
-        public Generic()
+        public MechanicsMainWindow()
         {
             InitializeComponent();
         }
@@ -27,12 +28,9 @@ namespace DbComparator.App.Resources.Style
             sender.ForWindowFromTemplate(w => w.WindowState = (w.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized);
         
 
-        private void closeBtn_Click(object sender, RoutedEventArgs e)
-        {
+        private void closeBtn_Click(object sender, RoutedEventArgs e) => 
             CloseWindow(sender);
-        }
-
-
+        
 
         private void window_move(object sender, MouseButtonEventArgs e)
         {
@@ -87,11 +85,11 @@ namespace DbComparator.App.Resources.Style
 
         private void OnTopSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.Top);
 
-        private void OnBottomSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.Bottom);
-
         private void OnLeftSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.Left);
 
         private void OnRightSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.Right);
+
+        private void OnBottomSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.Bottom);
 
         private void OnTopLeftSide(object sender, MouseButtonEventArgs e) => OnSize(sender, SizingAction.TopLeft);
 

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Comparator.Repositories.Parsers
 {
-    public class MySqlFieldsInfoParser
+    internal class MySqlFieldsInfoParser
     {
         public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<MySqlFields> fields, IEnumerable<MySqlConstaintsModel> constraints, IEnumerable<MySqlCascadeOption> options)
         {

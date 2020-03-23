@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
-    public class DbRepository
+    internal class DbRepository
     {
         private readonly string _connectionString;
         private readonly DbProviderFactory _factory;

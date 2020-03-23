@@ -1,6 +1,6 @@
 ﻿namespace Comparator.Repositories.DbRequests
 {
-    public class MySqlRequests
+    internal class MySqlRequests
     {
         public string GetTablesRequest(string dbName) =>
             $"SHOW TABLES FROM {dbName}";
@@ -29,7 +29,7 @@
         public string GetTreggersRequest(string dbName) =>
             $"SHOW TRIGGERS FROM {dbName}";
 
-        public string GetTreggersSqriptRequest(string dbName) => 
-            $"select action_statement from information_schema.triggers where TRIGGER_NAME = '{ dbName}'";
+        public string GetTreggersSqriptRequest(string dbName, string triggerName) => 
+            $"select action_statement from information_schema.triggers where TRIGGER_NAME = '{triggerName}' AND TRIGGER_SCHEMA = '{dbName}'";
     }
 }

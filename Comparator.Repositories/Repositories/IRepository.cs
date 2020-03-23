@@ -6,6 +6,10 @@ namespace Comparator.Repositories.Repositories
 {
     public interface IRepository
     {
+        string DbType { get; }
+
+        string DbName { get; }
+
         void CreateConnectionString(string source, string server, string dbName, string login, string password);
 
         IEnumerable<DtoFullField> GetFieldsInfo(string tableName);

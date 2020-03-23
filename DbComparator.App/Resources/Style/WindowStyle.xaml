@@ -1,11 +1,11 @@
-﻿ <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                     x:Class="DbComparator.App.Resources.Style.Generic">
+                    x:Class="DbComparator.App.Resources.Style.MechanicsMainWindow">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-     
+
     <Style TargetType="{x:Type Window}" x:Key="windowStyle">
         <Setter Property="MinWidth" Value="600"/>
         <Setter Property="MinHeight" Value="600"/>
@@ -140,7 +140,7 @@
                               X2="{TemplateBinding ActualWidth}" 
                               Y1="1" 
                               Y2="{TemplateBinding ActualHeight}"/>
-                       
+
                         <Rectangle x:Name="TopLeftSide" 
                                    MouseDown="OnTopLeftSide" 
                                    Cursor="SizeNWSE" 
@@ -182,7 +182,7 @@
                             <Setter TargetName="border" Property="Background" Value="{StaticResource WindowTitleBarDisabledBackgroundBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
-                </ControlTemplate>                
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

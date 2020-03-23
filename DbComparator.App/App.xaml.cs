@@ -17,15 +17,12 @@ namespace DbComparator.App
             kernel.Bind<IMessagerVM>().To<MessagerViewModel>();
             kernel.Bind<IDbInfoCreatorVM>().To<DbInfoCreatorViewModel>();
             kernel.Bind<IGeneralDbInfoVM>().To<GeneralDbInfoViewModel>();
-            kernel.Bind<ICollectionEqualizer>().To<CollectionEqualizer>();
-            kernel.Bind<IFieldsEqualizer>().To<FieldsEqualizer>();
-            kernel.Bind<IAutoComparator>().To<AutoComparator>();
             kernel.Bind<IAboutVM>().To<AboutViewModel>();
 
             var mainVM = kernel.Get<MainWindowViewModel>();
 
             MainWindow = new MainWindow();
-            MainWindow.DataContext = mainVM;
+            MainWindow.DataContext = mainVM; 
             MainWindow.Show();
 
         }

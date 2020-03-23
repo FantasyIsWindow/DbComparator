@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
-    public class MicrosoftDb : IRepository
+    internal class MicrosoftDb : IRepository
     {
         private const string _provider = "System.Data.SqlClient";
 
@@ -21,6 +21,14 @@ namespace Comparator.Repositories.Repositories
 
         private DbRepository _db;
 
+        private string _dbName;
+
+
+        public string DbType => (Provider.MicrosoftSql).ToString();
+
+        public string DbName => _dbName;         
+
+
         public MicrosoftDb()
         {
             _fieldsParser = new MicrosoftFieldsInfoParser();
@@ -32,6 +40,7 @@ namespace Comparator.Repositories.Repositories
         {
             _connectionString = $"server={server};Trusted_Connection=True;Database={dbName};Connect Timeout=5;";
             _db = new DbRepository(_connectionString, _provider);
+            _dbName = dbName;
         }
 
         public IEnumerable<DtoFullField> GetFieldsInfo(string tableName)

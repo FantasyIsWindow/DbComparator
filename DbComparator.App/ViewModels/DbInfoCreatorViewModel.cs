@@ -29,8 +29,6 @@ namespace DbComparator.App.ViewModels
 
         private bool _isEnabled;
 
-        private string[] _dbTypes;
-
 
 
         public DbInfoModel DbInfoModel
@@ -54,17 +52,11 @@ namespace DbComparator.App.ViewModels
             get => _isEnabled; 
         }
 
-        public string[] DbTypes
-        {
-            get => _dbTypes; 
-        }
-
 
         public DbInfoCreatorViewModel(IInfoDbRepository repository)
         {
             _repository = repository;
             _referencesType = new string[] { "Yes", "No" };
-            _dbTypes = new[] { "Microsoft Sql", "SyBase", "MySql" };
         }
         
         
