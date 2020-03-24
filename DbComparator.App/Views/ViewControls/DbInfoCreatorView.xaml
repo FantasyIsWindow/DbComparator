@@ -58,7 +58,8 @@
                   Style="{StaticResource comboBoxStyle}"
                   IsEnabled="{Binding IsEnabled}"
                   SelectedValue="{Binding DbInfoModel.DbType}" 
-                  ItemsSource="{Binding DbTypes}" Text="{Binding DbInfoModel.DbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  ItemsSource="{Binding Source={StaticResource dataProvider}}"
+                  Text="{Binding DbInfoModel.DbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
         </ComboBox>
 
         <Label Grid.Row="7" Content="Reference*"  Style="{StaticResource lableStyle}"/>

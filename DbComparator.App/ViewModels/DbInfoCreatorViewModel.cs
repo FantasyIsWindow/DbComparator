@@ -2,7 +2,6 @@
 using DbComparator.App.Infrastructure.Delegates;
 using DbComparator.App.Infrastructure.Enums;
 using DbComparator.App.Infrastructure.EventsArgs;
-using DbComparator.App.Services;
 using DbConectionInfoRepository.Models;
 using DbConectionInfoRepository.Repositories;
 using System;
