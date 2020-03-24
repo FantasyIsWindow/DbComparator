@@ -30,8 +30,6 @@ namespace DbComparator.App.ViewModels
 
         private object _currentPageContent;
 
-        private ObservableCollection<string> _dbTypes;
-
         private Provider _selectedDbType;
 
         private DbInfo _selectedRefModel;
@@ -55,12 +53,6 @@ namespace DbComparator.App.ViewModels
         {
             get => _currentPageContent;
             set => SetProperty(ref _currentPageContent, value, "CurrentPageContent");
-        }
-
-        public ObservableCollection<string> DbTypes
-        {
-            get => _dbTypes;
-            set => _dbTypes = value;
         }
 
         public Provider SelectedDbType
@@ -106,8 +98,6 @@ namespace DbComparator.App.ViewModels
                                    IAboutVM aboutVM)
         {
             _connectionDb = connectionDb;
-
-            _dbTypes = new ObservableCollection<string>(_connectionDb.GetAllTypes());
             _referenceInfoDbs = new ObservableCollection<DbInfo>();
             _notReferenceInfoDbs = new ObservableCollection<DbInfo>();
             _infoViewModel = generalDbInfo;
@@ -126,7 +116,6 @@ namespace DbComparator.App.ViewModels
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
             _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
-
 
         private RellayCommand _addNewDbInfoCommand;
 
@@ -237,12 +226,6 @@ namespace DbComparator.App.ViewModels
         public RellayCommand AboutViewShowCommand =>
             _aboutViewShowCommand = new RellayCommand((c) => { CurrentPageContent = _aboutVM; });
 
-        private void UpdateTypes()
-        {
-            ChoiseType();
-            CurrentPageContent = null;
-        }
-
         private void UpdateRecord(DbInfoModel dbInfo)
         {
             try
@@ -266,7 +249,19 @@ namespace DbComparator.App.ViewModels
         {
             InfoDbConnection _repository = new InfoDbConnection();
             _repository.DeleteDbInfo(dbInfo);
-            UpdateTypes();
+            UpdateTypes(null, null);
+        }
+
+        private void UpdateTypes(object sender, EventArgs e)
+        {
+            if (e != null)
+            {
+                var type = (MessageEventArgs)e;
+                SelectedDbType = RepositoryFactory.StringToProvider((string)type.Message);
+            }
+
+            ChoiseType();
+            CurrentPageContent = null;
         }
 
         private async void ChoiseType()

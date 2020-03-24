@@ -8,6 +8,8 @@
         xmlns:ViewModels="clr-namespace:DbComparator.App.ViewModels"
         xmlns:Views="clr-namespace:DbComparator.App.Views.ViewControls"
         xmlns:Selectors="clr-namespace:DbComparator.App.Resources.Selectors"
+        xmlns:Providers="clr-namespace:Comparator.Repositories.Repositories;assembly=Comparator.Repositories"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Comparator"
         Height="600" 
@@ -18,6 +20,11 @@
     <Window.Resources>
         <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
         <Converters:LoadViewVisibilityConverter x:Key="loadViewVisibilityConverter"/>
+        <ObjectDataProvider x:Key="dataProvider" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Providers:Provider"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -50,8 +57,9 @@
                   HorizontalAlignment="Left"
                   Margin="5, 5, 0, 5" 
                   Style="{StaticResource comboBoxStyle}" 
-                  ItemsSource="{Binding DbTypes}" 
-                  SelectedItem="{Binding SelectedDbType}">
+                  ItemsSource="{Binding Source={StaticResource dataProvider}}" 
+                  SelectedItem="{Binding SelectedDbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedIndex="-1">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ChoiseDbTypeCommand}"/>

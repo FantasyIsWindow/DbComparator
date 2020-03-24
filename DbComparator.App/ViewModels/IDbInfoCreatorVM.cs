@@ -7,7 +7,7 @@ namespace DbComparator.App.ViewModels
 {
     public interface IDbInfoCreatorVM
     {
-        event NotifyDelegate OkHandler;
+        event EventHandler OkHandler;
 
         event NotifyDelegate CloseHandler;
 

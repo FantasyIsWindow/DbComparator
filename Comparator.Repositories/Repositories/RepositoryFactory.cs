@@ -14,7 +14,10 @@ namespace Comparator.Repositories.Repositories
 
         public static IRepository GetRepository(Provider repository) =>
             CreateRepository(repository);
-        
+
+        public static Provider StringToProvider(string repository) => 
+            (Provider)Enum.Parse(typeof(Provider), repository);
+
         private static IRepository CreateRepository(Provider repository)
         {
             switch (repository)
@@ -24,6 +27,6 @@ namespace Comparator.Repositories.Repositories
                 case Provider.SyBase: return new SyBaseDb();
             }
             return null;
-        }
+        }        
     }
 }

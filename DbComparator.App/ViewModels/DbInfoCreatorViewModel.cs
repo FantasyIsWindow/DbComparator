@@ -10,7 +10,7 @@ namespace DbComparator.App.ViewModels
 { 
     public class DbInfoCreatorViewModel : ModelBase, IDbInfoCreatorVM
     {
-        public event NotifyDelegate OkHandler;
+        public event EventHandler OkHandler;
 
         public event NotifyDelegate CloseHandler;
 
@@ -90,11 +90,11 @@ namespace DbComparator.App.ViewModels
                     case OpenStatus.Add: { _repository.AddNewRecord(_dbInfoModel); break; }
                     case OpenStatus.Update: { _repository.UpdateDbInfo(_dbInfoModel); break; }
                 }
-                OkHandler?.Invoke();
+                SendMessage(OkHandler, _dbInfoModel.DbType);
             }
             catch (Exception ex)
             {
-                SendMessage(ex.Message);
+                SendMessage(MessageHandler, ex.Message);
             }
         }
 
@@ -104,13 +104,13 @@ namespace DbComparator.App.ViewModels
             _dbInfoModel.DbType      != null &&
             _dbInfoModel.Reference   != null;       
         
-        private void SendMessage(string message)
+        private void SendMessage(EventHandler handler, string message)
         {
-            if (MessageHandler != null)
+            if (handler != null)
             {
                 MessageEventArgs eventArgs = new MessageEventArgs();
                 eventArgs.Message = message;
-                MessageHandler?.Invoke(this, eventArgs);
+                handler?.Invoke(this, eventArgs);
             }
         }
     }
