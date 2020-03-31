@@ -13,7 +13,7 @@ namespace Comparator.Repositories.Repositories
 
         private MicrosoftFieldsInfoParser _fieldsParser;
 
-        private ProcedureScriptParser _scriptParser;
+        private ScriptParser _scriptParser;
 
         private string _connectionString;
 
@@ -32,7 +32,7 @@ namespace Comparator.Repositories.Repositories
         public MicrosoftDb()
         {
             _fieldsParser = new MicrosoftFieldsInfoParser();
-            _scriptParser = new ProcedureScriptParser();
+            _scriptParser = new ScriptParser();
             _request = new MicrosoftDbRequests();
         }
 

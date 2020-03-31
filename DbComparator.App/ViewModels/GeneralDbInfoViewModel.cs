@@ -8,7 +8,6 @@ using DbComparator.App.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace DbComparator.App.ViewModels
 {
@@ -21,13 +20,15 @@ namespace DbComparator.App.ViewModels
 
         public event EventHandler MessageHandler;
 
+        public event EventHandler CurrentEntitiesMessageHandler;
+
 
 
         private CollectionEqualizer _collectionEqualizer;
 
-        private FieldsEqualizer _fieldsEqualizer;
+        private RepositoryFactory _repositoryFactory;
 
-        private AutoComparator _autoComparator;
+        private GeneralComparator _generalComparator;
 
         private IRepository _lsRepository; 
 
@@ -45,13 +46,15 @@ namespace DbComparator.App.ViewModels
 
         private ObservableCollection<DtoFullField> _rsTableFields;
 
-        private string _lsSqript;
+        private string _lsScript;
 
-        private string _rsSqript;
+        private string _rsScript;
 
         private string _leftCompared;
 
         private string _rightCompared;
+
+        private bool _isAuto;
 
 
 
@@ -81,7 +84,6 @@ namespace DbComparator.App.ViewModels
             }
         }
 
-
         public ObservableCollection<GeneralDbInfo> LsGeneralInfo
         {
             get => _lsGeneralInfo;
@@ -106,16 +108,16 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _rsTableFields, value, "RsTableFields");
         }
 
-        public string LsSqript
+        public string LsScript
         {
-            get => _lsSqript;
-            set => SetProperty(ref _lsSqript, value, "LsSqript");
+            get => _lsScript;
+            set => SetProperty(ref _lsScript, value, "LsScript");
         }
 
-        public string RsSqript
+        public string RsScript
         {
-            get => _rsSqript;
-            set => SetProperty(ref _rsSqript, value, "RsSqript");
+            get => _rsScript;
+            set => SetProperty(ref _rsScript, value, "RsScript");
         }
 
         public string LeftCompared
@@ -128,15 +130,22 @@ namespace DbComparator.App.ViewModels
         {
             get => _rightCompared;
             set => SetProperty(ref _rightCompared, value, "RightCompared");
+        }     
+        
+        public bool IsAuto
+        {
+            get => _isAuto;
+            set => SetProperty(ref _isAuto, value, "IsAuto");
         }
 
         public GeneralDbInfoViewModel()
         {
             _lsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
             _rsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
+            _repositoryFactory = new RepositoryFactory();
+            _generalComparator = new GeneralComparator();
             _collectionEqualizer = new CollectionEqualizer();
-            _fieldsEqualizer = new FieldsEqualizer();
-            _autoComparator = new AutoComparator();
+            _isAuto = false;
         }
 
 
@@ -151,18 +160,8 @@ namespace DbComparator.App.ViewModels
         public RellayCommand BackCommand =>
             _backCommand = new RellayCommand((c) => { ClearInfoObjects(DepthOfCleaning.Low); });
 
-        public RellayCommand AutoCompareCommand
-        {
-            get
-            {
-                return _autoCompareCommand ??
-                    (_autoCompareCommand = new RellayCommand(obj =>
-                    {
-                        var result = _autoComparator.Compare(_lsRepository, _rsRepository);
-                        SendMessage(result);
-                    }));
-            }
-        }
+        public RellayCommand AutoCompareCommand => 
+            _autoCompareCommand = new RellayCommand(AutoCompare);
 
         public RellayCommand CompareCommand =>
             _compareCommand = new RellayCommand(CompareGeneralDbInfo);
@@ -171,12 +170,29 @@ namespace DbComparator.App.ViewModels
         {
             if (property != null && property.Name != "null")
             {
+                string message = "";
                 switch (property.PropertyType)
                 {
-                    case "Table": { FetchTableFields(property.Name); break; }
-                    case "Procedure": { FetchProcedureSqript(property.Name); break; }
-                    case "Trigger": { FetchTriggerSqript(property.Name); break; }
+                    case "Table": 
+                        {
+                            var str = GetFields(property.Name);
+                            message = "Tables: " + str;
+                            break;
+                        }
+                    case "Procedure": 
+                        {
+                            var str = GetScript(_lsRepository.GetProcedureSqript, _rsRepository.GetProcedureSqript, property.Name);
+                            message = "Procedures: " + str;
+                            break;
+                        }
+                    case "Trigger":
+                        {
+                            var str = GetScript(_lsRepository.GetTriggerSqript, _rsRepository.GetTriggerSqript, property.Name);
+                            message = "Triggers: " + str;
+                            break;
+                        }
                 }
+                SendMessage(CurrentEntitiesMessageHandler, message);
             }
         }
 
@@ -192,119 +208,89 @@ namespace DbComparator.App.ViewModels
                     }
                 case DepthOfCleaning.Medium:
                     {
-                        LsGeneralInfo.ClearIfNotEmpty();
-                        RsGeneralInfo.ClearIfNotEmpty();
+                        LsGeneralInfo.Clear();
+                        RsGeneralInfo.Clear();
                         goto case DepthOfCleaning.Low;
                     }
                 case DepthOfCleaning.Low:
                     {
                         LsTableFields = null;
                         RsTableFields = null;
-                        LsSqript = null;
-                        RsSqript = null;
+                        LsScript = null;
+                        RsScript = null;
                         break;
                     }
             }
+            SendMessage(CurrentEntitiesMessageHandler, "");
+        }
+
+        private void AutoCompare(object obj)
+        {
+            var result = _generalComparator.Colorize(LsGeneralInfo[0], RsGeneralInfo[0]);
+            IsAuto = true;
+            SendMessage(MessageHandler, result);
         }
 
         private void CompareGeneralDbInfo(object obj)
         {
-            var leftDbTables = _lsRepository.GetTables().ToList();
-            var rightDbTables = _rsRepository.GetTables().ToList();
-            _collectionEqualizer.CollectionsEquation(leftDbTables, rightDbTables);
+            IsAuto = false;
 
-            var leftDbProcedures = _lsRepository.GetProcedures().ToList();
-            var rightDbProcedures = _rsRepository.GetProcedures().ToList();
-            _collectionEqualizer.CollectionsEquation(leftDbProcedures, rightDbProcedures);
+            List<GeneralDbInfo> test_01 = new List<GeneralDbInfo>();
+            List<GeneralDbInfo> test_02 = new List<GeneralDbInfo>();
 
-            var leftDbTriggers = _lsRepository.GetTriggers().ToList();
-            var rightDbTriggers = _rsRepository.GetTriggers().ToList();
-            _collectionEqualizer.CollectionsEquation(leftDbTriggers, rightDbTriggers);
+            _generalComparator.CompareGeneralInfo(_lsRepository, _rsRepository, test_01, test_02);
 
-            FillColection(_lsGeneralInfo, leftDbTables, leftDbProcedures, leftDbTriggers, _lsReceiver);
-            FillColection(_rsGeneralInfo, rightDbTables, rightDbProcedures, rightDbTriggers, _rsReceiver);
+            LsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_01);
+            RsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_02);
         }
 
-        private void FillColection(ObservableCollection<GeneralDbInfo> collection, List<string> tables, List<string> procedures, List<string> triggers, DbInfo db)
+        private string GetFields(string name)
         {
-            var result = DesignOfCollection(tables, procedures, triggers, db.DataBase.DbName);
-            collection.ClearIfNotEmpty();
-            collection.Add(result);
+            LsTableFields = _lsRepository.GetFieldsInfo(name).ToObservableCollection();
+            RsTableFields = _rsRepository.GetFieldsInfo(name).ToObservableCollection();
+
+            string lS = LsTableFields.Count != 0 ? name : "null";
+            string rS = RsTableFields.Count != 0 ? name : "null";
+
+            _collectionEqualizer.FieldsAlignment(LsTableFields, RsTableFields);
+
+            return $"{lS} ↔ {rS}";
         }
 
-        private void FetchTableFields(string name)
+        private string GetScript(Func<string, string> lsFunc, Func<string, string> rsFunc, string name)
         {
-            LsTableFields = GetFieldsInfo(_lsRepository, name);
-            RsTableFields = GetFieldsInfo(_rsRepository, name);
+            LeftCompared = lsFunc(name) ?? " ";
+            RightCompared = rsFunc(name) ?? " ";
+            LsScript = LeftCompared;
+            RsScript = RightCompared;
 
-            _fieldsEqualizer.CollectionsEquation(LsTableFields, RsTableFields);
-        }
+            string lS = LeftCompared != " " ? name : "null";
+            string rS = RightCompared != " " ? name : "null";
 
-        private ObservableCollection<DtoFullField> GetFieldsInfo(IRepository repository, string tableName) =>
-            tableName != "null" ? repository.GetFieldsInfo(tableName).ToObservableCollection() : null;
-
-        private void FetchProcedureSqript(string name)
-        {
-            GetSqript(_lsRepository.GetProcedureSqript, _rsRepository.GetProcedureSqript, name);
-            LsSqript = LeftCompared;
-            RsSqript = RightCompared;
-        }
-
-        private void FetchTriggerSqript(string name)
-        {
-            GetSqript(_lsRepository.GetTriggerSqript, _rsRepository.GetTriggerSqript, name);
-            LsSqript = LeftCompared;
-            RsSqript = RightCompared;
-        }
-
-        private void GetSqript(Func<string, string> left, Func<string, string> right, string name)
-        {
-            LeftCompared = left(name) ?? " ";
-            RightCompared = right(name) ?? " ";
+            return $"{lS} ↔ {rS}";
         }
 
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
             if (repository == null || db.DataBase.DbType != repository.DbType)
             {
-                repository = RepositoryFactory.GetRepository(db.DataBase.DbType);
+                repository = _repositoryFactory.GetRepository(db.DataBase.DbType);
             }
             ClearInfoObjects(DepthOfCleaning.Medium);
             repository.CreateConnectionString(db.DataBase.DataSource, 
-                db.DataBase.ServerName, db.DataBase.DbName, db.DataBase.Login, db.DataBase.Password);
+                                              db.DataBase.ServerName, 
+                                              db.DataBase.DbName, 
+                                              db.DataBase.Login, 
+                                              db.DataBase.Password);
         }
 
-        private GeneralDbInfo DesignOfCollection(List<string> tables, List<string> procedures, List<string> triggers, string dbName)
+        private void SendMessage(EventHandler handler, object package)
         {
-            var tempTables = GetProperties(tables, "Table");
-            var tempProcedures = GetProperties(procedures, "Procedure");
-            var tempTriggers = GetProperties(triggers, "Trigger");
-
-            GeneralDbInfo dataBase = new GeneralDbInfo()
-            {
-                Name = dbName,
-                Entitys = new List<Entity>()
-                {
-                    new Entity() { Name = "Tables", Properties = tempTables },
-                    new Entity() { Name = "Procedures", Properties = tempProcedures },
-                    new Entity() { Name = "Triggers", Properties = tempTriggers }
-                }
-            };
-
-            return dataBase;
-        }
-
-        private List<Property> GetProperties(List<string> collection, string propertyName) =>
-            (from c in collection select new Property { Name = c, PropertyType = propertyName }).ToList();
-
-
-        private void SendMessage(object package)
-        {
-            if (MessageHandler != null)
+            if (handler != null)
             {
                 MessageEventArgs eventArgs = new MessageEventArgs();
                 eventArgs.Message = package;
-                MessageHandler(this, eventArgs);
+                handler(this, eventArgs);
             }
         }
     }

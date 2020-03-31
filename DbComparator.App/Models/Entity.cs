@@ -1,11 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using DbComparator.App.ViewModels;
+using System.Collections.Generic;
 
 namespace DbComparator.App.Models
 {
-    public class Entity
+    public class Entity : ModelBase
     {
-        public string Name { get; set; }
+        private string _name;
 
-        public List<Property> Properties { get; set; }
+        private List<Property> _properties;
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value, "Name");
+        }
+
+        public List<Property> Properties
+        {
+            get => _properties;
+            set => SetProperty(ref _properties, value, "Properties");
+        }
     }
 }

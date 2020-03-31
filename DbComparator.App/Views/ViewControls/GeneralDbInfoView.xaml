@@ -7,7 +7,6 @@
         <Converters:ViewsVisibilityConverter x:Key="viewsVisibilityConverter"/>
         <Converters:TextControlVisibilityConverter x:Key="textControlVisibilityConverter"/>
         <Converters:BackBtnMultiVisibilityConverter x:Key="backBtnMultiVisibilityConverter"/>
-        <Converters:TreeColorConverter x:Key="treeColorConverter"/>
         <Converters:EnabledBtnMultiConverter x:Key="enabledBtnMultiConverter"/>
     </UserControl.Resources>
     <Grid>
@@ -55,6 +54,7 @@
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=leftDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="leftDataGrid"
+                                               IsAuto="{Binding IsAuto}"
                                                FieldsCollection="{Binding LsTableFields}"
                                                FieldsToCompareCollection="{Binding RsTableFields}" 
                                                SetCellsWidth="{Binding ElementName=rightDataGrid, Path=GetCellsWidth}"
@@ -62,8 +62,9 @@
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=leftTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
-                                              MainText="{Binding LsSqript}" 
+                                              MainText="{Binding LsScript}" 
                                               CompareText="{Binding RightCompared}" 
+                                              IsAuto="{Binding IsAuto}"
                                               x:Name="leftTextBox"/>
 
             </Grid>
@@ -92,6 +93,7 @@
                 <Controls:ColorDataGridControl Grid.Row="1" 
                                                Visibility="{Binding ElementName=rightDataGrid, Path=FieldsCollection, Converter={StaticResource viewsVisibilityConverter}}" 
                                                x:Name="rightDataGrid" 
+                                               IsAuto="{Binding IsAuto}"
                                                FieldsCollection="{Binding RsTableFields}" 
                                                FieldsToCompareCollection="{Binding LsTableFields}" 
                                                SetCellsWidth="{Binding ElementName=leftDataGrid, Path=GetCellsWidth}"
@@ -99,8 +101,9 @@
 
                 <Controls:ColorizeTextControl Grid.Row="1" 
                                               Visibility="{Binding ElementName=rightTextBox, Path=MainText, Converter={StaticResource textControlVisibilityConverter}}" 
-                                              MainText="{Binding RsSqript}" 
+                                              MainText="{Binding RsScript}" 
                                               CompareText="{Binding LeftCompared}" 
+                                              IsAuto="{Binding IsAuto}"
                                               x:Name="rightTextBox"/>
 
             </Grid>

@@ -7,5 +7,15 @@
         <Setter Property="FontFamily" Value="{StaticResource GeneralFont}"/>
         <Setter Property="Background" Value="{StaticResource TextBlockBackgroundBrush}"/>     
     </Style>
+
+    <Style TargetType="{x:Type TextBlock}" x:Key="statusBarTextBlockStyle">
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="{StaticResource SecondaryFont}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="10, 3"/>
+        <Setter Property="Foreground" Value="{StaticResource StatusBarTextBlockForegroundBrush}"/>
+    </Style>
     
 </ResourceDictionary>

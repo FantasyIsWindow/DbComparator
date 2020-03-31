@@ -21,5 +21,7 @@
         public string OnUpdate { get; set; }
 
         public string OnDelete { get; set; }
+
+
     }
 }

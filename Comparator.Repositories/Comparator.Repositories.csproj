@@ -63,6 +63,7 @@
     <Compile Include="Models\DbModels\MySqlFields.cs" />
     <Compile Include="Models\DbModels\MySqlProcedure.cs" />
     <Compile Include="Models\DbModels\MySqlTrigger.cs" />
+    <Compile Include="Models\DbModels\MySqlTriggerSqript.cs" />
     <Compile Include="Models\DbModels\Procedure.cs" />
     <Compile Include="Models\DbModels\SyBaseConstaintsModel.cs" />
     <Compile Include="Models\DbModels\SyBaseFieldsModel.cs" />
@@ -72,8 +73,8 @@
     <Compile Include="Models\DtoModels\DtoSyBaseConstaintsModel.cs" />
     <Compile Include="Parsers\MicrosoftFieldsInfoParser.cs" />
     <Compile Include="Parsers\MySqlFieldsInfoParser.cs" />
-    <Compile Include="Parsers\ProcedureScriptParser.cs" />
     <Compile Include="Parsers\ReservedKeyword.cs" />
+    <Compile Include="Parsers\ScriptParser.cs" />
     <Compile Include="Parsers\SyBaseFieldsInfoParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DbRepository.cs" />

@@ -4,14 +4,20 @@
 
     <Style TargetType="{x:Type Views:DbInfoCreatorView}">
         <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UserControlBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
     <Style TargetType="{x:Type Views:MessagerView}">
         <Setter Property="Background" Value="{StaticResource UserControlBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UserControlBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
     <Style TargetType="{x:Type Views:AboutView}">
         <Setter Property="Background" Value="{StaticResource UserControlLightBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource UserControlBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
 </ResourceDictionary>

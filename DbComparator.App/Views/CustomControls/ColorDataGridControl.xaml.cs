@@ -73,6 +73,13 @@ namespace DbComparator.App.Views.CustomControls
                 typeof(ColorDataGridControl)
             );
 
+        public static readonly DependencyProperty IsAutoProperty = DependencyProperty.Register
+            (
+                "IsAuto",
+                typeof(bool),
+                typeof(ColorDataGridControl)
+            );
+
         public ObservableCollection<DtoFullField> FieldsCollection
         {
             get => (ObservableCollection<DtoFullField>)GetValue(FieldsCollectionProperty);
@@ -109,6 +116,12 @@ namespace DbComparator.App.Views.CustomControls
             set => SetValue(GetCellsWidthProperty, value);
         }
 
+        public bool IsAuto
+        {
+            get => (bool)GetValue(IsAutoProperty);
+            set => SetValue(IsAutoProperty, value);
+        }
+
         private static void SetFieldsCollection(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((ColorDataGridControl)d).SetItemSource();
 
@@ -141,7 +154,7 @@ namespace DbComparator.App.Views.CustomControls
         private void UserControl_LayoutUpdated(object sender, System.EventArgs e)
         {
 
-            if (!_isUpdate)
+            if (!_isUpdate && IsAuto)
             {
                 if (IsEmpty(FieldsCollection) && IsEmpty(FieldsToCompareCollection))
                 {
@@ -151,7 +164,7 @@ namespace DbComparator.App.Views.CustomControls
                 _isUpdate = true;
             }
 
-            if (_isUpdate && !_isResize && CellWith())
+            if (!_isResize && CellWith())
             {
                 CellWidthAlignment();
             }

@@ -13,7 +13,7 @@ namespace Comparator.Repositories.Repositories
 
         private SyBaseFieldsInfoParser _fieldsParser;
 
-        private ProcedureScriptParser _scriptParser;
+        private ScriptParser _scriptParser;
 
         private string _connectionString;
 
@@ -33,7 +33,7 @@ namespace Comparator.Repositories.Repositories
         public SyBaseDb()
         {
             _fieldsParser = new SyBaseFieldsInfoParser();
-            _scriptParser = new ProcedureScriptParser();
+            _scriptParser = new ScriptParser();
             _request = new SyBaseRequests();
         }
 

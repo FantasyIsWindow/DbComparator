@@ -1,16 +1,20 @@
 ﻿using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Delegates;
-using DbComparator.App.Infrastructure.Enums;
 using DbComparator.App.Models;
 using System.Collections.Generic;
 
 namespace DbComparator.App.ViewModels
 {
+    public enum MbShowDialog { OkState, OkCancelState }
+
+
     public class MessagerViewModel : ModelBase, IMessagerVM
     {
         public event NotifyDelegate OkHandler;
 
         public event NotifyDelegate CloseHandler;
+
+
 
         private string _title;
 

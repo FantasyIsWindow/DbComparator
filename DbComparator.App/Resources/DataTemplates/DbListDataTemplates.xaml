@@ -6,7 +6,7 @@
     <DataTemplate x:Key="connected">
         <Border x:Name="border" 
                 Height="70" 
-                BorderBrush="Aquamarine" 
+                BorderBrush="#624F1F" 
                 BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
     <DataTemplate x:Key="disconected">
         <Border x:Name="border" 
                 Height="70" 
-                BorderBrush="Aquamarine" 
+                BorderBrush="#BCAB81" 
                 BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
@@ -109,7 +109,7 @@
     <DataTemplate x:Key="referenceConnected">
         <Border x:Name="border" 
                 Height="70" 
-                BorderBrush="Aquamarine" 
+                BorderBrush="#624F1F" 
                 BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
@@ -147,7 +147,10 @@
     </DataTemplate>
 
     <DataTemplate x:Key="referenceDisconected">
-        <Border x:Name="border" Height="70" BorderBrush="Aquamarine" BorderThickness="1">
+        <Border x:Name="border" 
+                Height="70" 
+                BorderBrush="#BCAB81" 
+                BorderThickness="1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.7*"/>

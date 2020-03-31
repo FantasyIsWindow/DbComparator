@@ -6,6 +6,8 @@ namespace DbComparator.App.ViewModels
     {
         event EventHandler MessageHandler;
 
+        event EventHandler CurrentEntitiesMessageHandler;
+
         void ClearInfoObjects(DepthOfCleaning depth);
     }
 }

@@ -1,4 +1,4 @@
-﻿using DbComparator.App.Infrastructure.Enums;
+﻿using DbComparator.App.ViewModels;
 using System;
 using System.Globalization;
 using System.Windows;

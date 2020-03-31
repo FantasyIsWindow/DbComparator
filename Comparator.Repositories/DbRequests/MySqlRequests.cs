@@ -30,6 +30,7 @@
             $"SHOW TRIGGERS FROM {dbName}";
 
         public string GetTreggersSqriptRequest(string dbName, string triggerName) => 
-            $"select action_statement from information_schema.triggers where TRIGGER_NAME = '{triggerName}' AND TRIGGER_SCHEMA = '{dbName}'";
+            $"SELECT TRIGGER_NAME, ACTION_TIMING, EVENT_MANIPULATION, EVENT_OBJECT_TABLE, ACTION_ORIENTATION, ACTION_STATEMENT " +
+            $"FROM information_schema.triggers WHERE TRIGGER_NAME = '{triggerName}' AND TRIGGER_SCHEMA = '{dbName}'";
     }
 }

@@ -13,7 +13,7 @@ namespace Comparator.Repositories.Repositories
 
         private MySqlFieldsInfoParser _fieldsParser;
 
-        private ProcedureScriptParser _scriptParser;
+        private ScriptParser _scriptParser;
 
         private string _connectionString;
 
@@ -32,7 +32,7 @@ namespace Comparator.Repositories.Repositories
         public MySqlDb()
         {
             _request = new MySqlRequests();
-            _scriptParser = new ProcedureScriptParser();
+            _scriptParser = new ScriptParser();
             _fieldsParser = new MySqlFieldsInfoParser();
         }
 
@@ -84,8 +84,8 @@ namespace Comparator.Repositories.Repositories
 
         public string GetTriggerSqript(string triggerName)
         {
-            var sqript = _db.Select<string>(_request.GetTreggersSqriptRequest(_dbName, triggerName));
-            return _scriptParser.GetProcedureSquript(sqript);
+            var sqript = _db.Select<MySqlTriggerSqript>(_request.GetTreggersSqriptRequest(_dbName, triggerName));
+            return _scriptParser.GetTriggerSqript(sqript);
         }
 
         public async Task<bool> IsConnectionAsync() =>

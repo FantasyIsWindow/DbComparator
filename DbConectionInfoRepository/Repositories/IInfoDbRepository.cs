@@ -1,5 +1,4 @@
-﻿using DbConectionInfoRepository.Enums;
-using DbConectionInfoRepository.Models;
+﻿using DbConectionInfoRepository.Models;
 using System.Collections.Generic;
 
 namespace DbConectionInfoRepository.Repositories

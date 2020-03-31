@@ -8,7 +8,7 @@ namespace DbComparator.App.Views.CustomControls
 {
     public partial class ColorizeTextControl : UserControl
     {
-        public static DependencyProperty MainTextProperty = DependencyProperty.Register
+        public static readonly DependencyProperty MainTextProperty = DependencyProperty.Register
             (
                 "MainText",
                 typeof(string),
@@ -20,12 +20,19 @@ namespace DbComparator.App.Views.CustomControls
                 )
             );
 
-        public static DependencyProperty CompareTextProperty = DependencyProperty.Register
+        public static readonly DependencyProperty CompareTextProperty = DependencyProperty.Register
             (
                 "CompareText",
                 typeof(string),
                 typeof(ColorizeTextControl),
                 new FrameworkPropertyMetadata("")
+            );
+
+        public static readonly DependencyProperty IsAutoProperty = DependencyProperty.Register
+            (
+                "IsAuto",
+                typeof(bool),
+                typeof(ColorizeTextControl)
             );
 
         public string MainText
@@ -38,6 +45,12 @@ namespace DbComparator.App.Views.CustomControls
         {
             get => (string)GetValue(CompareTextProperty);
             set => SetValue(CompareTextProperty, value);
+        }      
+        
+        public bool IsAuto
+        {
+            get => (bool)GetValue(IsAutoProperty);
+            set => SetValue(IsAutoProperty, value);
         }
 
         private static void EnterMainText(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -49,7 +62,7 @@ namespace DbComparator.App.Views.CustomControls
         {
             rtb.Document.Blocks.Clear();
 
-            if (CompareText == " ")
+            if (!IsAuto || CompareText == " ")
             {
                 TextColorize(MainText, "Black");
             }

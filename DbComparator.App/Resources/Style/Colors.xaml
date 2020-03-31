@@ -63,6 +63,7 @@
     <!-- Page Brushes -->
     <SolidColorBrush x:Key="UserControlBackgroundBrush" Color="{StaticResource c_000}"/>
     <SolidColorBrush x:Key="UserControlLightBackgroundBrush" Color="{StaticResource c_001}"/>
+    <SolidColorBrush x:Key="UserControlBorderBrush" Color="{StaticResource c_005}"/>
 
     <!-- Label Brushes -->
     <SolidColorBrush x:Key="LabelForegroundBrush" Color="{StaticResource c_002}"/>  
@@ -82,6 +83,7 @@
 
     <!-- TextBlock Brushes -->
     <SolidColorBrush x:Key="TextBlockForegroundBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="StatusBarTextBlockForegroundBrush" Color="{StaticResource c_003}"/>
     <SolidColorBrush x:Key="TextBlockBackgroundBrush" Color="{StaticResource c_001}"/>
 
     <!-- GroupBox Brushes -->

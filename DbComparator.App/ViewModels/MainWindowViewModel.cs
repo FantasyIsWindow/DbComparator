@@ -1,10 +1,7 @@
 ﻿using Comparator.Repositories.Repositories;
 using DbComparator.App.Infrastructure.Commands;
-using DbComparator.App.Infrastructure.Enums;
 using DbComparator.App.Infrastructure.EventsArgs;
-using DbComparator.App.Infrastructure.Extensions;
 using DbComparator.App.Models;
-using DbConectionInfoRepository.Enums;
 using DbConectionInfoRepository.Models;
 using DbConectionInfoRepository.Repositories;
 using System;
@@ -16,6 +13,10 @@ namespace DbComparator.App.ViewModels
 {
     public class MainWindowViewModel : ModelBase
     {
+        public string MyProperty { get; }
+
+        private RepositoryFactory _repositoryFactory;
+
         private IInfoDbRepository _connectionDb;
 
         private IRepository _dbRepository;
@@ -31,7 +32,7 @@ namespace DbComparator.App.ViewModels
         private object _currentPageContent;
 
         private Provider _selectedDbType;
-
+                      
         private DbInfo _selectedRefModel;
 
         private DbInfo _selectedNotRefModel;
@@ -41,6 +42,8 @@ namespace DbComparator.App.ViewModels
         private ObservableCollection<DbInfo> _notReferenceInfoDbs;
 
         private bool _loadViewVisibility;
+
+        private string _statusBarMessage;
                      
 
         public IGeneralDbInfoVM InfoViewModel
@@ -91,12 +94,19 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _loadViewVisibility, value, "LoadViewVisibility");
         }
 
+        public string StatusBarMessage
+        {
+            get => _statusBarMessage;
+            set => SetProperty(ref _statusBarMessage, value, "StatusBarMessage");
+        }
+
         public MainWindowViewModel(IInfoDbRepository connectionDb, 
                                    IGeneralDbInfoVM generalDbInfo,
                                    IMessagerVM messager, 
                                    IDbInfoCreatorVM dbInfoManager, 
                                    IAboutVM aboutVM)
         {
+            _repositoryFactory = new RepositoryFactory();
             _connectionDb = connectionDb;
             _referenceInfoDbs = new ObservableCollection<DbInfo>();
             _notReferenceInfoDbs = new ObservableCollection<DbInfo>();
@@ -110,7 +120,14 @@ namespace DbComparator.App.ViewModels
         private void Subscriptions()
         {
             _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
+            _infoViewModel.CurrentEntitiesMessageHandler += ((sender, e) => 
+            {
+                var message = (MessageEventArgs)e; 
+                StatusBarMessage = (string)message.Message; 
+            });
+
             _showMessage.CloseHandler += (() => { CurrentPageContent = null; });
+
             _addNewDb.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
@@ -257,7 +274,7 @@ namespace DbComparator.App.ViewModels
             if (e != null)
             {
                 var type = (MessageEventArgs)e;
-                SelectedDbType = RepositoryFactory.StringToProvider((string)type.Message);
+                SelectedDbType = _repositoryFactory.StringToProvider((string)type.Message);
             }
 
             ChoiseType();
@@ -267,7 +284,7 @@ namespace DbComparator.App.ViewModels
         private async void ChoiseType()
         {
             LoadViewVisibility = true;
-            _dbRepository = RepositoryFactory.GetRepository(SelectedDbType);
+            _dbRepository = _repositoryFactory.GetRepository(SelectedDbType);
             await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
             await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
             LoadViewVisibility = false;
@@ -275,7 +292,7 @@ namespace DbComparator.App.ViewModels
 
         private async Task GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
         {
-            collection.ClearIfNotEmpty();
+            collection.Clear();
             var result = _connectionDb.GetAllReferenceDbByType(SelectedDbType.ToString(), reference);
             await GetDbTypes(result, collection);
         }

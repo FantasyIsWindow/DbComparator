@@ -1,5 +1,4 @@
 ﻿using DbComparator.App.Infrastructure.Delegates;
-using DbComparator.App.Infrastructure.Enums;
 using DbConectionInfoRepository.Models;
 using System;
 

@@ -1,10 +1,12 @@
 ﻿using DbConectionInfoRepository.DbRequests;
-using DbConectionInfoRepository.Enums;
 using DbConectionInfoRepository.Models;
 using System.Collections.Generic;
 
 namespace DbConectionInfoRepository.Repositories
 {
+    public enum IsReference { Yes, No }
+
+
     public class InfoDbConnection : IInfoDbRepository
     {
         private DbRepository _db;

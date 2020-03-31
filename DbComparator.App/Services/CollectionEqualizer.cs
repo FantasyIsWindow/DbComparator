@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Comparator.Repositories.Models.DtoModels;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace DbComparator.App.Services
@@ -7,19 +9,19 @@ namespace DbComparator.App.Services
     {
         private List<string> _generalTemplate;
 
-        public void CollectionsEquation(List<string> primaryCol, List<string> secondaryCol)
+        public void GeneralEqualizer(List<string> lsCol, List<string> rsCol)
         {
-            List<string> tempPrimaryCol = new List<string>(primaryCol);
-            List<string> tempSecondaryCol = new List<string>(secondaryCol);
+            List<string> lsTempCol = new List<string>(lsCol);
+            List<string> rsTempCol = new List<string>(rsCol);
 
-            CreateGeneralTemplate(tempPrimaryCol, tempSecondaryCol);
+            CreateGeneralTemplate(lsTempCol, rsTempCol);
 
-            Equalize(tempPrimaryCol, primaryCol);
-            Equalize(tempSecondaryCol, secondaryCol);
+            Equalize(lsTempCol, lsCol);
+            Equalize(rsTempCol, rsCol);
         }
 
-        private void CreateGeneralTemplate(IEnumerable<string> first, IEnumerable<string> second) =>
-            _generalTemplate = first.Union(second).Distinct().OrderBy(n => n).ToList();
+        private void CreateGeneralTemplate(IEnumerable<string> ls, IEnumerable<string> rs) =>
+            _generalTemplate = ls.Union(rs).Distinct().OrderBy(n => n).ToList();
 
         private void Equalize(IEnumerable<string> tempCol, List<string> writableCol)
         {
@@ -39,6 +41,46 @@ namespace DbComparator.App.Services
                 {
                     writableCol.Add("null");
                 }
+            }
+        }
+
+        public void FieldsAlignment(ObservableCollection<DtoFullField> lsCol, ObservableCollection<DtoFullField> rsCol)
+        {
+            if (lsCol == null || rsCol == null)
+            {
+                return;
+            }
+
+            if (lsCol.Count > rsCol.Count)
+            {
+                Alignment(lsCol, rsCol);
+            }
+            else
+            {
+                Alignment(rsCol, lsCol);
+            }
+        }
+
+        private void Alignment(ObservableCollection<DtoFullField> lsCol, ObservableCollection<DtoFullField> rsCol)
+        {
+            int size = lsCol.Count - rsCol.Count;
+
+            for (int i = 0; i < size; i++)
+            {
+                var field = new DtoFullField()
+                {
+                    ConstraintKeys = "",
+                    ConstraintType = "",
+                    ConstraintName = "",
+                    FieldName      = "",
+                    IsNullable     = "",
+                    OnDelete       = "",
+                    OnUpdate       = "",
+                    References     = "",
+                    Size           = "",
+                    TypeName       = ""
+                };
+                rsCol.Add(field);
             }
         }
     }

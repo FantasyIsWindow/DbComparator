@@ -1,13 +1,15 @@
 ﻿using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Delegates;
-using DbComparator.App.Infrastructure.Enums;
 using DbComparator.App.Infrastructure.EventsArgs;
 using DbConectionInfoRepository.Models;
 using DbConectionInfoRepository.Repositories;
 using System;
 
 namespace DbComparator.App.ViewModels
-{ 
+{
+    public enum OpenStatus { Add, Update }
+
+
     public class DbInfoCreatorViewModel : ModelBase, IDbInfoCreatorVM
     {
         public event EventHandler OkHandler;

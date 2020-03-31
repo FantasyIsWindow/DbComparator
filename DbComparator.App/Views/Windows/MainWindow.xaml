@@ -59,7 +59,7 @@
                   Style="{StaticResource comboBoxStyle}" 
                   ItemsSource="{Binding Source={StaticResource dataProvider}}" 
                   SelectedItem="{Binding SelectedDbType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedIndex="-1">
+                  Text="{Binding MyProperty, Mode=OneWay}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ChoiseDbTypeCommand}"/>
@@ -96,8 +96,11 @@
             </ListBox>
         </GroupBox>
 
-        <StatusBar Grid.Row="4" Grid.ColumnSpan="2" >
-            <Label Content="123" Style="{StaticResource lableStyle}"/>
+        <StatusBar Grid.Row="4" 
+                   Grid.ColumnSpan="2" 
+                   VerticalAlignment="Center">
+            <TextBlock Text="{Binding StatusBarMessage}"
+                       Style="{StaticResource statusBarTextBlockStyle}" />
         </StatusBar>
 
         <Border Grid.Row="0" 

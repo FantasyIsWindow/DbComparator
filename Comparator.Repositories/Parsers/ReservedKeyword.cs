@@ -208,19 +208,15 @@ namespace Comparator.Repositories.Parsers
                 "VALUES",
                 "END",
                 "WHEN",
+                "WHERE",
                 "THEN"
             };
         }
 
-        public bool IsExists(string word)
-        {
-            return _reservedWords.Contains(word);
-        }
+        public bool IsExists(string word) => _reservedWords.Contains(ToUp(word));        
 
-        public bool IsTab(string word)
-        {
-            return _tab.Contains(word);
-        }
+        public bool IsTab(string word) => _tab.Contains(ToUp(word));        
 
+        private string ToUp(string word) => word.ToUpper();
     }
 }
