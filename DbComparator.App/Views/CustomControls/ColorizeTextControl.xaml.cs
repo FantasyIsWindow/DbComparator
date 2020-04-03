@@ -58,6 +58,14 @@ namespace DbComparator.App.Views.CustomControls
             ((ColorizeTextControl)d).SetTextToRichBox();
         }
 
+        public ColorizeTextControl()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Installing text in RichBox
+        /// </summary>
         private void SetTextToRichBox()
         {
             rtb.Document.Blocks.Clear();
@@ -84,6 +92,11 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
+        /// <summary>
+        /// Compare and colorize text
+        /// </summary>
+        /// <param name="word">Colorable word to add</param>
+        /// <param name="color">Color</param>
         private void TextColorize(string word, string color)
         {
             Paragraph paragraph = rtb.CaretPosition.Paragraph;
@@ -97,6 +110,11 @@ namespace DbComparator.App.Views.CustomControls
             rtb.Document.Blocks.Add(paragraph);
         }
 
+        /// <summary>
+        /// Checking whether the passed word is present in the compared text
+        /// </summary>
+        /// <param name="word">Search word</param>
+        /// <returns>Result of search</returns>
         private bool IsWord(string word)
         {
             var compareText = CompareText.Split(new char[] { ' ', ',' }).ToList();
@@ -106,12 +124,6 @@ namespace DbComparator.App.Views.CustomControls
                 return true;
             }
             return false;
-        }
-
-
-        public ColorizeTextControl()
-        {
-            InitializeComponent();
         }
     }
 }

@@ -11,6 +11,9 @@ using System.Collections.ObjectModel;
 
 namespace DbComparator.App.ViewModels
 {
+    /// <summary>
+    /// Depth Of Cleaning
+    /// </summary>
     public enum DepthOfCleaning { Low, Medium, High }
 
 
@@ -166,6 +169,10 @@ namespace DbComparator.App.ViewModels
         public RellayCommand CompareCommand =>
             _compareCommand = new RellayCommand(CompareGeneralDbInfo);
 
+        /// <summary>
+        /// Getting data about a selected property
+        /// </summary>
+        /// <param name="property">Selected property</param>
         private void ItemSelection(Property property)
         {
             if (property != null && property.Name != "null")
@@ -224,6 +231,10 @@ namespace DbComparator.App.ViewModels
             SendMessage(CurrentEntitiesMessageHandler, "");
         }
 
+        /// <summary>
+        /// Activating auto comparison
+        /// </summary>
+        /// <param name="obj">Object</param>
         private void AutoCompare(object obj)
         {
             var result = _generalComparator.Colorize(LsGeneralInfo[0], RsGeneralInfo[0]);
@@ -231,6 +242,10 @@ namespace DbComparator.App.ViewModels
             SendMessage(MessageHandler, result);
         }
 
+        /// <summary>
+        /// Enabling comparison of shared database data
+        /// </summary>
+        /// <param name="obj">Object</param>
         private void CompareGeneralDbInfo(object obj)
         {
             IsAuto = false;
@@ -244,32 +259,49 @@ namespace DbComparator.App.ViewModels
             RsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_02);
         }
 
-        private string GetFields(string name)
+        /// <summary>
+        /// Getting fields from the specified table
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns></returns>
+        private string GetFields(string tableName)
         {
-            LsTableFields = _lsRepository.GetFieldsInfo(name).ToObservableCollection();
-            RsTableFields = _rsRepository.GetFieldsInfo(name).ToObservableCollection();
+            LsTableFields = _lsRepository.GetFieldsInfo(tableName).ToObservableCollection();
+            RsTableFields = _rsRepository.GetFieldsInfo(tableName).ToObservableCollection();
 
-            string lS = LsTableFields.Count != 0 ? name : "null";
-            string rS = RsTableFields.Count != 0 ? name : "null";
+            string lS = LsTableFields.Count != 0 ? tableName : "null";
+            string rS = RsTableFields.Count != 0 ? tableName : "null";
 
             _collectionEqualizer.FieldsAlignment(LsTableFields, RsTableFields);
 
             return $"{lS} ↔ {rS}";
         }
 
-        private string GetScript(Func<string, string> lsFunc, Func<string, string> rsFunc, string name)
+        /// <summary>
+        /// Selecting a script from the database
+        /// </summary>
+        /// <param name="lsFunc">Function for getting the left side script</param>
+        /// <param name="rsFunc">Function for getting the right side script</param>
+        /// <param name="entityName"></param>
+        /// <returns>The script is retrieved from the database</returns>
+        private string GetScript(Func<string, string> lsFunc, Func<string, string> rsFunc, string entityName)
         {
-            LeftCompared = lsFunc(name) ?? " ";
-            RightCompared = rsFunc(name) ?? " ";
+            LeftCompared = lsFunc(entityName) ?? " ";
+            RightCompared = rsFunc(entityName) ?? " ";
             LsScript = LeftCompared;
             RsScript = RightCompared;
 
-            string lS = LeftCompared != " " ? name : "null";
-            string rS = RightCompared != " " ? name : "null";
+            string lS = LeftCompared != " " ? entityName : "null";
+            string rS = RightCompared != " " ? entityName : "null";
 
             return $"{lS} ↔ {rS}";
         }
 
+        /// <summary>
+        /// Changing the database context
+        /// </summary>
+        /// <param name="db">Db info</param>
+        /// <param name="repository">Repository</param>
         private void DataContextChanged(DbInfo db, ref IRepository repository)
         {
             if (repository == null || db.DataBase.DbType != repository.DbType)
@@ -284,6 +316,11 @@ namespace DbComparator.App.ViewModels
                                               db.DataBase.Password);
         }
 
+        /// <summary>
+        /// Sending a message
+        /// </summary>
+        /// <param name="handler">Handler</param>
+        /// <param name="message">Message</param>
         private void SendMessage(EventHandler handler, object package)
         {
             if (handler != null)

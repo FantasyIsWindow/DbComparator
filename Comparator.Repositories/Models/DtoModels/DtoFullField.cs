@@ -16,7 +16,7 @@
 
         public string ConstraintKeys { get; set; }
 
-        public string References { get; set; }
+        public string Referenced { get; set; }
 
         public string OnUpdate { get; set; }
 

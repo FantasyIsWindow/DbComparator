@@ -9,6 +9,11 @@ namespace DbComparator.App.Services
     {
         private List<string> _generalTemplate;
 
+        /// <summary>
+        /// String collection alignment function
+        /// </summary>
+        /// <param name="lsCol">Left side collection</param>
+        /// <param name="rsCol">Right side collection</param>
         public void GeneralEqualizer(List<string> lsCol, List<string> rsCol)
         {
             List<string> lsTempCol = new List<string>(lsCol);
@@ -20,9 +25,19 @@ namespace DbComparator.App.Services
             Equalize(rsTempCol, rsCol);
         }
 
+        /// <summary>
+        /// Creating a reference template for comparison
+        /// </summary>
+        /// <param name="ls">Left side collection</param>
+        /// <param name="rs">Right side collection</param>
         private void CreateGeneralTemplate(IEnumerable<string> ls, IEnumerable<string> rs) =>
             _generalTemplate = ls.Union(rs).Distinct().OrderBy(n => n).ToList();
 
+        /// <summary>
+        /// Alignment of the collection
+        /// </summary>
+        /// <param name="tempCol">Temp collection</param>
+        /// <param name="writableCol">Writable collection</param>
         private void Equalize(IEnumerable<string> tempCol, List<string> writableCol)
         {
             writableCol.Clear();
@@ -44,6 +59,11 @@ namespace DbComparator.App.Services
             }
         }
 
+        /// <summary>
+        /// Field collection alignment function
+        /// </summary>
+        /// <param name="lsCol">Left side collection</param>
+        /// <param name="rsCol">Right side collection</param>
         public void FieldsAlignment(ObservableCollection<DtoFullField> lsCol, ObservableCollection<DtoFullField> rsCol)
         {
             if (lsCol == null || rsCol == null)
@@ -61,6 +81,11 @@ namespace DbComparator.App.Services
             }
         }
 
+        /// <summary>
+        /// Alignment of the collection
+        /// </summary>
+        /// <param name="lsCol">Left side collection</param>
+        /// <param name="rsCol">Right side collection</param>
         private void Alignment(ObservableCollection<DtoFullField> lsCol, ObservableCollection<DtoFullField> rsCol)
         {
             int size = lsCol.Count - rsCol.Count;
@@ -76,7 +101,7 @@ namespace DbComparator.App.Services
                     IsNullable     = "",
                     OnDelete       = "",
                     OnUpdate       = "",
-                    References     = "",
+                    Referenced     = "",
                     Size           = "",
                     TypeName       = ""
                 };

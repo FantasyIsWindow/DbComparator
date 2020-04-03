@@ -4,9 +4,9 @@ namespace Comparator.Repositories.Parsers
 {
     internal class ReservedKeyword
     {
-        private HashSet<string> _reservedWords;
+        private readonly HashSet<string> _reservedWords;
 
-        private HashSet<string> _tab;
+        private readonly HashSet<string> _tab;
 
         public ReservedKeyword()
         {
@@ -213,10 +213,25 @@ namespace Comparator.Repositories.Parsers
             };
         }
 
-        public bool IsExists(string word) => _reservedWords.Contains(ToUp(word));        
+        /// <summary>
+        /// Checks whether such a word exists in the list of reserved words
+        /// </summary>
+        /// <param name="word">Search word</param>
+        /// <returns>True if there is a word in the reference list</returns>
+        public bool IsExists(string word) => _reservedWords.Contains(ToUp(word));
 
-        public bool IsTab(string word) => _tab.Contains(ToUp(word));        
+        /// <summary>
+        /// Checks whether such a word exists in the list of reserved tab words
+        /// </summary>
+        /// <param name="word">Search word</param>
+        /// <returns>True if there is a word in the reference list</returns>
+        public bool IsTab(string word) => _tab.Contains(ToUp(word));
 
+        /// <summary>
+        /// Returns an uppercase word
+        /// </summary>
+        /// <param name="word">Increase the word</param>
+        /// <returns>The word in uppercase</returns>
         private string ToUp(string word) => word.ToUpper();
     }
 }

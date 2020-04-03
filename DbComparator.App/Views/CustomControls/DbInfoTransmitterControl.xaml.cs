@@ -34,7 +34,10 @@ namespace DbComparator.App.Views.CustomControls
 
         private static void GetIcon(DependencyObject d, DependencyPropertyChangedEventArgs e) => 
             ((DbInfoTransmitterControl)d).InstallingIcon();
-        
+
+        /// <summary>
+        /// Installing the icon
+        /// </summary>
         private void InstallingIcon()
         {
             Uri imageUri = new Uri(Icon, UriKind.Relative);
@@ -42,6 +45,10 @@ namespace DbComparator.App.Views.CustomControls
             img.Source = image;
         }
 
+        /// <summary>
+        /// Handling the mouse movement event
+        /// </summary>
+        /// <param name="e">Event</param>
         protected override void OnMouseMove(MouseEventArgs e) 
         {
             base.OnMouseMove(e);
@@ -55,6 +62,10 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
+        /// <summary>
+        /// Getting feedback
+        /// </summary>
+        /// <param name="e">Event</param>
         protected override void OnGiveFeedback(GiveFeedbackEventArgs e) 
         {
             base.OnGiveFeedback(e);

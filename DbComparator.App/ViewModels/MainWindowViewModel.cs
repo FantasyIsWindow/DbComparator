@@ -15,24 +15,24 @@ namespace DbComparator.App.ViewModels
     {
         public string MyProperty { get; }
 
-        private RepositoryFactory _repositoryFactory;
+        private readonly RepositoryFactory _repositoryFactory;
 
-        private IInfoDbRepository _connectionDb;
+        private readonly IInfoDbRepository _connectionDb;
 
         private IRepository _dbRepository;
 
         private IGeneralDbInfoVM _infoViewModel;
 
-        private IMessagerVM _showMessage;
+        private readonly IMessagerVM _showMessage;
 
-        private IDbInfoCreatorVM _addNewDb;
+        private readonly IDbInfoCreatorVM _addNewDb;
 
-        private IAboutVM _aboutVM;
+        private readonly IAboutVM _aboutVM;
 
         private object _currentPageContent;
 
         private Provider _selectedDbType;
-                      
+
         private DbInfo _selectedRefModel;
 
         private DbInfo _selectedNotRefModel;
@@ -44,7 +44,7 @@ namespace DbComparator.App.ViewModels
         private bool _loadViewVisibility;
 
         private string _statusBarMessage;
-                     
+
 
         public IGeneralDbInfoVM InfoViewModel
         {
@@ -87,7 +87,7 @@ namespace DbComparator.App.ViewModels
             get => _notReferenceInfoDbs;
             set => _notReferenceInfoDbs = value;
         }
-               
+
         public bool LoadViewVisibility
         {
             get => _loadViewVisibility;
@@ -100,10 +100,10 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _statusBarMessage, value, "StatusBarMessage");
         }
 
-        public MainWindowViewModel(IInfoDbRepository connectionDb, 
+        public MainWindowViewModel(IInfoDbRepository connectionDb,
                                    IGeneralDbInfoVM generalDbInfo,
-                                   IMessagerVM messager, 
-                                   IDbInfoCreatorVM dbInfoManager, 
+                                   IMessagerVM messager,
+                                   IDbInfoCreatorVM dbInfoManager,
                                    IAboutVM aboutVM)
         {
             _repositoryFactory = new RepositoryFactory();
@@ -117,13 +117,16 @@ namespace DbComparator.App.ViewModels
             Subscriptions();
         }
 
+        /// <summary>
+        /// The implementation of subscriptions
+        /// </summary>
         private void Subscriptions()
         {
             _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
-            _infoViewModel.CurrentEntitiesMessageHandler += ((sender, e) => 
+            _infoViewModel.CurrentEntitiesMessageHandler += ((sender, e) =>
             {
-                var message = (MessageEventArgs)e; 
-                StatusBarMessage = (string)message.Message; 
+                var message = (MessageEventArgs)e;
+                StatusBarMessage = (string)message.Message;
             });
 
             _showMessage.CloseHandler += (() => { CurrentPageContent = null; });
@@ -155,9 +158,8 @@ namespace DbComparator.App.ViewModels
             {
                 return _addNewDbInfoCommand ??
                     (_addNewDbInfoCommand = new RellayCommand(obj =>
-                    {                       
-                        var reference = obj as string;
-                        if (reference != null)
+                    {
+                        if (obj is string reference)
                         {
                             DbInfoModel model = new DbInfoModel { Reference = reference, DbType = SelectedDbType.ToString() };
                             _addNewDb.ShowManagerWindow(OpenStatus.Add, model);
@@ -243,6 +245,10 @@ namespace DbComparator.App.ViewModels
         public RellayCommand AboutViewShowCommand =>
             _aboutViewShowCommand = new RellayCommand((c) => { CurrentPageContent = _aboutVM; });
 
+        /// <summary>
+        /// Updating a database entry
+        /// </summary>
+        /// <param name="dbInfo">Updated record</param>
         private void UpdateRecord(DbInfoModel dbInfo)
         {
             try
@@ -256,12 +262,20 @@ namespace DbComparator.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Output of the notification window
+        /// </summary>
+        /// <param name="model">Record</param>
         private void ShowQuastionMessage(DbInfoModel model)
         {
             ShowMessage("Warning", "Are you Sure?", MbShowDialog.OkCancelState);
             _showMessage.OkHandler += (() => { RemoveRecord(model); });
         }
 
+        /// <summary>
+        /// Deleting an existing record
+        /// </summary>
+        /// <param name="dbInfo">Delete records</param>
         private void RemoveRecord(DbInfoModel dbInfo)
         {
             InfoDbConnection _repository = new InfoDbConnection();
@@ -269,6 +283,11 @@ namespace DbComparator.App.ViewModels
             UpdateTypes(null, null);
         }
 
+        /// <summary>
+        /// Updating information about providers
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event</param>
         private void UpdateTypes(object sender, EventArgs e)
         {
             if (e != null)
@@ -281,23 +300,38 @@ namespace DbComparator.App.ViewModels
             CurrentPageContent = null;
         }
 
+        /// <summary>
+        /// Choosing a provider
+        /// </summary>
         private async void ChoiseType()
         {
             LoadViewVisibility = true;
             _dbRepository = _repositoryFactory.GetRepository(SelectedDbType);
             await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
             await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
-            LoadViewVisibility = false;
+            LoadViewVisibility = false; 
         }
 
+        /// <summary>
+        /// Get basic information about the database
+        /// </summary>
+        /// <param name="collection">Collection to fill</param>
+        /// <param name="reference">Is the database a reference database</param>
+        /// <returns>Task</returns>
         private async Task GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
         {
             collection.Clear();
-            var result = _connectionDb.GetAllReferenceDbByType(SelectedDbType.ToString(), reference);
-            await GetDbTypes(result, collection);
+            var result = _connectionDb.GetAllDbByType(SelectedDbType.ToString(), reference);
+            await GetInfo(result, collection);
         }
 
-        private async Task GetDbTypes(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
+        /// <summary>
+        /// Collecting information from the resulting list of databases
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="target">Collection to fill</param>
+        /// <returns>Task</returns>
+        private async Task GetInfo(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
             foreach (var item in models)
             {
@@ -313,15 +347,26 @@ namespace DbComparator.App.ViewModels
             if (target.Count >= 0)
             {
                 target.Add(new DbInfo() { DataBase = null });
-            }            
+            }
         }
 
+        /// <summary>
+        /// Receiving messages and opening the message window
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event</param>
         private void GetMessage(object sender, EventArgs e)
         {
             var message = (MessageEventArgs)e;
             ShowMessage("Warning", message.Message, MbShowDialog.OkState);
         }
 
+        /// <summary>
+        /// The call of the message box
+        /// </summary>
+        /// <param name="title">Title</param>
+        /// <param name="message">Message with data to display</param>
+        /// <param name="state">The display settings window</param>
         private void ShowMessage(string title, object message, MbShowDialog state)
         {
             _showMessage.ShowMessageBox(title, message, state);

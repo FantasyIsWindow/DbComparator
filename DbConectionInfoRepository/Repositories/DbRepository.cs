@@ -8,9 +8,12 @@ namespace DbConectionInfoRepository.Repositories
 {
     public class DbRepository
     {
+        private readonly string _dbName;
+
         private readonly string _fullPath;
+
         private readonly string _connectionString;
-        private string _dbName;
+
         private readonly string _tableName;
 
         public string TableName
@@ -25,6 +28,9 @@ namespace DbConectionInfoRepository.Repositories
             CreateDb();
         }
 
+        /// <summary>
+        /// Creating a database table
+        /// </summary>
         private void CreateDb()
         {
             if (!File.Exists(_dbName))
@@ -45,6 +51,11 @@ namespace DbConectionInfoRepository.Repositories
             }
         }
 
+        /// <summary>
+        /// Execute Command
+        /// </summary>
+        /// <param name="command">Command</param>
+        /// <param name="obj">Object</param>
         public void ExecuteCommand(string command, object obj = null)
         {
             try
@@ -57,10 +68,16 @@ namespace DbConectionInfoRepository.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
+        /// <summary>
+        /// Returns the resulting collection of the query
+        /// </summary>
+        /// <typeparam name="T">A generalized class</typeparam>
+        /// <param name="query">Query</param>
+        /// <returns>The resulting collection of the query</returns>
         public IEnumerable<T> ExecuteQuery<T>(string query) where T : class
         {
             try
@@ -75,7 +92,7 @@ namespace DbConectionInfoRepository.Repositories
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
     }

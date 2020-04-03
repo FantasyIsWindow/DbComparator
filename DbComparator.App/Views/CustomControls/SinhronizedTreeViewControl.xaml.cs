@@ -52,8 +52,8 @@ namespace DbComparator.App.Views.CustomControls
         {
             get => (ObservableCollection<GeneralDbInfo>)GetValue(TVItemsSourceProperty);
             set => SetValue(TVItemsSourceProperty, value);
-        }   
-        
+        }
+
         public double VerticalScrollOffset
         {
             get => (double)GetValue(VerticalScrollOffsetProperty);
@@ -64,13 +64,13 @@ namespace DbComparator.App.Views.CustomControls
         {
             get => (double)GetValue(CurrentVerticalScrollOffsetProperty);
             set => SetValue(CurrentVerticalScrollOffsetProperty, value);
-        }      
-        
+        }
+
         public Action<Property> SetSelectedItem
         {
             get => (Action<Property>)GetValue(SetSelectedItemProperty);
             set => SetValue(SetSelectedItemProperty, value);
-        }     
+        }
 
 
         public SinhronizedTreeViewControl()
@@ -79,12 +79,12 @@ namespace DbComparator.App.Views.CustomControls
         }
 
         private static void SetItemsSourceToTreeView(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
-            ((SinhronizedTreeViewControl)d).SetItemSource();        
+            ((SinhronizedTreeViewControl)d).SetItemSource();
 
         private static void SetVerticalScrollBarPosition(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((SinhronizedTreeViewControl)d).SetVerticalOffsetValue();
-               
-        private void treeView_ScrollChanged(object sender, ScrollChangedEventArgs e) =>
+
+        private void TreeView_ScrollChanged(object sender, ScrollChangedEventArgs e) =>
             CurrentVerticalScrollOffset = e.VerticalOffset;
 
 
@@ -94,11 +94,16 @@ namespace DbComparator.App.Views.CustomControls
 
         private void SetItemSource() =>
             treeView.ItemsSource = TVItemsSource;
-        
 
+        /// <summary>
+        /// Setting the vertical offset value
+        /// </summary>
+        /// <param name="obj">A control containing the Scroll Viewer</param>
+        /// <param name="offset">Offset value</param>
+        /// <returns>The result of the installation</returns>
         private bool SetVerticalOffset(DependencyObject obj, double offset)
         {
-            bool terminate = false;
+
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 var child = VisualTreeHelper.GetChild(obj, i);
@@ -109,17 +114,14 @@ namespace DbComparator.App.Views.CustomControls
                 }
             }
 
-            if (!terminate)
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-                {
-                    terminate = SetVerticalOffset(VisualTreeHelper.GetChild(obj, i), offset);
-                }
+                SetVerticalOffset(VisualTreeHelper.GetChild(obj, i), offset);
             }
             return false;
         }
 
-        private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (e.NewValue is Property value)
             {

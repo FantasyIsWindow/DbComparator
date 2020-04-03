@@ -132,18 +132,23 @@ namespace DbComparator.App.Views.CustomControls
 
         private static void SetHorizontalScrollBarPosition(DependencyObject d, DependencyPropertyChangedEventArgs e) =>
             ((ColorDataGridControl)d).SetHorizontalOffsetValue();
-
-
-        private void SetFieldsToCompare()
-        {
-            _fields = FieldsToCompareCollection;
-        }
-
+                     
         public ColorDataGridControl()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Setting field values for table comparison
+        /// </summary>
+        private void SetFieldsToCompare()
+        {
+            _fields = FieldsToCompareCollection;
+        }
+
+        /// <summary>
+        /// Installing the data source data grid
+        /// </summary>
         public void SetItemSource()
         {
             dataGrid.ItemsSource = FieldsCollection;
@@ -153,23 +158,45 @@ namespace DbComparator.App.Views.CustomControls
 
         private void UserControl_LayoutUpdated(object sender, System.EventArgs e)
         {
+            DataGridCellColorize();
+            DataGridCellsResize();
+        }
 
+        /// <summary>
+        /// Checking collections of tables and coloring cells depending on the comparison result
+        /// </summary>
+        private void DataGridCellColorize()
+        {
             if (!_isUpdate && IsAuto)
             {
                 if (IsEmpty(FieldsCollection) && IsEmpty(FieldsToCompareCollection))
                 {
-                    CellColorize();
-                    GetCurrentCellsWidth();
+                    Colorize();
                 }
                 _isUpdate = true;
             }
+        }
 
-            if (!_isResize && CellWith())
+        /// <summary>
+        /// Comparison and alignment of the width of the table cells
+        /// </summary>
+        private void DataGridCellsResize()
+        {
+            if (!_isResize)
             {
-                CellWidthAlignment();
+                GetCurrentCellsWidth();
+                if (SetCellsWidth != null && SetCellsWidth.Length > 0)
+                {
+                    CellWidthAlignment();
+                }
             }
         }
 
+        /// <summary>
+        /// Checking the collection for null or empty
+        /// </summary>
+        /// <param name="fields">Fields collection</param>
+        /// <returns>Comparison result</returns>
         private bool IsEmpty(ObservableCollection<DtoFullField> fields)
         {
             if (fields == null)
@@ -187,11 +214,10 @@ namespace DbComparator.App.Views.CustomControls
             return false;
         }
 
-        private bool CellWith() =>
-            SetCellsWidth != null && SetCellsWidth.Length > 0 ? true : false;
-
-
-        private void CellColorize()
+        /// <summary>
+        /// Color cells based on the results of comparing the values of two tables
+        /// </summary>
+        private void Colorize()
         {
             if (FieldsCollection?.Count() != 0 && FieldsToCompareCollection?.Count() != 0)
             {
@@ -220,6 +246,12 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
+        /// <summary>
+        /// Finds a cell in the passed string
+        /// </summary>
+        /// <param name="row">Data grid row</param>
+        /// <param name="index">Current index</param>
+        /// <returns>Data grid cell</returns>
         private DataGridCell GetCells(DataGridRow row, int index)
         {
             if (row != null)
@@ -236,9 +268,15 @@ namespace DbComparator.App.Views.CustomControls
             return null;
         }
 
+        /// <summary>
+        /// Finds and returns the visual child of the required control
+        /// </summary>
+        /// <typeparam name="T">A generalized class</typeparam>
+        /// <param name="parent">Primitives</param>
+        /// <returns>Visual child</returns>
         private T GetVisualChild<T>(Visual parent) where T : Visual
         {
-            T child = default(T);
+            T child = default;
             int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
             for (int i = 0; i < numVisuals; i++)
             {
@@ -256,6 +294,13 @@ namespace DbComparator.App.Views.CustomControls
             return child;
         }
 
+        /// <summary>
+        /// Compares the fields of a table
+        /// </summary>
+        /// <param name="fieldName">Reference value</param>
+        /// <param name="name">Compare value</param>
+        /// <param name="index">Current index</param>
+        /// <returns>Comparison result</returns>
         private bool IsTrue(string fieldName, string name, int index)
         {
             switch (fieldName)
@@ -267,24 +312,30 @@ namespace DbComparator.App.Views.CustomControls
                 case "ConstraintType": return _fields[index].ConstraintType == name;
                 case "ConstraintName": return _fields[index].ConstraintName == name;
                 case "ConstraintKeys": return _fields[index].ConstraintKeys == name;
-                case "References": return _fields[index].References == name;
+                case "References": return _fields[index].Referenced == name;
                 case "OnUpdate": return _fields[index].OnUpdate == name;
                 case "OnDelete": return _fields[index].OnDelete == name;
             }
             return false;
         }
 
-        private void dataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e) =>
+        private void DataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e) =>
             CurrentHorizontalScrollOffset = e.HorizontalOffset;
 
-
+        /// <summary>
+        /// Calling the method for setting the horizontal offset value
+        /// </summary>
         private void SetHorizontalOffsetValue() =>
              SetHorizontalOffset(dataGrid, HorizontalScrollOffset);
 
-
+        /// <summary>
+        /// Setting the horizontal offset value
+        /// </summary>
+        /// <param name="obj">A control containing the Scroll Viewer</param>
+        /// <param name="offset">Offset value</param>
+        /// <returns>The result of the installation</returns>
         private bool SetHorizontalOffset(DependencyObject obj, double offset)
         {
-            bool terminate = false;
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 var child = VisualTreeHelper.GetChild(obj, i);
@@ -295,16 +346,17 @@ namespace DbComparator.App.Views.CustomControls
                 }
             }
 
-            if (!terminate)
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-                {
-                    terminate = SetHorizontalOffset(VisualTreeHelper.GetChild(obj, i), offset);
-                }
+                SetHorizontalOffset(VisualTreeHelper.GetChild(obj, i), offset);
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Get the width of cells in the current data table
+        /// </summary>
         private void GetCurrentCellsWidth()
         {
             GetCellsWidth = new double[dataGrid.Columns.Count];
@@ -315,6 +367,9 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
+        /// <summary>
+        /// The alignment of the width of cells in data grid
+        /// </summary>
         private void CellWidthAlignment()
         {
             for (int i = 0; i < dataGrid.Columns.Count; i++)

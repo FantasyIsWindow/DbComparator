@@ -36,6 +36,9 @@ namespace DbComparator.App.Views.CustomControls
             }
         }
 
+        /// <summary>
+        /// Setting the default value
+        /// </summary>
         private void SetDefaultValues()
         {
             Uri imageUri = new Uri(_pathToDefaultIcon, UriKind.Relative);

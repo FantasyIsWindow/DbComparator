@@ -8,6 +8,14 @@ namespace DbComparator.App.Infrastructure.Converters
 {
     class MessageBoxVisibilityConverter : IValueConverter
     {
+        /// <summary>
+        /// Returns the visibility of the message window, depending on the parameter MbShowDialog
+        /// </summary>
+        /// <param name="values">Values</param>
+        /// <param name="targetType">Target type</param>
+        /// <param name="parameter">Parameter</param>
+        /// <param name="culture">Culture</param>
+        /// <returns>The visibility of the message window</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is MbShowDialog state)

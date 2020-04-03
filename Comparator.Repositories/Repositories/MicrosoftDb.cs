@@ -11,13 +11,13 @@ namespace Comparator.Repositories.Repositories
     {
         private const string _provider = "System.Data.SqlClient";
 
-        private MicrosoftFieldsInfoParser _fieldsParser;
+        private readonly MicrosoftFieldsInfoParser _fieldsParser;
 
-        private ScriptParser _scriptParser;
+        private readonly ScriptParser _scriptParser;
+
+        private readonly MicrosoftDbRequests _request;
 
         private string _connectionString;
-
-        private MicrosoftDbRequests _request;
 
         private DbRepository _db;
 
@@ -50,9 +50,19 @@ namespace Comparator.Repositories.Repositories
             return _fieldsParser.GetFieldsCollection(fields, constraints);
         }
 
+        /// <summary>
+        /// Returns a raw collection of table fields
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table fields</returns>
         private IEnumerable<Fields> GetFields(string tableName) =>
             _db.Select<Fields>(_request.GetFieldsRequest(tableName));
 
+        /// <summary>
+        /// Returns a raw collection of table constraints
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table constraints</returns>
         private IEnumerable<DtoConstraint> GetConstraints(string tableName)
         {
             var constraints = _db.Select<Constraint>(_request.GetConstraintsRequest(tableName));
@@ -62,7 +72,11 @@ namespace Comparator.Repositories.Repositories
         public IEnumerable<string> GetProcedures()
         {
             var procedures = _db.Select<Procedure>(_request.GetProceduresRequest("dbo"));
-            ProcessingCollection(procedures);
+            foreach (var procedure in procedures)
+            {
+                var tempArr = procedure.PROCEDURE_NAME.Split(';');
+                procedure.PROCEDURE_NAME = tempArr[0];
+            }
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(procedures);
         }
 
@@ -76,23 +90,19 @@ namespace Comparator.Repositories.Repositories
         {
             var tables = _db.Select<Table>(_request.GetTablesRequest("dbo"));
             return Mapper.Map.Map<IEnumerable<Table>, IEnumerable<string>>(tables);
-        } 
-        
+        }
+
         public IEnumerable<string> GetTriggers() => 
             _db.Select<string>(_request.GetTreggersRequest());
-        
+
         public async Task<bool> IsConnectionAsync() => 
             await _db.CheckConectionAsync();
 
-        private void ProcessingCollection(IEnumerable<Procedure> procedures)
-        {
-            foreach (var procedure in procedures)
-            {
-                var tempArr = procedure.PROCEDURE_NAME.Split(';');
-                procedure.PROCEDURE_NAME = tempArr[0];
-            }
-        }
-
+        /// <summary>
+        /// Returns the procedure or trigger script
+        /// </summary>
+        /// <param name="name">Procedure or trigger name</param>
+        /// <returns>Procedure or trigger script</returns>
         private string GetSqript(string name)
         {
             var sqript = _db.Select<string>(_request.GetSqriptRequest(name));

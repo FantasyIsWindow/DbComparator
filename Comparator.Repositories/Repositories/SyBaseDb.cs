@@ -11,13 +11,13 @@ namespace Comparator.Repositories.Repositories
     {
         private const string _provider = "Sap.Data.SQLAnywhere";
 
-        private SyBaseFieldsInfoParser _fieldsParser;
+        private readonly SyBaseFieldsInfoParser _fieldsParser;
 
-        private ScriptParser _scriptParser;
+        private readonly ScriptParser _scriptParser;
+
+        private readonly SyBaseRequests _request;
 
         private string _connectionString;
-
-        private SyBaseRequests _request;
 
         private DbRepository _db;
 
@@ -44,7 +44,7 @@ namespace Comparator.Repositories.Repositories
             _dbOwner = login;
             _dbName = dbName;
         }
-        
+
         public IEnumerable<DtoFullField> GetFieldsInfo(string tableName)
         {
             var fields = GetFields(tableName);
@@ -52,12 +52,22 @@ namespace Comparator.Repositories.Repositories
             return _fieldsParser.GetFieldsCollection(fields, constraints);
         }
 
+        /// <summary>
+        /// Returns a raw collection of table constraints
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table constraints</returns>
         private IEnumerable<DtoSyBaseConstaintsModel> GetConstraints(string tableName)
         {
             var result = _db.Select<SyBaseConstaintsModel>(_request.GetConstraintsRequest(tableName));
             return Mapper.Map.Map<IEnumerable<SyBaseConstaintsModel>, IEnumerable<DtoSyBaseConstaintsModel>>(result);
         }
 
+        /// <summary>
+        /// Returns a raw collection of table fields
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table fields</returns>
         private IEnumerable<SyBaseFieldsModel> GetFields(string tableName) => 
             _db.Select<SyBaseFieldsModel>(_request.GetFieldsRequest(tableName));
 
@@ -78,13 +88,18 @@ namespace Comparator.Repositories.Repositories
 
         public IEnumerable<string> GetTriggers() => 
             _db.Select<string>(_request.GetTreggersRequest());
-                
+
         public async Task<bool> IsConnectionAsync() =>
             await _db.CheckConectionAsync();
 
         public string GetTriggerSqript(string triggerName) => 
             GetSqript(triggerName);
 
+        /// <summary>
+        /// Returns the procedure or trigger script
+        /// </summary>
+        /// <param name="name">Procedure or trigger name</param>
+        /// <returns>Procedure or trigger script</returns>
         private string GetSqript(string name)
         {
             var sqript = _db.Select<string>(_request.GetSqriptRequest(name));

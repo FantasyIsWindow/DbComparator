@@ -7,6 +7,9 @@ using System;
 
 namespace DbComparator.App.ViewModels
 {
+    /// <summary>
+    /// Sets parameters for the window opening status
+    /// </summary>
     public enum OpenStatus { Add, Update }
 
 
@@ -72,7 +75,7 @@ namespace DbComparator.App.ViewModels
             _closeCommand = new RellayCommand(c => CloseHandler?.Invoke());
 
         public RellayCommand OkCommand =>
-            _okCommand = new RellayCommand(AddInfoToDb, CanAddInfoToDb);
+            _okCommand = new RellayCommand(AddOrUpdateInfoToDb, CanAddInfoToDb);
         
         public void ShowManagerWindow(OpenStatus status, DbInfoModel dbInfo = null)
         {
@@ -82,8 +85,11 @@ namespace DbComparator.App.ViewModels
             _isEnabled = (_openStatus == OpenStatus.Update || dbInfo != null) ? false : true;
         }
 
-
-        private void AddInfoToDb(object obj)
+        /// <summary>
+        /// Adding or updating an entry to the database
+        /// </summary>
+        /// <param name="obj">Object</param>
+        private void AddOrUpdateInfoToDb(object obj)
         {
             try
             {
@@ -100,12 +106,22 @@ namespace DbComparator.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Checking whether the fields required for adding to the database are filled in
+        /// </summary>
+        /// <param name="obj">Object</param>
+        /// <returns></returns>
         private bool CanAddInfoToDb(object obj) =>
             _dbInfoModel.ServerName  != null &&
             _dbInfoModel.DbName      != null &&
             _dbInfoModel.DbType      != null &&
-            _dbInfoModel.Reference   != null;       
-        
+            _dbInfoModel.Reference   != null;
+
+        /// <summary>
+        /// Sending a message
+        /// </summary>
+        /// <param name="handler">Handler</param>
+        /// <param name="message">Message</param>
         private void SendMessage(EventHandler handler, string message)
         {
             if (handler != null)

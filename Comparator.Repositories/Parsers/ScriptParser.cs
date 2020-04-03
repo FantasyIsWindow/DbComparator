@@ -8,7 +8,7 @@ namespace Comparator.Repositories.Parsers
 {
     internal class ScriptParser
     {
-        private ReservedKeyword _findWord;
+        private readonly ReservedKeyword _findWord;
 
         private bool isBeginAdded;
 
@@ -19,12 +19,27 @@ namespace Comparator.Repositories.Parsers
             _findWord = new ReservedKeyword();
         }
 
+        /// <summary>
+        /// Returns the procedure or trigger script
+        /// </summary>
+        /// <param name="str">Collection of procedure or trigger strings</param>
+        /// <returns>Procedure or trigger script</returns>
         public string GetProcedureSquript(IEnumerable<string> str) =>
-            str.NotNull() ? ParseScript(str.EnamerableToString()) : null;
+            str.NotNull() ? ParseScript(str.EnumerableToString()) : null;
 
+        /// <summary>
+        /// Returns the procedure or trigger script
+        /// </summary>
+        /// <param name="str">Procedure or trigger string</param>
+        /// <returns>Procedure or trigger script</returns>
         public string GetProcedureSquript(string str) =>
             str != null ? ParseScript(str) : null;
 
+        /// <summary>
+        /// Returns the trigger script
+        /// </summary>
+        /// <param name="triggers">Trigger string</param>
+        /// <returns>Procedure or trigger script</returns>
         public string GetTriggerSqript(IEnumerable<MySqlTriggerSqript> triggers)
         {
             foreach (var trigger in triggers)
@@ -36,9 +51,14 @@ namespace Comparator.Repositories.Parsers
             return null;
         }
 
+        /// <summary>
+        /// Returns a formatted script
+        /// </summary>
+        /// <param name="script">Row string</param>
+        /// <returns>Formatted script</returns>
         private string ParseScript(string script)
         {
-            var arr = StringArrGenerate(script);
+            var arr = StringToArr(script);
             isBeginAdded = false;
             isBegin = false;
 
@@ -73,7 +93,12 @@ namespace Comparator.Repositories.Parsers
             return newScript.ToString();
         }
 
-        private string[] StringArrGenerate(string script)
+        /// <summary>
+        /// Returns an array of words divided by a string of words
+        /// </summary>
+        /// <param name="script">Row string</param>
+        /// <returns>Broken according to the line</returns>
+        private string[] StringToArr(string script)
         {
             StringBuilder builder1 = new StringBuilder();
 
@@ -93,6 +118,12 @@ namespace Comparator.Repositories.Parsers
             return tempStr.Split(new char[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>
+        /// Returns the processed reserved word
+        /// </summary>
+        /// <param name="arr">Array of words divided by a string of words</param>
+        /// <param name="index">The current index of the array</param>
+        /// <returns>Processed reserved word</returns>
         private string ProcessingReservedWord(string[] arr, int index)
         {
             string word = arr[index].ToUpper();

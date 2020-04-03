@@ -7,15 +7,28 @@ namespace Comparator.Repositories.Parsers
 {
     internal class MySqlFieldsInfoParser
     {
-        public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<MySqlFields> fields, IEnumerable<MySqlConstaintsModel> constraints, IEnumerable<MySqlCascadeOption> options)
+        /// <summary>
+        /// Returns a collection of table fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <param name="cascadeOptions">List of raw cascade options</param>
+        /// <returns>The filtered list of fields of the table<</returns>
+        public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<MySqlFields> fields, IEnumerable<MySqlConstaintsModel> constraints, IEnumerable<MySqlCascadeOption> cascadeOptions)
         {
-            List<DtoConstraint> consts = ConstraintsCollectionPreparation(constraints, options);
+            List<DtoConstraint> consts = ConstraintsCollectionPreparation(constraints, cascadeOptions);
             List<DtoFullField> resultFullFieldsCollection = BuildingCollectionOfFields(fields, consts);
             NullValueToEmptyString(resultFullFieldsCollection);
 
             return  resultFullFieldsCollection;
         }
-                          
+
+        /// <summary>
+        /// Returns a prepared collection of restrictions
+        /// </summary>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <param name="options">List of raw cascade options</param>
+        /// <returns>The filtered list of constraints of the table</returns>
         private List<DtoConstraint> ConstraintsCollectionPreparation(IEnumerable<MySqlConstaintsModel> constraints, IEnumerable<MySqlCascadeOption> options)
         {
             List<DtoConstraint> dtoConstraints = new List<DtoConstraint>();
@@ -26,7 +39,7 @@ namespace Comparator.Repositories.Parsers
                     FieldName = cons.COLUMN_NAME,
                     ConstraintType = cons.CONSTRAINT_TYPE,
                     ConstraintName = cons.CONSTRAINT_NAME,
-                    References = ReferenceDecoration(cons.REFERENCED_TABLE_NAME, cons.REFERENCED_COLUMN_NAME)                   
+                    Referenced = ReferencedStringDecoration(cons.REFERENCED_TABLE_NAME, cons.REFERENCED_COLUMN_NAME)                   
                 };
                 dtoConstraints.Add(item);
             }
@@ -44,9 +57,22 @@ namespace Comparator.Repositories.Parsers
             return dtoConstraints;
         }
 
-        private string ReferenceDecoration(string tName, string cName) => 
-            cName != null ? tName + " (" + cName + ')' : tName;
+        /// <summary>
+        /// Returns a formatted reference to the table
+        /// </summary>
+        /// <param name="tName">Table name</param>
+        /// <param name="fName">Field name</param>
+        /// <returns>Formatted reference to the table</returns>
+        private string ReferencedStringDecoration(string tName, string fName) =>
+            fName != null ? tName + " (" + fName + ')' : tName;
 
+
+        /// <summary>
+        /// Returns a list of filtered fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="consts">List of raw constraints</param>
+        /// <returns>Building Collection Of Fields</returns>
         private List<DtoFullField> BuildingCollectionOfFields(IEnumerable<MySqlFields> fields, List<DtoConstraint> consts)
         {
             List<DtoFullField> tempFieldsList = new List<DtoFullField>();
@@ -71,7 +97,7 @@ namespace Comparator.Repositories.Parsers
                     {
                         temp.ConstraintType = con.ConstraintType;
                         temp.ConstraintName = con.ConstraintName;
-                        temp.References = con.References;
+                        temp.Referenced = con.Referenced;
                         temp.OnDelete = con.OnDelete;
                         temp.OnUpdate = con.OnUpdate;
                         flag = true;
@@ -84,7 +110,7 @@ namespace Comparator.Repositories.Parsers
                         {
                             ConstraintType = con.ConstraintType,
                             ConstraintName = con.ConstraintName,
-                            References = con.References
+                            Referenced = con.Referenced
                         };
                         tempFieldsList.Add(qwe);
                     }
@@ -98,6 +124,10 @@ namespace Comparator.Repositories.Parsers
             return tempFieldsList;
         }
 
+        /// <summary>
+        /// Null to empty string
+        /// </summary>
+        /// <param name="collection">List of fields with null</param>
         private void NullValueToEmptyString(List<DtoFullField> collection)
         {
             foreach (var item in collection)
@@ -109,7 +139,7 @@ namespace Comparator.Repositories.Parsers
                 item.IsNullable = item.IsNullable ?? "";
                 item.OnDelete = item.OnDelete ?? "";
                 item.OnUpdate = item.OnUpdate ?? "";
-                item.References = item.References ?? "";
+                item.Referenced = item.Referenced ?? "";
                 item.Size = item.Size ?? "";
                 item.TypeName = item.TypeName ?? "";
             }

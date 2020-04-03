@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace DbComparator.App.ViewModels
 {
+    /// <summary>
+    /// Sets parameters for displaying the message window
+    /// </summary>
     public enum MbShowDialog { OkState, OkCancelState }
 
 

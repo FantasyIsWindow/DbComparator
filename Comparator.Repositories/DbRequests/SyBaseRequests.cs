@@ -2,18 +2,43 @@
 {
     internal class SyBaseRequests
     {
+        /// <summary>
+        /// Returns the text of a request to get a list of table names
+        /// </summary>
+        /// <param name="ownerName">Data base owner</param>
+        /// <returns>Request to get a list of table names in the database</returns>
         public string GetTablesRequest(string ownerName) =>
             $"EXEC sp_tables @table_owner = '{ownerName}'";
 
+        /// <summary>
+        /// Returns the text of a request to get a list of table fields
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Request to get a list of fields from a table in the database</returns>
         public string GetFieldsRequest(string tableName) =>
             $"SELECT * FROM systabcol c KEY JOIN systab t on t.table_id=c.table_id WHERE t.table_name = '{tableName}'";
 
+        /// <summary>
+        /// Returns the text of a request to get a list of procedures
+        /// </summary>
+        /// <param name="ownerName">Data base owner</param>
+        /// <returns>Request to get a list of database procedures</returns>
         public string GetProceduresRequest(string ownerName) =>
             $"EXEC sp_stored_procedures @sp_owner = '{ownerName}'";
 
-        public string GetSqriptRequest(string procedureName) =>
-            $"EXEC sp_helptext '{procedureName}'";
+        /// <summary>
+        /// Returns the procedure or trigger script
+        /// </summary>
+        /// <param name="name">Entity name</param>
+        /// <returns>Request to get a procedure script or trigger</returns>
+        public string GetSqriptRequest(string name) =>
+            $"EXEC sp_helptext '{name}'";
 
+        /// <summary>
+        /// Returns the text of a request to get a list of constraints
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Request to get a list of table constraints</returns>
         public string GetConstraintsRequest(string tableName) =>
             $"SELECT(SELECT TABLE_NAME FROM SysTable WHERE object_id = SC.\"table_object_id\") " +
             $"AS \"table_name\", " +
@@ -73,6 +98,10 @@
             $"LEFT OUTER JOIN \"SYSINDEX\" SIUnique ON SC.ref_object_id = SIUnique.object_id " +
             $"WHERE SysTable.TABLE_NAME = '{tableName}'";
 
+        /// <summary>
+        /// Returns the text of a request to get a list of triggers
+        /// </summary>
+        /// <returns>Request to get a list of database triggers</returns>
         public string GetTreggersRequest() => 
             $"Select r.trigger_name from sys.systable as t join sys.systrigger r on r.table_id = t.table_id";
     }

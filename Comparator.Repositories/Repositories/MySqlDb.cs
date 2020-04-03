@@ -11,13 +11,13 @@ namespace Comparator.Repositories.Repositories
     {
         private const string _provider = "MySql.Data.MySqlClient";
 
-        private MySqlFieldsInfoParser _fieldsParser;
+        private readonly MySqlFieldsInfoParser _fieldsParser;
 
-        private ScriptParser _scriptParser;
+        private readonly ScriptParser _scriptParser;
 
-        private string _connectionString;
+        private readonly MySqlRequests _request;
 
-        private MySqlRequests _request;
+        private string _connectionString;        
 
         private DbRepository _db;
 
@@ -53,11 +53,20 @@ namespace Comparator.Repositories.Repositories
 
         private IEnumerable<MySqlCascadeOption> GetCascadeOptions(string tableName) => 
             _db.Select<MySqlCascadeOption>(_request.GetCascadeOptions(_dbName, tableName));
-        
 
+        /// <summary>
+        /// Returns a raw collection of table fields
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table fields</returns>
         private IEnumerable<MySqlFields> GetFields(string tableName) =>
             _db.Select<MySqlFields>(_request.GetFieldsRequest(_dbName, tableName ));
 
+        /// <summary>
+        /// Returns a raw collection of table constraints
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Raw collection of table constraints</returns>
         private IEnumerable<MySqlConstaintsModel> GetConstraints(string tableName) => 
             _db.Select<MySqlConstaintsModel>(_request.GetConstraintsRequest(_dbName, tableName));
 
@@ -71,10 +80,10 @@ namespace Comparator.Repositories.Repositories
         {
             var sqript = _db.SelectForKey(_request.GetProcedureSqriptRequest(procedureName), "Create Procedure");
             return _scriptParser.GetProcedureSquript(sqript);
-        } 
+        }
 
         public IEnumerable<string> GetTables() =>
-            _db.Select<string>(_request.GetTablesRequest(_dbName));           
+            _db.Select<string>(_request.GetTablesRequest(_dbName));
 
         public IEnumerable<string> GetTriggers()
         {

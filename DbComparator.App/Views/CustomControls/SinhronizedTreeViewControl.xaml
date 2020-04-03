@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <TreeView ItemsSource="{Binding GeneralInfoDbLeft}" 
               x:Name="treeView"
-              SelectedItemChanged="treeView_SelectedItemChanged"
-              ScrollViewer.ScrollChanged="treeView_ScrollChanged"              
+              SelectedItemChanged="TreeView_SelectedItemChanged"
+              ScrollViewer.ScrollChanged="TreeView_ScrollChanged"              
               Style="{StaticResource treeViewStyle}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Entitys}">

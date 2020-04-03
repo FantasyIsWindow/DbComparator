@@ -6,7 +6,13 @@ using System.Linq;
 namespace Comparator.Repositories.Parsers
 {
     internal class MicrosoftFieldsInfoParser
-    {       
+    {
+        /// <summary>
+        /// Returns a collection of table fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <returns>The filtered list of fields of the table</returns>
         public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<Fields> fields, IEnumerable<DtoConstraint> constraints)
         {
             List<DtoConstraint> consts = ConstraintsCollectionPreparation(constraints);
@@ -16,6 +22,11 @@ namespace Comparator.Repositories.Parsers
             return resultFullFieldsCollection;
         }
 
+        /// <summary>
+        /// Returns a prepared collection of restrictions
+        /// </summary>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <returns>The filtered list of constraints of the table</returns>
         private List<DtoConstraint> ConstraintsCollectionPreparation(IEnumerable<DtoConstraint> constraints)
         {
             List<DtoConstraint> consts = new List<DtoConstraint>();
@@ -43,7 +54,7 @@ namespace Comparator.Repositories.Parsers
                 else if (constraint.ConstraintKeys.Split(' ')[0] == "REFERENCES")
                 {
                     var last = consts.Last();
-                    last.References = constraint.ConstraintKeys.Replace("REFERENCES ", "");
+                    last.Referenced = constraint.ConstraintKeys.Replace("REFERENCES ", "");
                     continue;
                 }
                 else
@@ -56,6 +67,12 @@ namespace Comparator.Repositories.Parsers
             return consts;
         }
 
+        /// <summary>
+        /// Returns a list of filtered fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="consts">List of raw constraints</param>
+        /// <returns>Building Collection Of Fields</returns>
         private List<DtoFullField> BuildingCollectionOfFields(IEnumerable<Fields> fields, List<DtoConstraint> consts)
         {
             List<DtoFullField> tempResultCollection = new List<DtoFullField>();
@@ -78,7 +95,7 @@ namespace Comparator.Repositories.Parsers
                         temp.ConstraintType = con.ConstraintType;
                         temp.ConstraintName = con.ConstraintName;
                         temp.ConstraintKeys = con.ConstraintKeys;
-                        temp.References = con.References;
+                        temp.Referenced = con.Referenced;
                         temp.OnDelete = con.OnDelete;
                         temp.OnUpdate = con.OnUpdate;
                         flag = true;
@@ -92,7 +109,7 @@ namespace Comparator.Repositories.Parsers
                             ConstraintType = con.ConstraintType,
                             ConstraintName = con.ConstraintName,
                             ConstraintKeys = con.ConstraintKeys,
-                            References = con.References
+                            Referenced = con.Referenced
                         };
                         tempResultCollection.Add(qwe);
                     }
@@ -105,6 +122,10 @@ namespace Comparator.Repositories.Parsers
             return tempResultCollection;
         }
 
+        /// <summary>
+        /// Null to empty string
+        /// </summary>
+        /// <param name="collection">List of fields with null</param>
         private void NullValueToEmptyString(List<DtoFullField> collection)
         {
             foreach (var item in collection)
@@ -116,9 +137,9 @@ namespace Comparator.Repositories.Parsers
                 item.IsNullable     = item.IsNullable     ?? "";
                 item.OnDelete       = item.OnDelete       ?? "";
                 item.OnUpdate       = item.OnUpdate       ?? "";
-                item.References     = item.References     ?? "";
+                item.Referenced     = item.Referenced     ?? "";
                 item.Size           = item.Size           ?? "";
-                item.TypeName        = item.TypeName      ?? "";
+                item.TypeName       = item.TypeName       ?? "";
             }
         }
     }

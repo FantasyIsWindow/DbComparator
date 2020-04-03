@@ -7,6 +7,12 @@ namespace Comparator.Repositories.Parsers
 {
     internal class SyBaseFieldsInfoParser
     {
+        /// <summary>
+        /// Returns a collection of table fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <returns>The filtered list of fields of the table</returns>
         public IEnumerable<DtoFullField> GetFieldsCollection(IEnumerable<SyBaseFieldsModel> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
         {
             List<DtoFullField> tempFieldsCollection = FieldsCollectionPreparation(fields);
@@ -17,6 +23,11 @@ namespace Comparator.Repositories.Parsers
             return resultFullFieldsCollection;
         }
 
+        /// <summary>
+        /// Returns a prepared list of fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <returns>Prepared list of fields</returns>
         private List<DtoFullField> FieldsCollectionPreparation(IEnumerable<SyBaseFieldsModel> fields)
         {
             List<DtoFullField> tempCollection = new List<DtoFullField>();
@@ -37,6 +48,12 @@ namespace Comparator.Repositories.Parsers
             return tempCollection;
         }
 
+        /// <summary>
+        /// Returns a prepared collection of restrictions and fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="constraints">List of raw constraints</param>
+        /// <returns>The filtered list of constraints and fields of the table</returns>
         private List<DtoFullField> ConstraintsCollectionPreparation(List<DtoFullField> fields, IEnumerable<DtoSyBaseConstaintsModel> constraints)
         {
             List<DtoFullField> tempConstraints = new List<DtoFullField>();
@@ -61,13 +78,19 @@ namespace Comparator.Repositories.Parsers
                 field.ConstraintName = item.ConstraintName;
                 field.OnDelete = item.OnDelete;
                 field.OnUpdate = item.OnUpdate;
-                field.References = GetReference(item.OtherTable, item.OtherColumns);
+                field.Referenced = GetReferenced(item.OtherTable, item.OtherColumns);
 
                 tempConstraints.Add(field);
             }
             return tempConstraints;
         }
 
+        /// <summary>
+        /// Returns a list of filtered fields
+        /// </summary>
+        /// <param name="fields">List of raw fields</param>
+        /// <param name="consts">List of raw constraints</param>
+        /// <returns>Building Collection Of Fields</returns>
         private List<DtoFullField> BuildingCollectionOfFields(List<DtoFullField> fields, List<DtoFullField> consts)
         {
             List<DtoFullField> tempFullFieldsCollection = new List<DtoFullField>();
@@ -91,7 +114,7 @@ namespace Comparator.Repositories.Parsers
                         fullField.ConstraintKeys = con.ConstraintKeys;
                         fullField.ConstraintName = con.ConstraintName;
                         fullField.ConstraintType = con.ConstraintType;
-                        fullField.References = con.References;
+                        fullField.Referenced = con.Referenced;
                         fullField.OnUpdate = con.OnUpdate;
                         fullField.OnDelete = con.OnDelete;
                         flag = true;
@@ -107,7 +130,7 @@ namespace Comparator.Repositories.Parsers
                             ConstraintType = con.ConstraintType,
                             OnDelete = con.OnDelete,
                             OnUpdate = con.OnUpdate,
-                            References = con.References
+                            Referenced = con.Referenced
                         };
                         tempFullFieldsCollection.Add(temp);
                     }
@@ -120,6 +143,11 @@ namespace Comparator.Repositories.Parsers
             return tempFullFieldsCollection;
         }
 
+        /// <summary>
+        /// Returns a formatted string for the field type name
+        /// </summary>
+        /// <param name="str">Raw string</param>
+        /// <returns>Formatted string for the field type name</returns>
         private string GetType(string str)
         {
             string digit = null;
@@ -136,6 +164,11 @@ namespace Comparator.Repositories.Parsers
             return digit;
         }
 
+        /// <summary>
+        /// Returns a formatted string of the field size type
+        /// </summary>
+        /// <param name="str">Raw string</param>
+        /// <returns>Formatted string size field type</returns>
         private string GetSize(string str)
         {
             string digit = null;
@@ -158,9 +191,14 @@ namespace Comparator.Repositories.Parsers
                 }
             }
 
-            return digit != null ? digit : null;
+            return digit;
         }
 
+        /// <summary>
+        /// Returns a formatted string of the restriction type
+        /// </summary>
+        /// <param name="constraint">List of raw constraints</param>
+        /// <returns>Formatted string type restriction</returns>
         private string GetConstraintType(string constraint)
         {
             if (constraint != null)
@@ -181,6 +219,12 @@ namespace Comparator.Repositories.Parsers
             return null;
         }
 
+        /// <summary>
+        /// Returns a formatted string for the restriction field
+        /// </summary>
+        /// <param name="constraint">List of raw constraints</param>
+        /// <param name="fields">List of raw fields</param>
+        /// <returns>Formatted string of the restriction field/returns>
         private string GetConstraintField(string constraint, List<DtoFullField> fields)
         {
             if (constraint != null)
@@ -200,6 +244,11 @@ namespace Comparator.Repositories.Parsers
             return null;
         }
 
+        /// <summary>
+        /// Returns a formatted string of constraint keys
+        /// </summary>
+        /// <param name="constraint"></param>
+        /// <returns>A formatted string of the key restrictions</returns>
         private string GetConstraintKey(string constraint)
         {
             string temp = null;
@@ -226,18 +275,28 @@ namespace Comparator.Repositories.Parsers
                 }
             }
 
-            return temp != null ? temp : null;
+            return temp;
         }
 
-        private string GetReference(string tableName, string tableField)
+        /// <summary>
+        /// Returns a formatted reference to the table
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <param name="fieldName">Field name</param>
+        /// <returns>Formatted reference to the table</returns>
+        private string GetReferenced(string tableName, string fieldName)
         {
             if (!string.IsNullOrEmpty(tableName))
             {
-                return tableName + " (" + tableField + ")";
+                return tableName + " (" + fieldName + ")";
             }
             return null;
         }
 
+        /// <summary>
+        /// Null to empty string
+        /// </summary>
+        /// <param name="collection">List of fields with null</param>
         private void NullValueToEmptyString(List<DtoFullField> collection)
         {
             foreach (var item in collection)
@@ -249,7 +308,7 @@ namespace Comparator.Repositories.Parsers
                 item.IsNullable     = item.IsNullable     ?? "";
                 item.OnDelete       = item.OnDelete       ?? "";
                 item.OnUpdate       = item.OnUpdate       ?? "";
-                item.References     = item.References     ?? "";
+                item.Referenced     = item.Referenced     ?? "";
                 item.Size           = item.Size           ?? "";
                 item.TypeName       = item.TypeName       ?? "";
             }

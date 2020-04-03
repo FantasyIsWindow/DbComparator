@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -17,6 +16,12 @@ namespace Comparator.Repositories.Repositories
             _factory = DbProviderFactories.GetFactory(provider);
         }
 
+        /// <summary>
+        /// Getting data from a database
+        /// </summary>
+        /// <typeparam name="T">Class to fill in with the received data</typeparam>
+        /// <param name="query">Select query</param>
+        /// <returns>Collection with data received during the request</returns>
         public IEnumerable<T> Select<T>(string query) where T : class
         {
             try
@@ -29,12 +34,18 @@ namespace Comparator.Repositories.Repositories
                     return result;
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 return null;
             }            
         }
 
+        /// <summary>
+        /// Getting data from the database by field name
+        /// </summary>
+        /// <param name="query">Select query</param>
+        /// <param name="key">Field name</param>
+        /// <returns></returns>
         public string SelectForKey(string query, string key) 
         {
             try
@@ -57,13 +68,17 @@ namespace Comparator.Repositories.Repositories
 
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 return null;
             }
             return "";
         }
 
+        /// <summary>
+        /// Checking database availability
+        /// </summary>
+        /// <returns>Returns true if the database is available</returns>
         public async Task<bool> CheckConectionAsync()
         {
             try
@@ -75,11 +90,10 @@ namespace Comparator.Repositories.Repositories
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
-            }
-            
+            }            
         }
     }
 }

@@ -7,7 +7,7 @@
               CanUserSortColumns="False" 
               IsReadOnly="True" 
               Style="{StaticResource dataGridStyle}" 
-              ScrollViewer.ScrollChanged="dataGrid_ScrollChanged"
+              ScrollViewer.ScrollChanged="DataGrid_ScrollChanged"
               RowHeaderWidth="0"
               x:Name="dataGrid" />
     
