@@ -122,7 +122,7 @@ namespace DbComparator.App.ViewModels
         /// </summary>
         private void Subscriptions()
         {
-            _infoViewModel.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
+            _infoViewModel.MessageHandler += ((sender, e) => { GetMessage("Comparison result", sender, e); });
             _infoViewModel.CurrentEntitiesMessageHandler += ((sender, e) =>
             {
                 var message = (MessageEventArgs)e;
@@ -133,7 +133,7 @@ namespace DbComparator.App.ViewModels
 
             _addNewDb.CloseHandler += (() => { CurrentPageContent = null; });
             _addNewDb.OkHandler += UpdateTypes;
-            _addNewDb.MessageHandler += ((sender, e) => { GetMessage(sender, e); });
+            _addNewDb.MessageHandler += ((sender, e) => { GetMessage("Warning", sender, e); });
             _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
 
@@ -355,10 +355,10 @@ namespace DbComparator.App.ViewModels
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event</param>
-        private void GetMessage(object sender, EventArgs e)
+        private void GetMessage(string title, object sender, EventArgs e)
         {
             var message = (MessageEventArgs)e;
-            ShowMessage("Warning", message.Message, MbShowDialog.OkState);
+            ShowMessage(title, message.Message, MbShowDialog.OkState);
         }
 
         /// <summary>

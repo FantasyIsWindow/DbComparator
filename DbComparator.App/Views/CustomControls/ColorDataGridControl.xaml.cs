@@ -169,7 +169,7 @@ namespace DbComparator.App.Views.CustomControls
         {
             if (!_isUpdate && IsAuto)
             {
-                if (IsEmpty(FieldsCollection) && IsEmpty(FieldsToCompareCollection))
+                if (CollectionExists(FieldsCollection) && CollectionExists(FieldsToCompareCollection))
                 {
                     Colorize();
                 }
@@ -197,7 +197,7 @@ namespace DbComparator.App.Views.CustomControls
         /// </summary>
         /// <param name="fields">Fields collection</param>
         /// <returns>Comparison result</returns>
-        private bool IsEmpty(ObservableCollection<DtoFullField> fields)
+        private bool CollectionExists(ObservableCollection<DtoFullField> fields)
         {
             if (fields == null)
             {
@@ -312,7 +312,7 @@ namespace DbComparator.App.Views.CustomControls
                 case "ConstraintType": return _fields[index].ConstraintType == name;
                 case "ConstraintName": return _fields[index].ConstraintName == name;
                 case "ConstraintKeys": return _fields[index].ConstraintKeys == name;
-                case "References": return _fields[index].Referenced == name;
+                case "Referenced": return _fields[index].Referenced == name;
                 case "OnUpdate": return _fields[index].OnUpdate == name;
                 case "OnDelete": return _fields[index].OnDelete == name;
             }
