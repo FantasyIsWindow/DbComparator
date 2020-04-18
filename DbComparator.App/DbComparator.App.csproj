@@ -215,6 +215,7 @@
     <Compile Include="Resources\Style\MechanicsMainWindow.cs" />
     <Compile Include="Services\CollectionEqualizer.cs" />
     <Compile Include="Services\GeneralComparator.cs" />
+    <Compile Include="Services\ScriptBuilder.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
     <Compile Include="ViewModels\IAboutVM.cs" />

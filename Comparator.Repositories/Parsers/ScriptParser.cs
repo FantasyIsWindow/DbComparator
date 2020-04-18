@@ -75,7 +75,7 @@ namespace Comparator.Repositories.Parsers
                 }
                 else if (i == arr.Length - 1 && word != "END" && isBeginAdded)
                 {
-                    newScript.Append(word + " \r\nEND\r\n\t");
+                    newScript.Append(word + " \nEND\n\t");
                 }
                 else if (word.StartsWith("@") && isBeginAdded)
                 {
@@ -83,7 +83,7 @@ namespace Comparator.Repositories.Parsers
                 }
                 else if (word == ";")
                 {
-                    newScript.Append(word + "\r\n\t");
+                    newScript.Append(word + "\n\t");
                 }
                 else
                 {
@@ -132,12 +132,12 @@ namespace Comparator.Repositories.Parsers
             {
                 isBegin = true;
                 isBeginAdded = true;
-                return word + " \r\nBEGIN\r\n\t";
+                return word + " \nBEGIN\n\t";
             }
             else if (word == "BEGIN" || word == "END")
             {
                 isBegin = true;
-                return "\r\n" + word + "\r\n\t";
+                return "\n" + word + "\n\t";
             }
             else if (_findWord.IsTab(word) && arr[index - 1] != "(")
             {
@@ -148,7 +148,7 @@ namespace Comparator.Repositories.Parsers
                 }
                 else
                 {
-                    return "\r\n\t" + word + ' ';
+                    return "\n\t" + word + ' ';
                 }
             }
             else

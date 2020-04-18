@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DbComparator.App.Services
 {
-    public class GeneralComparator
+    internal class GeneralComparator
     {
         private CollectionEqualizer _collectionEqualizer;
 
@@ -75,7 +75,7 @@ namespace DbComparator.App.Services
             lsGenInfo.Add(left);
             rsGenInfo.Add(right);
         }
-
+        
         /// <summary>
         /// Building a collection
         /// </summary>

@@ -33,6 +33,8 @@ namespace DbComparator.App.ViewModels
 
         private GeneralComparator _generalComparator;
 
+        private ScriptBuilder _scriptBuilder;
+
         private IRepository _lsRepository; 
 
         private IRepository _rsRepository;
@@ -148,6 +150,7 @@ namespace DbComparator.App.ViewModels
             _repositoryFactory = new RepositoryFactory();
             _generalComparator = new GeneralComparator();
             _collectionEqualizer = new CollectionEqualizer();
+            _scriptBuilder = new ScriptBuilder();
             _isAuto = false;
         }
 
@@ -257,6 +260,10 @@ namespace DbComparator.App.ViewModels
 
             LsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_01);
             RsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_02);
+
+            _scriptBuilder.CreateScript(_lsRepository);
+            _scriptBuilder.CreateScript(_rsRepository);
+
         }
 
         /// <summary>
