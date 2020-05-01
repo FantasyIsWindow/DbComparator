@@ -203,5 +203,15 @@
         </Border>
     </DataTemplate>
 
+    <DataTemplate x:Key="providerName">    
+        <Label Content="{Binding DataBase.DbType}" 
+               Height="30"
+               HorizontalContentAlignment="Center"               
+               BorderThickness="0, 1, 0, 0"
+               FontWeight="Bold"
+               BorderBrush="#9A885B"
+               Background="#BCAB81"
+               Padding="0, 5, 0, 0"/>
+    </DataTemplate>
+
 </ResourceDictionary>
-    

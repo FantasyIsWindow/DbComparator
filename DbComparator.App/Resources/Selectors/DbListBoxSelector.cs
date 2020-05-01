@@ -12,6 +12,8 @@ namespace DbComparator.App.Resources.Selectors
 
         public DataTemplate AddNew { get; set; }
 
+        public DataTemplate Name { get; set; }
+
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -32,6 +34,10 @@ namespace DbComparator.App.Resources.Selectors
                     return info.IsConnect ? Connected :
                            !info.IsConnect ? Disconected :
                            null;
+                }
+                else
+                {
+                    return Name;
                 }
             }
 

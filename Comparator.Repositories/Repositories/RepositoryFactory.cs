@@ -5,7 +5,7 @@ namespace Comparator.Repositories.Repositories
     /// <summary>
     /// Sets options for supported database providers
     /// </summary>
-    public enum Provider { MicrosoftSql, SyBase, MySql }
+    public enum Provider { MicrosoftSql, SyBase, MySql, All }
 
     public class RepositoryFactory
     {
@@ -42,9 +42,9 @@ namespace Comparator.Repositories.Repositories
         {
             switch (repository)
             {
-                case Provider.MicrosoftSql: return new MicrosoftDb();
-                case Provider.MySql:        return new MySqlDb();
-                case Provider.SyBase:       return new SyBaseDb();
+                case Provider.MicrosoftSql: return new MsSqlDbRepository();
+                case Provider.MySql:        return new MySqlRepository();
+                case Provider.SyBase:       return new SyBaseDbRepository();
             }
             return null;
         }        

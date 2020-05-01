@@ -17,6 +17,7 @@ namespace DbComparator.App
             kernel.Bind<IMessagerVM>().To<MessagerViewModel>();
             kernel.Bind<IDbInfoCreatorVM>().To<DbInfoCreatorViewModel>();
             kernel.Bind<IGeneralDbInfoVM>().To<GeneralDbInfoViewModel>();
+            kernel.Bind<ICreateDbScriptVM>().To<CreateDbScriptViewModel>();
             kernel.Bind<IAboutVM>().To<AboutViewModel>();
 
             var mainVM = kernel.Get<MainWindowViewModel>();

@@ -51,7 +51,7 @@
     <SolidColorBrush x:Key="MenuItemHoverBackgroundBrush" Color="{StaticResource c_002}"/>
     <SolidColorBrush x:Key="MenuItemHoverForegroundBrush" Color="{StaticResource c_003}"/>
     <SolidColorBrush x:Key="MenuItemHoverBorderBrush" Color="{StaticResource c_004}"/>
-    <SolidColorBrush x:Key="MenuItemEnabledForegroundBrush" Color="{StaticResource c_007}"/>
+    <SolidColorBrush x:Key="MenuItemEnabledForegroundBrush" Color="{StaticResource c_003}"/>
 
     <!-- Window Brushes -->
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource c_000}"/>
@@ -140,6 +140,12 @@
     <SolidColorBrush x:Key="StatusBarBackgroundBrush" Color="{StaticResource c_005}"/>
     <SolidColorBrush x:Key="StatusBarSeparatorFillBrush" Color="{StaticResource c_001}"/>
     <SolidColorBrush x:Key="StatusBarDisabledForegroundBrush" Color="{StaticResource c_002}"/>
+
+    <!-- RadioButton Brushes -->
+    <SolidColorBrush x:Key="RadioButtonNormalFillBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="RadioButtonNormalBorderStrokeBrush" Color="{StaticResource c_003}"/>
+    <SolidColorBrush x:Key="RadioButtonGlyphBrush" Color="{StaticResource c_003}"/>
+
 
 
 

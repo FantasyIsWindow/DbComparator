@@ -3,6 +3,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ScrollViewerStyle.xaml"/>
+        <ResourceDictionary Source="RadioButtonStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
     
@@ -23,5 +24,46 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style TargetType="{x:Type ListBox}" x:Key="createDbScriptListBoxStyleItem">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ListBoxBorderBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">                    
+                    <ScrollViewer Style="{StaticResource scrollViewerStyle}">
+                        <Border Background="{StaticResource ListBoxBackgroundBrush}">
+                            <ItemsPresenter />
+                        </Border>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <RadioButton GroupName="dbs" 
+                                             x:Name="rb"
+                                             Content="{Binding Info.DbName}"                                         
+                                             Command="{Binding Path=DataContext.CheckedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"                                                                                          
+                                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"                                             
+                                             Style="{StaticResource radioButtonStyle}"
+                                             Margin="5"/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

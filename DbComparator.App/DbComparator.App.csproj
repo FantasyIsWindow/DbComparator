@@ -114,6 +114,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Style\RadioButtonStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Style\RichTextBoxStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,6 +174,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ViewControls\CreateDbScriptView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ViewControls\GeneralDbInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -199,6 +207,7 @@
     <Compile Include="Infrastructure\Converters\LoadViewVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\MessageBoxVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\BackBtnMultiVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\Converters\SharedCheckboxStateMultiConverter .cs" />
     <Compile Include="Infrastructure\Converters\TextControlVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\ViewsVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Delegates\NotifyDelegate.cs" />
@@ -210,6 +219,7 @@
     <Compile Include="Models\DbInfo.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\GeneralDbInfo.cs" />
+    <Compile Include="Models\Passage.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Resources\Selectors\DbListBoxSelector.cs" />
     <Compile Include="Resources\Style\MechanicsMainWindow.cs" />
@@ -217,8 +227,10 @@
     <Compile Include="Services\GeneralComparator.cs" />
     <Compile Include="Services\ScriptBuilder.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\CreateDbScriptViewModel.cs" />
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
     <Compile Include="ViewModels\IAboutVM.cs" />
+    <Compile Include="ViewModels\ICreateDbScriptVM.cs" />
     <Compile Include="ViewModels\IDbInfoCreatorVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
     <Compile Include="ViewModels\IMessagerVM.cs" />
@@ -243,6 +255,9 @@
     </Compile>
     <Compile Include="Views\ViewControls\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewControls\CreateDbScriptView.xaml.cs">
+      <DependentUpon>CreateDbScriptView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewControls\GeneralDbInfoView.xaml.cs">
       <DependentUpon>GeneralDbInfoView.xaml</DependentUpon>
@@ -295,6 +310,10 @@
     <ProjectReference Include="..\Comparator.Repositories\Comparator.Repositories.csproj">
       <Project>{3ba6f320-00fb-45e9-91a3-61793ebacf0b}</Project>
       <Name>Comparator.Repositories</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbComparator.FileWorker\DbComparator.FileWorker.csproj">
+      <Project>{b1efce9c-3c28-414f-b0c7-7bd7cf9cd69d}</Project>
+      <Name>DbComparator.FileWorker</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbConectionInfoRepository\DbConectionInfoRepository.csproj">
       <Project>{fbe4249f-ae77-424d-9d83-23732503a64a}</Project>

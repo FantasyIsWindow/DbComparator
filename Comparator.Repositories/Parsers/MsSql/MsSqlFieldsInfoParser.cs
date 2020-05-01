@@ -3,9 +3,9 @@ using Comparator.Repositories.Models.DtoModels;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Comparator.Repositories.Parsers
+namespace Comparator.Repositories.Parsers.MsSql
 {
-    internal class MicrosoftFieldsInfoParser
+    internal class MsSqlFieldsInfoParser
     {
         /// <summary>
         /// Returns a collection of table fields

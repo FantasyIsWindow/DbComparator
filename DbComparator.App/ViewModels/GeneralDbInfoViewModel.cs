@@ -240,6 +240,7 @@ namespace DbComparator.App.ViewModels
         /// <param name="obj">Object</param>
         private void AutoCompare(object obj)
         {
+            _lsRepository.GetDbScript();
             var result = _generalComparator.Colorize(LsGeneralInfo[0], RsGeneralInfo[0]);
             IsAuto = true;
             SendMessage(MessageHandler, result);
@@ -261,8 +262,8 @@ namespace DbComparator.App.ViewModels
             LsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_01);
             RsGeneralInfo = new ObservableCollection<GeneralDbInfo>(test_02);
 
-            _scriptBuilder.CreateScript(_lsRepository);
-            _scriptBuilder.CreateScript(_rsRepository);
+           // _scriptBuilder.CreateScript(_lsRepository);
+           // _scriptBuilder.CreateScript(_rsRepository);
 
         }
 

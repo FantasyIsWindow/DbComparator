@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comparator.Repositories", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbConectionInfoRepository", "DbConectionInfoRepository\DbConectionInfoRepository.csproj", "{FBE4249F-AE77-424D-9D83-23732503A64A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbComparator.FileWorker", "DbComparator.FileWorker\DbComparator.FileWorker.csproj", "{B1EFCE9C-3C28-414F-B0C7-7BD7CF9CD69D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FBE4249F-AE77-424D-9D83-23732503A64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBE4249F-AE77-424D-9D83-23732503A64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBE4249F-AE77-424D-9D83-23732503A64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1EFCE9C-3C28-414F-B0C7-7BD7CF9CD69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1EFCE9C-3C28-414F-B0C7-7BD7CF9CD69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1EFCE9C-3C28-414F-B0C7-7BD7CF9CD69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1EFCE9C-3C28-414F-B0C7-7BD7CF9CD69D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

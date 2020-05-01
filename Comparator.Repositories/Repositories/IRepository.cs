@@ -60,6 +60,30 @@ namespace Comparator.Repositories.Repositories
         IEnumerable<string> GetTriggers();
 
         /// <summary>
+        /// Get the script for the entire database
+        /// </summary>
+        /// <returns></returns>
+        string GetDbScript();
+
+        /// <summary>
+        /// Get the script for all tables from the database
+        /// </summary>
+        /// <returns></returns>
+        string GetTablesScript();
+
+        /// <summary>
+        /// Get the script for all procedures from the database
+        /// </summary>
+        /// <returns></returns>
+        string GetProceduresScript();
+
+        /// <summary>
+        /// Get the script for all triggers from the database
+        /// </summary>
+        /// <returns></returns>
+        string GetTriggersScript();
+
+        /// <summary>
         /// Asynchronous database connection verification
         /// </summary>
         /// <returns>Test result</returns>

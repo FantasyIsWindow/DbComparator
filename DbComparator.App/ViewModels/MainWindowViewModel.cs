@@ -29,6 +29,8 @@ namespace DbComparator.App.ViewModels
 
         private readonly IAboutVM _aboutVM;
 
+        private readonly ICreateDbScriptVM _createDbScriptVM;
+
         private object _currentPageContent;
 
         private Provider _selectedDbType;
@@ -104,7 +106,8 @@ namespace DbComparator.App.ViewModels
                                    IGeneralDbInfoVM generalDbInfo,
                                    IMessagerVM messager,
                                    IDbInfoCreatorVM dbInfoManager,
-                                   IAboutVM aboutVM)
+                                   IAboutVM aboutVM,
+                                   ICreateDbScriptVM createDbScriptVM)
         {
             _repositoryFactory = new RepositoryFactory();
             _connectionDb = connectionDb;
@@ -114,6 +117,7 @@ namespace DbComparator.App.ViewModels
             _showMessage = messager;
             _addNewDb = dbInfoManager;
             _aboutVM = aboutVM;
+            _createDbScriptVM = createDbScriptVM;
             Subscriptions();
         }
 
@@ -135,6 +139,7 @@ namespace DbComparator.App.ViewModels
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage("Warning", sender, e); });
             _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
+            _createDbScriptVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
 
         private RellayCommand _addNewDbInfoCommand;
@@ -150,6 +155,8 @@ namespace DbComparator.App.ViewModels
         private RellayCommand _choiseDbTypeCommand;
 
         private RellayCommand _aboutViewShowCommand;
+
+        private RellayCommand _openCreateDbScriptView;
 
 
         public RellayCommand AddNewDbInfoCommand
@@ -245,6 +252,48 @@ namespace DbComparator.App.ViewModels
         public RellayCommand AboutViewShowCommand =>
             _aboutViewShowCommand = new RellayCommand((c) => { CurrentPageContent = _aboutVM; });
 
+        public RellayCommand OpenCreateDbScriptView
+        {
+            get
+            {
+                return _openCreateDbScriptView ??
+                   (_openCreateDbScriptView = new RellayCommand(obj =>
+                   {
+                       CurrentPageContent = _createDbScriptVM;
+
+                       ObservableCollection<Passage> dbs = new ObservableCollection<Passage>();
+                       FillInfoModelList(_referenceInfoDbs, dbs);
+                       FillInfoModelList(_notReferenceInfoDbs, dbs);
+                       _createDbScriptVM.SetDbInfo(dbs, _dbRepository);
+                   },
+                        (obj) => _dbRepository != null
+                   ));
+            }
+        }
+
+        /// <summary>
+        /// Function for preparing a collection for the information input window for creating a script
+        /// </summary>
+        /// <param name="collection">Collection containing the necessary data</param>
+        /// <param name="target">Collection to fill</param>
+        private void FillInfoModelList(ObservableCollection<DbInfo> collection, ObservableCollection<Passage> target)
+        {
+            foreach (var item in collection)
+            {
+                if (item.IsConnect)
+                {
+                    Passage passage = new Passage()
+                    {
+                        Info = item.DataBase,
+                        IsChecked = false
+                    };
+
+                    target.Add(passage);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Updating a database entry
         /// </summary>
@@ -296,6 +345,9 @@ namespace DbComparator.App.ViewModels
                 SelectedDbType = _repositoryFactory.StringToProvider((string)type.Message);
             }
 
+            ReferenceInfoDbs.Clear();
+            NotReferenceInfoDbs.Clear();
+
             ChoiseType();
             CurrentPageContent = null;
         }
@@ -306,10 +358,9 @@ namespace DbComparator.App.ViewModels
         private async void ChoiseType()
         {
             LoadViewVisibility = true;
-            _dbRepository = _repositoryFactory.GetRepository(SelectedDbType);
             await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
             await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
-            LoadViewVisibility = false; 
+            LoadViewVisibility = false;
         }
 
         /// <summary>
@@ -320,9 +371,27 @@ namespace DbComparator.App.ViewModels
         /// <returns>Task</returns>
         private async Task GetDbInfo(ObservableCollection<DbInfo> collection, IsReference reference)
         {
-            collection.Clear();
-            var result = _connectionDb.GetAllDbByType(SelectedDbType.ToString(), reference);
-            await GetInfo(result, collection);
+            IEnumerable<DbInfoModel> result = null;
+            if (SelectedDbType == Provider.All)
+            {
+                foreach (Provider item in Enum.GetValues(typeof(Provider)))
+                {
+                    if (item == Provider.All)
+                    {
+                        continue;
+                    }
+
+                    _dbRepository = _repositoryFactory.GetRepository(item);
+                    result = _connectionDb.GetAllDbByType(item.ToString(), reference);
+                    await GetInfo(result, collection);
+                }
+            }
+            else
+            {
+                _dbRepository = _repositoryFactory.GetRepository(SelectedDbType);
+                result = _connectionDb.GetAllDbByType(SelectedDbType.ToString(), reference);
+                await GetInfo(result, collection);
+            }            
         }
 
         /// <summary>
@@ -333,6 +402,17 @@ namespace DbComparator.App.ViewModels
         /// <returns>Task</returns>
         private async Task GetInfo(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
+            if (SelectedDbType == Provider.All)
+            {
+                target.Add(new DbInfo() 
+                {
+                    DataBase = new DbInfoModel() 
+                    {
+                        DbType = _dbRepository.DbType 
+                    } 
+                });
+            }
+
             foreach (var item in models)
             {
                 _dbRepository.CreateConnectionString(item.DataSource, item.ServerName, item.DbName, item.Login, item.Password);
@@ -344,9 +424,13 @@ namespace DbComparator.App.ViewModels
                 };
                 target.Add(db);
             }
-            if (target.Count >= 0)
+
+            if (target.Count >= 0 && SelectedDbType != Provider.All)
             {
-                target.Add(new DbInfo() { DataBase = null });
+                target.Add(new DbInfo() 
+                {
+                    DataBase = null 
+                });
             }
         }
 

@@ -3,7 +3,7 @@ using Comparator.Repositories.Models.DtoModels;
 using System.Collections.Generic;
 using System;
 
-namespace Comparator.Repositories.Parsers
+namespace Comparator.Repositories.Parsers.SyBase
 {
     internal class SyBaseFieldsInfoParser
     {
@@ -41,6 +41,12 @@ namespace Comparator.Repositories.Parsers
                     FieldName = item.column_name,
                     Size = GetSize(item.base_type_str)
                 };
+
+                if (!string.IsNullOrEmpty(item.@default))
+                {
+                    field.ConstraintType = "DEFAULT";
+                    field.ConstraintKeys = item.@default;
+                }
 
                 tempCollection.Add(field);
             }
@@ -82,6 +88,20 @@ namespace Comparator.Repositories.Parsers
 
                 tempConstraints.Add(field);
             }
+
+            foreach (var item in fields)
+            {
+                if (item.ConstraintType == "DEFAULT")
+                {
+                    DtoFullField field = new DtoFullField();
+
+                    field.ConstraintType = item.ConstraintType;
+                    field.ConstraintKeys = item.ConstraintKeys;
+                    field.FieldName = item.FieldName;
+                    tempConstraints.Add(field);
+                }
+            }
+
             return tempConstraints;
         }
 

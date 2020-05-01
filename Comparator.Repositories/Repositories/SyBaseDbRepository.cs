@@ -1,19 +1,24 @@
 ﻿using Comparator.Repositories.DbRequests;
 using Comparator.Repositories.Models.DbModels;
 using Comparator.Repositories.Models.DtoModels;
-using Comparator.Repositories.Parsers;
+using Comparator.Repositories.Parsers.SyBase;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
 {
-    internal class SyBaseDb : IRepository
+    internal class SyBaseDbRepository : IRepository
     {
         private const string _provider = "Sap.Data.SQLAnywhere";
 
         private readonly SyBaseFieldsInfoParser _fieldsParser;
 
-        private readonly ScriptParser _scriptParser;
+        private readonly SyBaseScriptParser _scriptParser;
+
+        private readonly SyBaseTriggerScriptParser _triggerScriptParser;
+
+        private readonly SyBaseDbScriptCreator _dbScriptCreator;
 
         private readonly SyBaseRequests _request;
 
@@ -24,16 +29,18 @@ namespace Comparator.Repositories.Repositories
         private string _dbOwner;
 
         private string _dbName;
-
-
+        
+        
         public string DbName => _dbName;
 
         public string DbType => (Provider.SyBase).ToString();
 
-        public SyBaseDb()
+        public SyBaseDbRepository()
         {
             _fieldsParser = new SyBaseFieldsInfoParser();
-            _scriptParser = new ScriptParser();
+            _scriptParser = new SyBaseScriptParser();
+            _triggerScriptParser = new SyBaseTriggerScriptParser();
+            _dbScriptCreator = new SyBaseDbScriptCreator();
             _request = new SyBaseRequests();
         }
 
@@ -77,9 +84,6 @@ namespace Comparator.Repositories.Repositories
             return Mapper.Map.Map<IEnumerable<Procedure>, IEnumerable<string>>(result);
         }
 
-        public string GetProcedureSqript(string procedureName) =>
-            GetSqript(procedureName);
-
         public IEnumerable<string> GetTables()
         {
             var result = _db.Select<Table>(_request.GetTablesRequest(_dbOwner));
@@ -92,18 +96,62 @@ namespace Comparator.Repositories.Repositories
         public async Task<bool> IsConnectionAsync() =>
             await _db.CheckConectionAsync();
 
-        public string GetTriggerSqript(string triggerName) => 
-            GetSqript(triggerName);
-
-        /// <summary>
-        /// Returns the procedure or trigger script
-        /// </summary>
-        /// <param name="name">Procedure or trigger name</param>
-        /// <returns>Procedure or trigger script</returns>
-        private string GetSqript(string name)
+        public string GetProcedureSqript(string procedureName)
         {
-            var sqript = _db.Select<string>(_request.GetSqriptRequest(name));
-            return _scriptParser.GetProcedureSquript(sqript);
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
+            return _scriptParser.GetSquript(sqript);
+        }
+
+        public string GetDbScript()
+        {
+            string tables = GetTablesScript();
+            string procedures = GetProceduresScript();
+            string triggers = GetTriggersScript();
+
+            return _dbScriptCreator.CreateFullDbScript(tables, procedures, triggers, _dbName);
+        }
+
+        public string GetTablesScript()
+        {
+            var tablesNames = GetTables();
+            Dictionary<string, List<DtoFullField>> tables = new Dictionary<string, List<DtoFullField>>();
+
+            foreach (var tableName in tablesNames)
+            {
+                var temp = GetFieldsInfo(tableName).ToList();
+                tables.Add(tableName, temp);
+            }
+            return _dbScriptCreator.CreateTablesScript(tables);
+        }
+
+        public string GetProceduresScript()
+        {
+            var proceduresNames = GetProcedures();
+            List<string> procedures = new List<string>();
+
+            foreach (var procedureName in proceduresNames)
+            {
+                procedures.Add(GetProcedureSqript(procedureName));
+            }
+            return _dbScriptCreator.CreateProceduresOrTriggersScript(procedures);
+        }
+
+        public string GetTriggersScript()
+        {
+            var triggersNames = GetTriggers();
+            List<string> triggers = new List<string>();
+
+            foreach (var triggerName in triggersNames)
+            {
+                triggers.Add(GetTriggerSqript(triggerName));
+            }
+            return _dbScriptCreator.CreateProceduresOrTriggersScript(triggers);
+        }
+
+        public string GetTriggerSqript(string triggerName)
+        {
+            var sqript = _db.Select<string>(_request.GetSqriptRequest(triggerName));
+            return _triggerScriptParser.GetTriggerParser(sqript);
         }
     }
 }

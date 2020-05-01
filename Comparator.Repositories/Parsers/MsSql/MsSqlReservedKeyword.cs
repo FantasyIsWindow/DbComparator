@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Comparator.Repositories.Parsers
+namespace Comparator.Repositories.Parsers.MsSql
 {
-    internal class ReservedKeyword
+    internal class MsSqlReservedKeyword : ReservedKeywordLibrary
     {
-        private readonly HashSet<string> _reservedWords;
-
-        private readonly HashSet<string> _tab;
-
-        public ReservedKeyword()
+        public MsSqlReservedKeyword()
         {
             _reservedWords = new HashSet<string>()
             {
@@ -21,12 +17,12 @@ namespace Comparator.Repositories.Parsers
                 "ASC",
                 "AUTHORIZATION",
                 "BACKUP",
+                "BY",
                 "BEGIN",
                 "BETWEEN",
                 "BREAK",
                 "BROWSE",
                 "BULK",
-                "BY",
                 "CASCADE",
                 "CASE",
                 "CHECK",
@@ -195,43 +191,38 @@ namespace Comparator.Repositories.Parsers
                 "WHERE",
                 "WHILE",
                 "WITH",
-                "WITHIN GROUP"
+                "WITHIN GROUP",
+                "NOCOUNT",
+                "AVAILABILITY"
             };
 
             _tab = new HashSet<string>()
             {
                 "SET",
+                "CASE",
                 "SELECT",
-                "JOIN",
-                "IF",
-                "ELSE",
-                "VALUES",
-                "END",
                 "WHEN",
+                "ELSE",
+                "LEFT",
+                "RIGHT",
+                "GROUP",
+                "ORDER",
+                "VALUES",
+                "HAVING",
+                "DECLARE",
                 "WHERE",
-                "THEN"
+                "INNER",
+                "INSERT",
+                "IF",
+                "RETURNS",
+                "DELETE",
+                "RETURN"
+            };
+
+            _newLine = new HashSet<string>()
+            {
+                "CREATE"
             };
         }
-
-        /// <summary>
-        /// Checks whether such a word exists in the list of reserved words
-        /// </summary>
-        /// <param name="word">Search word</param>
-        /// <returns>True if there is a word in the reference list</returns>
-        public bool IsExists(string word) => _reservedWords.Contains(ToUp(word));
-
-        /// <summary>
-        /// Checks whether such a word exists in the list of reserved tab words
-        /// </summary>
-        /// <param name="word">Search word</param>
-        /// <returns>True if there is a word in the reference list</returns>
-        public bool IsTab(string word) => _tab.Contains(ToUp(word));
-
-        /// <summary>
-        /// Returns an uppercase word
-        /// </summary>
-        /// <param name="word">Increase the word</param>
-        /// <returns>The word in uppercase</returns>
-        private string ToUp(string word) => word.ToUpper();
     }
 }

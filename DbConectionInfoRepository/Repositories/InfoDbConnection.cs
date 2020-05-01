@@ -37,7 +37,7 @@ namespace DbConectionInfoRepository.Repositories
         /// <returns>Collection of all databases from the required provider</returns>
         public IEnumerable<DbInfoModel> GetAllDbByType(string dbType, IsReference reference)
         {
-            string str = reference == IsReference.Yes ? "Yes" : "No";
+            string str = reference.ToString();
             return _db.ExecuteQuery<DbInfoModel>(_request.GetAllDbByTypeRequest(_db.TableName, dbType, str));
         }
 
