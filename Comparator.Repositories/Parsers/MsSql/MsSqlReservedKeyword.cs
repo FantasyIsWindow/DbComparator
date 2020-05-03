@@ -200,7 +200,6 @@ namespace Comparator.Repositories.Parsers.MsSql
             {
                 "SET",
                 "CASE",
-                "SELECT",
                 "WHEN",
                 "ELSE",
                 "LEFT",

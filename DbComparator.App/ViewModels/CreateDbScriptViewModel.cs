@@ -59,38 +59,25 @@ namespace DbComparator.App.ViewModels
             get => _isChecked; 
             set => SetProperty(ref _isChecked, value, "IsChecked");
         }
-
-
-
-
+                     
         public CreateDbScriptViewModel()
         {
             _fileCreator = new FileCreator();
             _dbList = new ObservableCollection<Passage>();
         }
-
-
-
-
+                     
         public void SetDbInfo(ObservableCollection<Passage> info, IRepository dbRepository)
         {
             _dbList = info;
             _dbRepository = dbRepository;
         }
 
-
-
-
-
-
         private RellayCommand _okCommand;
 
         private RellayCommand _cancelCommand;
 
         private RellayCommand _checkedCommand;
-
-
-
+               
         public RellayCommand OkCommand
         {
             get
@@ -104,8 +91,18 @@ namespace DbComparator.App.ViewModels
             }
         }
 
-        public RellayCommand CancelCommand =>
-            _cancelCommand = new RellayCommand(c => CloseHandler?.Invoke());
+        public RellayCommand CancelCommand
+        {
+            get
+            {
+                return _cancelCommand ??
+                    (_cancelCommand = new RellayCommand(obj =>
+                    {
+                        ResetParameters();
+                        CloseHandler?.Invoke();
+                    }));
+            }
+        }
 
         public RellayCommand CheckedCommand
         {
@@ -121,6 +118,9 @@ namespace DbComparator.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Getting the script for the selected element
+        /// </summary>
         private void CreateScript()
         {
             string result = "";
@@ -149,9 +149,18 @@ namespace DbComparator.App.ViewModels
 
             _fileCreator.SaveFile(type + _dbRepository.DbName, result);
 
+            ResetParameters();
+        }
+
+        /// <summary>
+        /// Resetting variable parameters
+        /// </summary>
+        private void ResetParameters()
+        {
             IsCheckedTables = false;
             IsCheckedProcedures = false;
             IsCheckedTriggers = false;
+            IsChecked = false;
         }
     }
 }

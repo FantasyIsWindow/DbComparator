@@ -293,7 +293,6 @@ namespace Comparator.Repositories.Parsers.MySql
             {
                 "SET",
                 "CASE",
-                "SELECT",
                 "WHEN",
                 "ELSE",
                 "LEFT",

@@ -82,7 +82,6 @@
     <Compile Include="Parsers\MySql\MySqlReservedKeyword.cs" />
     <Compile Include="Parsers\MsSql\MsSqlScriptParser.cs" />
     <Compile Include="Parsers\MsSql\MsSqlReservedKeyword.cs" />
-    <Compile Include="Parsers\MySql\MySqlTableCreator.cs" />
     <Compile Include="Parsers\MySql\MySqlTriggerScriptParser.cs" />
     <Compile Include="Parsers\ReservedKeywordLibrary.cs" />
     <Compile Include="Parsers\ScriptParser.cs" />

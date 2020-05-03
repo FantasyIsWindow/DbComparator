@@ -24,7 +24,7 @@ namespace Comparator.Repositories.Parsers.SyBase
 
                     if (!isAs && word == "AS" && !isBeginD)
                     {
-                        fragmentedQuery[i] = "\nAS";
+                        fragmentedQuery[i] = "AS";
                         isAs = true;
                         if (fragmentedQuery[i + 1].ToUpper() != "BEGIN")
                         {

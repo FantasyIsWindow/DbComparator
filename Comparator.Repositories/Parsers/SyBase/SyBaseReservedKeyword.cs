@@ -65,7 +65,6 @@ namespace Comparator.Repositories.Parsers.SyBase
             {
                 "SET",
                 "CASE",
-                "SELECT",
                 "WHEN",
                 "ELSE",
                 "LEFT",

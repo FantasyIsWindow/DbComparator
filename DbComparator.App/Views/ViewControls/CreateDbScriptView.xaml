@@ -29,7 +29,7 @@
                  Style="{StaticResource createDbScriptListBoxStyleItem}"/>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="10, 15, 0, 10" IsEnabled="{Binding IsChecked}">
-            <CheckBox Content="All" IsThreeState="True" Margin="0, 5, 5, 5">
+            <CheckBox Content="All" IsThreeState="True" Margin="0, 5, 5, 5" Style="{StaticResource checkBoxStyle}"> 
                 <CheckBox.IsChecked>
                     <MultiBinding Converter="{StaticResource checkBoxConverter}">
                         <Binding ElementName="tablesCheckbox" Path="IsChecked"/>
@@ -38,9 +38,9 @@
                     </MultiBinding>
                 </CheckBox.IsChecked>                
             </CheckBox>
-            <CheckBox Content="Tables" x:Name="tablesCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedTables}"/>
-            <CheckBox Content="Procedures" x:Name="proceduresCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedProcedures}"/>
-            <CheckBox Content="Triggers" x:Name="triggersCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedTriggers}"/>
+            <CheckBox Content="Tables" x:Name="tablesCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedTables}" Style="{StaticResource checkBoxStyle}"/>
+            <CheckBox Content="Procedures" x:Name="proceduresCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedProcedures}" Style="{StaticResource checkBoxStyle}"/>
+            <CheckBox Content="Triggers" x:Name="triggersCheckbox" Margin="10, 5, 5, 5" IsChecked="{Binding IsCheckedTriggers}" Style="{StaticResource checkBoxStyle}"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" 

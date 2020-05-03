@@ -8,7 +8,7 @@ namespace Comparator.Repositories.Parsers.MsSql
     {
         public MsSqlScriptParser() 
             : base(new MsSqlReservedKeyword()) { }
-                
+
         protected override string ParseScript(string script)
         {
             bool isAs = false;
@@ -23,7 +23,7 @@ namespace Comparator.Repositories.Parsers.MsSql
 
                     if (!isAs && word == "AS")
                     {
-                        fragmentedQuery[i] = "\nAS";
+                        fragmentedQuery[i] = "AS";
                         isAs = true;
                         if (fragmentedQuery[i + 1].ToUpper() != "BEGIN")
                         {
@@ -41,7 +41,7 @@ namespace Comparator.Repositories.Parsers.MsSql
 
                     if (word == "END" && i != fragmentedQuery.Count - 1)
                     {
-                        fragmentedQuery[i] = "\n" + word + "\n";
+                        fragmentedQuery[i] = "\n" + word;
                         continue;
                     }
 
@@ -82,7 +82,7 @@ namespace Comparator.Repositories.Parsers.MsSql
 
         protected override List<string> StringToArr(string script)
         {
-            string preparedLine = script.Replace(",", ", ").Replace(";", " ; ").Replace("(", " ( ").Replace(")", " ) ");
+            string preparedLine = script.Replace("',", "', ").Replace(",", ", ").Replace("(", " ( ").Replace(")", " ) ");
             return preparedLine.Split(new char[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
     }

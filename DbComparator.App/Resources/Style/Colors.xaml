@@ -10,6 +10,25 @@
     <Color x:Key="c_006">#FFF9EE</Color>
     <Color x:Key="c_007">#000000</Color>
 
+    <!-- RadioButton Brushes -->
+    <SolidColorBrush x:Key="RadioButtonForegroundBrush" Color="{StaticResource c_005}"/>
+    <SolidColorBrush x:Key="RadioButtonNormalFillBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="RadioButtonNormalBorderStrokeBrush" Color="{StaticResource c_004}"/>
+    <SolidColorBrush x:Key="RadioButtonGlyphBrush" Color="{StaticResource c_004}"/>
+    <Color x:Key="RadioButtonMouseOverBrush">#BCAB81</Color>
+    <Color x:Key="RadioButtonPressedBrush">#9A885B</Color>
+
+    <!-- CheckBox Brushes -->
+    <SolidColorBrush x:Key="CheckBoxNormalBorderStrokeBrush" Color="{StaticResource c_000}"/>
+    <SolidColorBrush x:Key="CheckBoxNormalFillBrush" Color="{StaticResource c_002}"/>
+    <SolidColorBrush x:Key="CheckBoxCheckMarkStrokeBrush" Color="{StaticResource c_004}"/>
+    <SolidColorBrush x:Key="CheckBoxIndeterminateMarkStrokeBrush" Color="{StaticResource c_004}"/>
+    <Color x:Key="CheckBoxMouseOverBrush">#BCAB81</Color>
+    <Color x:Key="CheckBoxPressedBrush">#9A885B</Color>
+    <Color x:Key="CheckBoxPressedBorderDarkBrush">#9A885B</Color>
+    <Color x:Key="CheckBoxPressedBorderLighthBrush">#E6D8B8</Color>
+
+
     <!-- TreeView Brushes -->
     <Color x:Key="TreeViewSelectedItemBackgroundColorBrush">#726138</Color>
     <Color x:Key="TreeViewSelectionItemBackgroundColorBrush">#E6D8B8</Color>   
@@ -140,13 +159,5 @@
     <SolidColorBrush x:Key="StatusBarBackgroundBrush" Color="{StaticResource c_005}"/>
     <SolidColorBrush x:Key="StatusBarSeparatorFillBrush" Color="{StaticResource c_001}"/>
     <SolidColorBrush x:Key="StatusBarDisabledForegroundBrush" Color="{StaticResource c_002}"/>
-
-    <!-- RadioButton Brushes -->
-    <SolidColorBrush x:Key="RadioButtonNormalFillBrush" Color="{StaticResource c_000}"/>
-    <SolidColorBrush x:Key="RadioButtonNormalBorderStrokeBrush" Color="{StaticResource c_003}"/>
-    <SolidColorBrush x:Key="RadioButtonGlyphBrush" Color="{StaticResource c_003}"/>
-
-
-
 
 </ResourceDictionary>

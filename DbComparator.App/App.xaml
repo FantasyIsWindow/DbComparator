@@ -23,7 +23,9 @@
                 <ResourceDictionary Source="Resources/Style/RichTextBoxStyle.xaml"/>
                 <ResourceDictionary Source="Resources/Style/DataGridStyle.xaml"/>
                 <ResourceDictionary Source="Resources/Style/TreeViewStyle.xaml"/>
-                <ResourceDictionary Source="Resources/Style/StatusBarStyle.xaml"/>        
+                <ResourceDictionary Source="Resources/Style/StatusBarStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Style/RadioButtonStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Style/CheckBoxStyle.xaml"/>     
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
