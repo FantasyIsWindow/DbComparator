@@ -4,9 +4,10 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ScrollViewerStyle.xaml"/>
         <ResourceDictionary Source="RadioButtonStyle.xaml"/>
+        <ResourceDictionary Source="CheckBoxStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    
-    
+
+
     <Style TargetType="{x:Type ListBox}" x:Key="listBoxStyle">
         <Setter Property="BorderBrush" Value="{StaticResource ListBoxBorderBrush}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -25,7 +26,40 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type ListBox}" x:Key="createDbScriptListBoxStyleItem">
+    <Style TargetType="{x:Type ListBoxItem}" x:Key="createDbScriptLBItemStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border Background="{StaticResource ListBoxBackgroundBrush}">
+                        <RadioButton GroupName="dbs" 
+                                     Content="{Binding Info.DbName}"    
+                                     Command="{Binding Path=DataContext.CheckedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"  
+                                     CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"  
+                                     Style="{StaticResource radioButtonStyle}"
+                                     Margin="5"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ListBoxItem}" x:Key="mergerDbScriptLBItemStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border Background="{StaticResource ListBoxBackgroundBrush}">
+                        <CheckBox Content="{Binding Info.DbName}" 
+                                  IsChecked="{Binding IsChecked}"
+                                  Command="{Binding Path=DataContext.CheckedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                                  Style="{StaticResource checkBoxStyle}"
+                                  Margin="5"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ListBox}" x:Key="scriptLBItemsStyle">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="BorderBrush" Value="{StaticResource ListBoxBorderBrush}"/>
@@ -36,7 +70,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListBox}">                    
+                <ControlTemplate TargetType="{x:Type ListBox}">
                     <ScrollViewer Style="{StaticResource scrollViewerStyle}">
                         <Border Background="{StaticResource ListBoxBackgroundBrush}">
                             <ItemsPresenter />
@@ -45,25 +79,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <RadioButton GroupName="dbs" 
-                                             x:Name="rb"
-                                             Content="{Binding Info.DbName}"                                         
-                                             Command="{Binding Path=DataContext.CheckedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"                                                                                          
-                                             CommandParameter="{Binding Path=Content, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"                                             
-                                             Style="{StaticResource radioButtonStyle}"
-                                             Margin="5"/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Setter.Value>
-        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding OpenMode}" Value="ScriptCreator">
+                <Setter Property="ItemContainerStyle" Value="{StaticResource createDbScriptLBItemStyle}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding OpenMode}" Value="ScriptMerger">
+                <Setter Property="ItemContainerStyle" Value="{StaticResource mergerDbScriptLBItemStyle}"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
-
+    
 </ResourceDictionary>

@@ -3,7 +3,6 @@ using Comparator.Repositories.Models.DbModels;
 using Comparator.Repositories.Models.DtoModels;
 using Comparator.Repositories.Parsers.SyBase;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Comparator.Repositories.Repositories
@@ -17,8 +16,6 @@ namespace Comparator.Repositories.Repositories
         private readonly SyBaseScriptParser _scriptParser;
 
         private readonly SyBaseTriggerScriptParser _triggerScriptParser;
-
-        private readonly SyBaseDbScriptCreator _dbScriptCreator;
 
         private readonly SyBaseRequests _request;
 
@@ -40,7 +37,6 @@ namespace Comparator.Repositories.Repositories
             _fieldsParser = new SyBaseFieldsInfoParser();
             _scriptParser = new SyBaseScriptParser();
             _triggerScriptParser = new SyBaseTriggerScriptParser();
-            _dbScriptCreator = new SyBaseDbScriptCreator();
             _request = new SyBaseRequests();
         }
 
@@ -101,53 +97,7 @@ namespace Comparator.Repositories.Repositories
             var sqript = _db.Select<string>(_request.GetSqriptRequest(procedureName));
             return _scriptParser.GetSquript(sqript);
         }
-
-        public string GetDbScript()
-        {
-            string tables = GetTablesScript();
-            string procedures = GetProceduresScript();
-            string triggers = GetTriggersScript();
-
-            return _dbScriptCreator.CreateFullDbScript(tables, procedures, triggers, _dbName);
-        }
-
-        public string GetTablesScript()
-        {
-            var tablesNames = GetTables();
-            Dictionary<string, List<DtoFullField>> tables = new Dictionary<string, List<DtoFullField>>();
-
-            foreach (var tableName in tablesNames)
-            {
-                var temp = GetFieldsInfo(tableName).ToList();
-                tables.Add(tableName, temp);
-            }
-            return _dbScriptCreator.CreateTablesScript(tables);
-        }
-
-        public string GetProceduresScript()
-        {
-            var proceduresNames = GetProcedures();
-            List<string> procedures = new List<string>();
-
-            foreach (var procedureName in proceduresNames)
-            {
-                procedures.Add(GetProcedureSqript(procedureName));
-            }
-            return _dbScriptCreator.CreateProceduresOrTriggersScript(procedures);
-        }
-
-        public string GetTriggersScript()
-        {
-            var triggersNames = GetTriggers();
-            List<string> triggers = new List<string>();
-
-            foreach (var triggerName in triggersNames)
-            {
-                triggers.Add(GetTriggerSqript(triggerName));
-            }
-            return _dbScriptCreator.CreateProceduresOrTriggersScript(triggers);
-        }
-
+              
         public string GetTriggerSqript(string triggerName)
         {
             var sqript = _db.Select<string>(_request.GetSqriptRequest(triggerName));

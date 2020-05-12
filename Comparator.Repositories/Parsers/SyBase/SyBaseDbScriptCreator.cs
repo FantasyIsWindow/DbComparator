@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Comparator.Repositories.Parsers.SyBase
 {
-    internal class SyBaseDbScriptCreator
+    internal class SyBaseDbScriptCreator : IDatabaseScriptDesigner
     {
         /// <summary>
         /// Get the script for the entire database
@@ -41,11 +41,16 @@ namespace Comparator.Repositories.Parsers.SyBase
 
             foreach (var table in tables)
             {
-                var tableScript = tableCreator.GetTableScript(table.Value, table.Key, foreignKeys);
+                var tableScript = tableCreator.GetTableScript(table.Value, table.Key);
                 dbScript.Append(tableScript + "\n\n");
             }
             dbScript.Append((foreignKeys));
             return dbScript.ToString();
+        }
+
+        public string CreateTablesScript(List<string> tables, List<string> constraints)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -63,5 +68,7 @@ namespace Comparator.Repositories.Parsers.SyBase
             }
             return dbScript.ToString();
         }
+
+
     }
 }

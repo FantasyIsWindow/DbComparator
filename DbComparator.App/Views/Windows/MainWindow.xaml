@@ -41,11 +41,12 @@
 
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="Create Db script" Command="{Binding OpenCreateDbScriptView}"/>
                 <MenuItem Header="Exit" Click="Close_Command"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Add new db" Command="{Binding AddNewDbInfoCommand}"/>
+                <MenuItem Header="Create Db script" Command="{Binding OpenCreateDbScriptCommand}"/>
+                <MenuItem Header="Merge Db scripts" Command="{Binding MergeDbScriptCommand}"/>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About" Command="{Binding AboutViewShowCommand}"/>

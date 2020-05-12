@@ -25,8 +25,6 @@ namespace DbComparator.App.ViewModels
 
         public event EventHandler CurrentEntitiesMessageHandler;
 
-
-
         private CollectionEqualizer _collectionEqualizer;
 
         private RepositoryFactory _repositoryFactory;
@@ -143,19 +141,17 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _isAuto, value, "IsAuto");
         }
 
-        public GeneralDbInfoViewModel()
+        public GeneralDbInfoViewModel(RepositoryFactory repositoryFactory)
         {
             _lsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
             _rsGeneralInfo = new ObservableCollection<GeneralDbInfo>();
-            _repositoryFactory = new RepositoryFactory();
+            _repositoryFactory = repositoryFactory;
             _generalComparator = new GeneralComparator();
             _collectionEqualizer = new CollectionEqualizer();
             _scriptBuilder = new ScriptBuilder();
             _isAuto = false;
         }
-
-
-
+               
         private RellayCommand _backCommand;
 
         private RellayCommand _autoCompareCommand;
@@ -240,7 +236,6 @@ namespace DbComparator.App.ViewModels
         /// <param name="obj">Object</param>
         private void AutoCompare(object obj)
         {
-            _lsRepository.GetDbScript();
             var result = _generalComparator.Colorize(LsGeneralInfo[0], RsGeneralInfo[0]);
             IsAuto = true;
             SendMessage(MessageHandler, result);

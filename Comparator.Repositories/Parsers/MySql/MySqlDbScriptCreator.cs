@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Comparator.Repositories.Models.DtoModels;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Comparator.Repositories.Parsers.MySql
 {
-    internal class MySqlDbScriptCreator
+    internal class MySqlDbScriptCreator : IDatabaseScriptDesigner
     {
         /// <summary>
         /// Get the script for the entire database
@@ -46,6 +47,27 @@ namespace Comparator.Repositories.Parsers.MySql
         }
 
         /// <summary>
+        /// Get the script for the entire tables
+        /// </summary>
+        /// <param name="tables">A dictionary containing a list of table data</param>
+        /// <returns>Tables script</returns>
+        public string CreateTablesScript(List<string> tables, List<string> constraints)
+        {
+            StringBuilder dbScript = new StringBuilder();
+            foreach (var table in tables)
+            {
+                dbScript.Append(table + "\n\n");
+            }
+
+            foreach (var constraint in constraints)
+            {
+                dbScript.Append(constraint + "\n");
+            }
+
+            return dbScript.ToString();
+        }
+
+        /// <summary>
         /// Get the script for the entire procedures or triggers
         /// </summary>
         /// <param name="scripts">A list containing scripts for procedures or triggers</param>
@@ -60,5 +82,7 @@ namespace Comparator.Repositories.Parsers.MySql
             }
             return dbScript.ToString();
         }
+
+
     }
 }

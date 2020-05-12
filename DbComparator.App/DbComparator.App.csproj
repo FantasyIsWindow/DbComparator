@@ -234,7 +234,6 @@
     <Compile Include="ViewModels\CreateDbScriptViewModel.cs" />
     <Compile Include="ViewModels\DbInfoCreatorViewModel.cs" />
     <Compile Include="ViewModels\IAboutVM.cs" />
-    <Compile Include="ViewModels\ICreateDbScriptVM.cs" />
     <Compile Include="ViewModels\IDbInfoCreatorVM.cs" />
     <Compile Include="ViewModels\IGeneralDbInfoVM.cs" />
     <Compile Include="ViewModels\IMessagerVM.cs" />

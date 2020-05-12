@@ -17,8 +17,6 @@ namespace DbComparator.App.ViewModels
 
         public event NotifyDelegate CloseHandler;
 
-
-
         private string _title;
 
         private string _message;
@@ -52,12 +50,9 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _currentState, value, "CurrentState");
         }
           
-
         private RellayCommand _okCommand;
 
         private RellayCommand _closeCommand;
-
-
 
         public RellayCommand OkCommand => _okCommand ??
             (
@@ -78,7 +73,12 @@ namespace DbComparator.App.ViewModels
                 })
             );
 
-
+        /// <summary>
+        /// Getting data to display
+        /// </summary>
+        /// <param name="title">Title</param>
+        /// <param name="package">Package containing the message</param>
+        /// <param name="state">Display status of the output window</param>
         public void ShowMessageBox(string title, object package, MbShowDialog state)
         {
             Title = title;

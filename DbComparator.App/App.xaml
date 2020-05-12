@@ -7,7 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/DataTemplates/DbListDataTemplates.xaml"/>
-
+                
                 <ResourceDictionary Source="Resources/Style/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Resources/Style/ListBoxStyle.xaml"/>
                 <ResourceDictionary Source="Resources/Style/ScrollViewerStyle.xaml"/>

@@ -9,7 +9,13 @@
                 <ControlTemplate TargetType="{x:Type CheckBox}">
                     <BulletDecorator x:Name="bulletDecorator" Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Border Width="13" Height="13" CornerRadius="0" x:Name="border" BorderThickness="1" BorderBrush="{StaticResource CheckBoxNormalFillBrush}" Background="{StaticResource CheckBoxNormalFillBrush}">
+                            <Border Width="13" 
+                                    Height="13" 
+                                    CornerRadius="0" 
+                                    x:Name="border" 
+                                    BorderThickness="1" 
+                                    BorderBrush="{StaticResource CheckBoxNormalBorderStrokeBrush}" 
+                                    Background="{StaticResource CheckBoxNormalFillBrush}">
                                 <Grid>
                                     <Path Visibility="Collapsed" 
                                           Width="7" 

@@ -1,10 +1,9 @@
-﻿using Comparator.Repositories.Models.DtoModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Comparator.Repositories.Parsers.MsSql
 {
-    internal class MsSqlDbScriptCreator
+    internal class MsSqlDbScriptCreator : IDatabaseScriptDesigner
     {
         /// <summary>
         /// Get the script for the entire database
@@ -32,19 +31,19 @@ namespace Comparator.Repositories.Parsers.MsSql
         /// </summary>
         /// <param name="tables">A dictionary containing a list of table data</param>
         /// <returns>Tables script</returns>
-        public string CreateTablesScript(Dictionary<string, List<DtoFullField>> tables)
+        public string CreateTablesScript(List<string> tables, List<string> constraints)
         {
-            MsSqlTableCreator tableCreator = new MsSqlTableCreator();
-
             StringBuilder dbScript = new StringBuilder();
-            StringBuilder foreignKeys = new StringBuilder();
-
             foreach (var table in tables)
             {
-                var tableScript = tableCreator.GetTableScript(table.Value, table.Key, foreignKeys);
-                dbScript.Append(tableScript + "\n\n");
+                dbScript.Append(table + "\n\n");
             }
-            dbScript.Append((foreignKeys));
+
+            foreach (var constraint in constraints)
+            {
+                dbScript.Append(constraint + "\n");
+            }
+
             return dbScript.ToString();
         }
 

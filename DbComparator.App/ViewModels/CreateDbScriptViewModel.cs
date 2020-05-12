@@ -3,21 +3,33 @@ using DbComparator.App.Infrastructure.Commands;
 using DbComparator.App.Infrastructure.Delegates;
 using DbComparator.App.Models;
 using DbComparator.FileWorker;
-using System.Collections.ObjectModel;
+using DbConectionInfoRepository.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DbComparator.App.ViewModels
 {
-    public class CreateDbScriptViewModel : ModelBase, ICreateDbScriptVM
+    public enum CreatorMode { ScriptCreator, ScriptMerger, ScriptConverter }   
+                
+
+    public class CreateDbScriptViewModel : ModelBase
     {
         public event NotifyDelegate CloseHandler;
 
         private readonly FileCreator _fileCreator;
 
+        private ScriptCollector _collector;
+
         private IRepository _dbRepository;
 
-        private ObservableCollection<Passage> _dbList;
+        private string _title;
 
-        public ObservableCollection<Passage> DbList => _dbList;
+        private readonly RepositoryFactory _repositoryFactory;
+
+        private List<Passage> _dbList;
+
+        public List<Passage> DbList => _dbList;
 
         private bool _isCheckedTables;
 
@@ -25,11 +37,16 @@ namespace DbComparator.App.ViewModels
 
         private bool _isCheckedTriggers;
 
-        private Passage _checkedItem;
-
         private bool _isChecked;
 
+        private CreatorMode _openMode;
 
+        private Provider _selectedProvider;
+
+        private string[] _providerList;
+
+        private string _scriptDbName;
+                     
         public bool IsCheckedTables
         {
             get => _isCheckedTables;
@@ -48,28 +65,49 @@ namespace DbComparator.App.ViewModels
             set => SetProperty(ref _isCheckedTriggers, value, "IsCheckedTriggers");
         }
 
-        public Passage CheckedItem
-        {
-            get => _checkedItem;
-            set => SetProperty(ref _checkedItem, value, "CheckedItem");
-        }
-
         public bool IsChecked
         {
             get => _isChecked; 
             set => SetProperty(ref _isChecked, value, "IsChecked");
         }
-                     
-        public CreateDbScriptViewModel()
+
+        public string Title
         {
-            _fileCreator = new FileCreator();
-            _dbList = new ObservableCollection<Passage>();
+            get => _title;
+            set => SetProperty(ref _title, value, "Title"); 
         }
-                     
-        public void SetDbInfo(ObservableCollection<Passage> info, IRepository dbRepository)
+
+        public CreatorMode OpenMode
         {
+            get => _openMode; 
+            set => SetProperty(ref _openMode, value, "OpenMode");
+        }
+
+        public Provider SelectedProvider
+        {
+            get => _selectedProvider;
+            set => SetProperty(ref _selectedProvider, value, "SelectedProvider");
+        }
+
+        public string[] ProviderList
+        {
+            get => _providerList;
+        }
+
+        public string ScriptDbName
+        {
+            get => _scriptDbName;
+            set => SetProperty(ref _scriptDbName, value, "ScriptDbName");
+        }
+
+        public CreateDbScriptViewModel(RepositoryFactory repositoryFactory, List<Passage> info, CreatorMode openMode)
+        {
+            _repositoryFactory = repositoryFactory;
             _dbList = info;
-            _dbRepository = dbRepository;
+            _openMode = openMode;
+            _fileCreator = new FileCreator();
+            _collector = new ScriptCollector();
+            InitializeData();
         }
 
         private RellayCommand _okCommand;
@@ -77,7 +115,7 @@ namespace DbComparator.App.ViewModels
         private RellayCommand _cancelCommand;
 
         private RellayCommand _checkedCommand;
-               
+
         public RellayCommand OkCommand
         {
             get
@@ -85,11 +123,13 @@ namespace DbComparator.App.ViewModels
                 return _okCommand ??
                     (_okCommand = new RellayCommand(obj =>
                     {
-                        CreateScript();
+                        GettingAndSavingScript();
+                        ResetParameters();
                         CloseHandler?.Invoke();
                     }));
             }
         }
+               
 
         public RellayCommand CancelCommand
         {
@@ -104,52 +144,135 @@ namespace DbComparator.App.ViewModels
             }
         }
 
-        public RellayCommand CheckedCommand
+        public RellayCommand CheckedCommand =>
+            _checkedCommand = new RellayCommand( (obj) => 
+                ProcessingMarkedControl(obj));
+
+        /// <summary>
+        /// Processing the marked control
+        /// </summary>
+        /// <param name="obj">Marked object</param>
+        private void ProcessingMarkedControl(object obj)
         {
-            get
+            if (_openMode == CreatorMode.ScriptCreator)
             {
-                return _checkedCommand ??
-                    (_checkedCommand = new RellayCommand(obj =>
-                    {
-                        var item = obj as Passage;
-                        CheckedItem = item;
-                        IsChecked = true;
-                    }));
+                var item = (obj as Passage).Info;
+                InitialRepository(item);
+                IsChecked = true;
+                ScriptDbName = item.DbName;
             }
+            else if (_openMode == CreatorMode.ScriptMerger)
+            {
+                IsChecked = false;
+                ScriptDbName = "";
+                foreach (var db in _dbList)
+                {
+                    if (db.IsChecked)
+                    {
+                        IsChecked = true;
+                        ScriptDbName += db.Info.DbName + "_";
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Getting and saving a script
+        /// </summary>
+        private void GettingAndSavingScript()
+        {
+            StringBuilder result = new StringBuilder();
+            if (_openMode == CreatorMode.ScriptCreator)
+            {
+                result.Append(CreateScript());
+            }
+            else if (_openMode == CreatorMode.ScriptMerger)
+            {
+                List<DbInfoModel> models = new List<DbInfoModel>();
+                foreach (var db in _dbList)
+                {
+                    if (db.IsChecked)
+                    {
+                        models.Add(db.Info);
+                    }
+                }
+
+                foreach (var model in models)
+                {
+                    InitialRepository(model);
+                    result.Append(CreateScript());
+                }
+            }
+
+            _fileCreator.SaveFile(ScriptDbName, result.ToString());
+        }
+
+        /// <summary>
+        /// Data initialization
+        /// </summary>
+        private void InitializeData()
+        {
+            if (_openMode == CreatorMode.ScriptCreator)
+            {
+                Title = "Create db script"; 
+            }
+            else if (_openMode == CreatorMode.ScriptMerger)
+            {
+                Title = "Merge db scripts";
+            }
+
+            int size = Enum.GetValues(typeof(Provider)).Length - 1;
+            _providerList = new string[size];
+            int i = 0;
+            foreach (Provider provider in Enum.GetValues(typeof(Provider)))
+            {
+                if (provider != Provider.All)
+                {
+                    _providerList[i++] = provider.ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Repository initialization
+        /// </summary>
+        /// <param name="model">Data to connect to the database</param>
+        private void InitialRepository(DbInfoModel model)
+        {
+            _dbRepository = _repositoryFactory.GetRepository(model.DbType);
+            _dbRepository.CreateConnectionString(model.DataSource, model.ServerName, model.DbName, model.Login, model.Password);
+            _collector.SetRepository(_dbRepository);
         }
 
         /// <summary>
         /// Getting the script for the selected element
         /// </summary>
-        private void CreateScript()
+        private string CreateScript()
         {
             string result = "";
-            string type = "";
 
             if (IsCheckedTables && IsCheckedProcedures && IsCheckedTriggers)
             {
-                result = _dbRepository.GetDbScript();
-                type = "db_";
+                result = _collector.GetDbScript(SelectedProvider);
+                ScriptDbName = "db" + ScriptDbName;
             }
             else if (IsCheckedTables)
             {
-                result = _dbRepository.GetTablesScript();
-                type = "tables_";
+                result = _collector.GetTablesScript(SelectedProvider);
+                ScriptDbName = "tables_" + ScriptDbName;
             }
             else if (IsCheckedProcedures)
             {
-                result = _dbRepository.GetProceduresScript();
-                type = "procedures_";
+                result = _collector.GetProceduresScript(SelectedProvider);
+                ScriptDbName = "procedures_" + ScriptDbName;
             }
             else if (IsCheckedTriggers)
             {
-                result = _dbRepository.GetTriggersScript();
-                type = "triggers_";
+                result = _collector.GetTriggersScript(SelectedProvider);
+                ScriptDbName = "triggers_" + ScriptDbName;
             }
 
-            _fileCreator.SaveFile(type + _dbRepository.DbName, result);
-
-            ResetParameters();
+            return result;
         }
 
         /// <summary>

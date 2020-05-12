@@ -71,6 +71,7 @@
     <Compile Include="Models\DtoModels\DtoConstraint.cs" />
     <Compile Include="Models\DtoModels\DtoFullField.cs" />
     <Compile Include="Models\DtoModels\DtoSyBaseConstaintsModel.cs" />
+    <Compile Include="Parsers\IDatabaseScriptDesigner.cs" />
     <Compile Include="Parsers\ITableCreator.cs" />
     <Compile Include="Parsers\MsSql\MsSqlDbScriptCreator.cs" />
     <Compile Include="Parsers\MsSql\MsSqlFieldsInfoParser.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Parsers\MySql\MySqlReservedKeyword.cs" />
     <Compile Include="Parsers\MsSql\MsSqlScriptParser.cs" />
     <Compile Include="Parsers\MsSql\MsSqlReservedKeyword.cs" />
+    <Compile Include="Parsers\MySql\MySqlTableCreator.cs" />
     <Compile Include="Parsers\MySql\MySqlTriggerScriptParser.cs" />
     <Compile Include="Parsers\ReservedKeywordLibrary.cs" />
     <Compile Include="Parsers\ScriptParser.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Repositories\MsSqlDbRepository.cs" />
     <Compile Include="Repositories\MySqlRepository.cs" />
     <Compile Include="Repositories\RepositoryFactory.cs" />
+    <Compile Include="Repositories\ScriptCollector.cs" />
     <Compile Include="Repositories\SyBaseDbRepository.cs" />
   </ItemGroup>
   <ItemGroup>

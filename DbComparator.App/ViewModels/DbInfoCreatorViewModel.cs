@@ -21,7 +21,6 @@ namespace DbComparator.App.ViewModels
 
         public event EventHandler MessageHandler;
 
-
         private readonly IInfoDbRepository _repository;  
         
         private OpenStatus _openStatus;
@@ -33,8 +32,6 @@ namespace DbComparator.App.ViewModels
         private string _content;
 
         private bool _isEnabled;
-
-
 
         public DbInfoModel DbInfoModel
         {
@@ -62,14 +59,11 @@ namespace DbComparator.App.ViewModels
         {
             _repository = repository;
             _referencesType = new string[] { "Yes", "No" };
-        }
-        
+        }        
         
         private RellayCommand _closeCommand;
 
         private RellayCommand _okCommand;
-
-
 
         public RellayCommand CloseCommand =>
             _closeCommand = new RellayCommand(c => CloseHandler?.Invoke());

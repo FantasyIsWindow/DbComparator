@@ -6,8 +6,6 @@ namespace Comparator.Repositories.Parsers.MsSql
 {
     internal class MsSqlTableCreator : ITableCreator
     {
-        private StringBuilder _foreignKeys;
-
         /// <summary>
         /// Get a table script based on the received data
         /// </summary>
@@ -15,9 +13,8 @@ namespace Comparator.Repositories.Parsers.MsSql
         /// <param name="tableName">Table name</param>
         /// <param name="foreignKeys">Script foreign keys</param>
         /// <returns>Table script</returns>
-        public string GetTableScript(List<DtoFullField> info, string tableName, StringBuilder foreignKeys)
+        public string GetTableScript(List<DtoFullField> info, string tableName)
         {
-            _foreignKeys = foreignKeys;
             return ScriptCreate(info, tableName);
         }
 
@@ -29,13 +26,14 @@ namespace Comparator.Repositories.Parsers.MsSql
         /// <returns>The generated script</returns>
         private string ScriptCreate(List<DtoFullField> info, string tableName)
         {
+            StringBuilder _foreignKeys = new StringBuilder();
             StringBuilder builder = new StringBuilder($"CREATE TABLE {tableName} (");
             StringBuilder constaintsBuilder = new StringBuilder();
 
             for (int i = 0; i < info.Count; i++)
             {
                 string fieldName = info[i].FieldName != "" ? $"{info[i].FieldName}" : "";
-                string typeName = info[i].TypeName != "" ? $" {info[i].TypeName.ToUpper()}" : "";
+                string typeName = info[i].TypeName != "" ? $" {TypeConverter(info[i].TypeName)}" : "";
                 string size = info[i].Size != "" ? $" ({info[i].Size})" : "";
                 string isNull = info[i].IsNullable != "" ? info[i].IsNullable != "NO" ? " NULL" : " NOT NULL" : "";
                 string constType = info[i].ConstraintType != "" ? " " + info[i].ConstraintType.Replace("(", "").Replace(")", "").Replace("-", "").ToUpper() : "";
@@ -58,7 +56,7 @@ namespace Comparator.Repositories.Parsers.MsSql
                 {
                     if (constType.Contains("FOREIGN"))
                     {
-                        _foreignKeys.Append($"\nALTER TABLE {tableName} ADD CONSTRAINT{constName}{constType} ({fieldName}) REFERENCES{referenced}{onUpdate}{onDelete};");
+                        _foreignKeys.Append($"$ALTER TABLE {tableName} ADD CONSTRAINT{constName}{constType} ({fieldName}) REFERENCES{referenced}{onUpdate}{onDelete};");
                     }
                     else if (info[i].ConstraintType == "DEFAULT")
                     {
@@ -82,7 +80,29 @@ namespace Comparator.Repositories.Parsers.MsSql
 
             builder.Append($"\n);");
 
+            builder.Append(_foreignKeys.ToString());
+
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Converting the received data type name
+        /// </summary>
+        /// <param name="value">Type value</param>
+        /// <returns>The formatted name of the type</returns>
+        private string TypeConverter(string value)
+        {
+            var dataType = value.Split(' ')[0];  
+
+            if (dataType.ToUpper() == "MEDIUMINT")
+            {
+                dataType = "INT";
+            }
+            else if (dataType.ToUpper() == "MEDIUMTEXT")
+            {
+                dataType = "NVARCHAR";
+            }
+            return dataType;
         }
 
         /// <summary>

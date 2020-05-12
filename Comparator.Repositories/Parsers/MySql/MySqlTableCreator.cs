@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Comparator.Repositories.Parsers.SyBase
+namespace Comparator.Repositories.Parsers.MySql
 {
-    internal class SyBaseTableCreator : ITableCreator
+    internal class MySqlTableCreator : ITableCreator
     {
         /// <summary>
         /// Get a table script based on the received data
@@ -26,16 +26,16 @@ namespace Comparator.Repositories.Parsers.SyBase
         /// <returns>The generated script</returns>
         private string ScriptCreate(List<DtoFullField> info, string tableName)
         {
+            StringBuilder _foreignKeys = new StringBuilder();
             StringBuilder builder = new StringBuilder($"CREATE TABLE {tableName} (");
             StringBuilder constaintsBuilder = new StringBuilder();
-            StringBuilder _foreignKeys = new StringBuilder();
 
             for (int i = 0; i < info.Count; i++)
             {
                 string fieldName = info[i].FieldName != "" ? $"{info[i].FieldName}" : "";
                 string typeName = info[i].TypeName != "" ? $" {info[i].TypeName.ToUpper()}" : "";
                 string size = info[i].Size != "" ? $" ({info[i].Size})" : "";
-                string isNull = info[i].IsNullable != "" ? info[i].IsNullable != "N" ? " NULL" : " NOT NULL" : "";
+                string isNull = info[i].IsNullable != "" ? info[i].IsNullable != "NO" ? " NULL" : " NOT NULL" : "";
                 string constType = info[i].ConstraintType != "" ? " " + info[i].ConstraintType.Replace("(", "").Replace(")", "").Replace("-", "").ToUpper() : "";
                 string constName = info[i].ConstraintName != "" ? $" {info[i].ConstraintName}" : "";
                 string constKeys = info[i].ConstraintKeys != "" ? $" {info[i].ConstraintKeys.Replace("(", "").Replace(")", "").Replace("[", "").Replace("]", "")}" : "";
@@ -56,25 +56,17 @@ namespace Comparator.Repositories.Parsers.SyBase
                 {
                     if (constType.Contains("FOREIGN"))
                     {
-                        _foreignKeys.Append($"\n$ALTER TABLE {tableName} ADD CONSTRAINT{constName}{constType} ({fieldName}) REFERENCES{referenced}{onUpdate}{onDelete};");
+                        _foreignKeys.Append($"$ALTER TABLE {tableName} ADD CONSTRAINT{constName}{constType} ({fieldName}) REFERENCES{referenced}{onUpdate}{onDelete};");
                     }
                     else if (info[i].ConstraintType == "DEFAULT")
                     {
                         builder.Remove(builder.Length - 1, 1);
-                        if (info[i].ConstraintKeys == "autoincrement")
-                        {
-                            builder.Append($"{constType}{constKeys.ToUpper()},");
-                        }
-                        else
-                        {
-                            builder.Append($"{constName}{constType}{IsDigit(constKeys)},");
-                        }
+                        builder.Append($" CONSTRAINT{constName}{constType}{IsDigit(constKeys)},");
                     }
-                    else if (info[i].ConstraintType.ToUpper() == "CHECK")
+                    else if (info[i].ConstraintType == "CHECK")
                     {
                         constaintsBuilder.Append($"\n\tCONSTRAINT{constName}{constType} {IsDigit(constKeys)},");
                     }
-
                     else
                     {
                         constaintsBuilder.Append($"\n\tCONSTRAINT{constName}{constType} ({fieldName}),");
@@ -101,16 +93,12 @@ namespace Comparator.Repositories.Parsers.SyBase
         /// <returns>Field name</returns>
         private string FindFieldName(List<DtoFullField> fieldsInfo, int currentIndex)
         {
-            if (currentIndex < 0)
+            if (currentIndex == 0)
             {
                 return "";
             }
 
-            string name = fieldsInfo[currentIndex].FieldName != "" ? 
-                          fieldsInfo[currentIndex].FieldName : 
-                          FindFieldName(fieldsInfo, currentIndex - 1);
-
-            return name;
+            return fieldsInfo[currentIndex].FieldName != "" ? fieldsInfo[currentIndex].FieldName : FindFieldName(fieldsInfo, currentIndex - 1);
         }
 
         /// <summary>
@@ -120,13 +108,9 @@ namespace Comparator.Repositories.Parsers.SyBase
         /// <returns>A formatted string</returns>
         private string IsDigit(string str)
         {
-            SyBaseReservedKeyword reservedKeyword = new SyBaseReservedKeyword();
+            MySqlReservedKeyword reservedKeyword = new MySqlReservedKeyword();
             int x;
-            if (int.TryParse(str, out x))
-            {
-                return $"{str}";
-            }
-            else if (reservedKeyword.IsExists(str))
+            if (int.TryParse(str, out x) || reservedKeyword.IsExists(str))
             {
                 return $"{str}";
             }
@@ -137,4 +121,3 @@ namespace Comparator.Repositories.Parsers.SyBase
         }
     }
 }
-

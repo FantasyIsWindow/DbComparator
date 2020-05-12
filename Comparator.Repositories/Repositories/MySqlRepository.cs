@@ -17,8 +17,6 @@ namespace Comparator.Repositories.Repositories
 
         private readonly MySqlTriggerScriptParser _triggerScriptParser;
 
-        private readonly MySqlDbScriptCreator _dbScriptCreator;
-
         private readonly MySqlRequests _request;
 
         private string _connectionString;        
@@ -38,7 +36,6 @@ namespace Comparator.Repositories.Repositories
             _request = new MySqlRequests();
             _procedureScriptParser = new MySqlScriptParser();
             _triggerScriptParser = new MySqlTriggerScriptParser();
-            _dbScriptCreator = new MySqlDbScriptCreator();
             _fieldsParser = new MySqlFieldsInfoParser();
         }
 
@@ -103,55 +100,7 @@ namespace Comparator.Repositories.Repositories
             return _triggerScriptParser.GetTriggerSqript(sqript);
         }
 
-        public string GetDbScript()
-        {
-            string tables = GetTablesScript();
-            string procedures = GetProceduresScript();
-            string triggers = GetTriggersScript();
-
-            return _dbScriptCreator.CreateFullDbScript(tables, procedures, triggers, _dbName);
-        }
-
-        public string GetTablesScript()
-        {          
-            var tablesNames = GetTables();
-            Dictionary<string, string> tables = new Dictionary<string, string>();
-
-            foreach (var tableName in tablesNames)
-            {
-                var tableScript = _db.SelectForKey(_request.GetTableDDL(tableName), "Create Table");
-                tables.Add(tableName, tableScript);
-            }
-
-            return _dbScriptCreator.CreateTablesScript(tables);
-        }
-
-        public string GetProceduresScript()
-        {
-            var proceduresNames = GetProcedures();
-            List<string> procedures = new List<string>();
-
-            foreach (var procedureName in proceduresNames)
-            {
-                procedures.Add(GetProcedureSqript(procedureName));
-            }
-            return _dbScriptCreator.CreateProceduresOrTriggersScript(procedures);
-        }
-
-        public string GetTriggersScript()
-        {
-            var triggersNames = GetTriggers();
-            List<string> triggers = new List<string>();
-
-            foreach (var triggerName in triggersNames)
-            {
-                triggers.Add(GetTriggerSqript(triggerName));
-            }
-            return _dbScriptCreator.CreateProceduresOrTriggersScript(triggers);
-        }
-
         public async Task<bool> IsConnectionAsync() =>
             await _db.CheckConectionAsync();
     }
 }
-

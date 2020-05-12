@@ -38,7 +38,7 @@ namespace Comparator.Repositories.Parsers.MySql
                 {
                     FieldName = cons.COLUMN_NAME,
                     ConstraintType = cons.CONSTRAINT_TYPE,
-                    ConstraintName = cons.CONSTRAINT_NAME,
+                    ConstraintName = cons.CONSTRAINT_NAME == "PRIMARY" ? $"PR_{cons.COLUMN_NAME}" : cons.CONSTRAINT_NAME,
                     Referenced = ReferencedStringDecoration(cons.REFERENCED_TABLE_NAME, cons.REFERENCED_COLUMN_NAME)                   
                 };
                 dtoConstraints.Add(item);

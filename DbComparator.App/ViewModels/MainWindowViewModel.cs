@@ -7,6 +7,7 @@ using DbConectionInfoRepository.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DbComparator.App.ViewModels
@@ -29,8 +30,6 @@ namespace DbComparator.App.ViewModels
 
         private readonly IAboutVM _aboutVM;
 
-        private readonly ICreateDbScriptVM _createDbScriptVM;
-
         private object _currentPageContent;
 
         private Provider _selectedDbType;
@@ -46,7 +45,6 @@ namespace DbComparator.App.ViewModels
         private bool _loadViewVisibility;
 
         private string _statusBarMessage;
-
 
         public IGeneralDbInfoVM InfoViewModel
         {
@@ -106,8 +104,7 @@ namespace DbComparator.App.ViewModels
                                    IGeneralDbInfoVM generalDbInfo,
                                    IMessagerVM messager,
                                    IDbInfoCreatorVM dbInfoManager,
-                                   IAboutVM aboutVM,
-                                   ICreateDbScriptVM createDbScriptVM)
+                                   IAboutVM aboutVM)
         {
             _repositoryFactory = new RepositoryFactory();
             _connectionDb = connectionDb;
@@ -117,7 +114,6 @@ namespace DbComparator.App.ViewModels
             _showMessage = messager;
             _addNewDb = dbInfoManager;
             _aboutVM = aboutVM;
-            _createDbScriptVM = createDbScriptVM;
             Subscriptions();
         }
 
@@ -139,7 +135,6 @@ namespace DbComparator.App.ViewModels
             _addNewDb.OkHandler += UpdateTypes;
             _addNewDb.MessageHandler += ((sender, e) => { GetMessage("Warning", sender, e); });
             _aboutVM.CloseHandler += (() => { CurrentPageContent = null; });
-            _createDbScriptVM.CloseHandler += (() => { CurrentPageContent = null; });
         }
 
         private RellayCommand _addNewDbInfoCommand;
@@ -156,8 +151,9 @@ namespace DbComparator.App.ViewModels
 
         private RellayCommand _aboutViewShowCommand;
 
-        private RellayCommand _openCreateDbScriptView;
+        private RellayCommand _openCreateDbScriptCommand;
 
+        private RellayCommand _mergeDbScriptCommand;
 
         public RellayCommand AddNewDbInfoCommand
         {
@@ -252,47 +248,63 @@ namespace DbComparator.App.ViewModels
         public RellayCommand AboutViewShowCommand =>
             _aboutViewShowCommand = new RellayCommand((c) => { CurrentPageContent = _aboutVM; });
 
-        public RellayCommand OpenCreateDbScriptView
+        public RellayCommand OpenCreateDbScriptCommand
         {
             get
             {
-                return _openCreateDbScriptView ??
-                   (_openCreateDbScriptView = new RellayCommand(obj =>
+                return _openCreateDbScriptCommand ??
+                   (_openCreateDbScriptCommand = new RellayCommand(obj =>
                    {
-                       CurrentPageContent = _createDbScriptVM;
-
-                       ObservableCollection<Passage> dbs = new ObservableCollection<Passage>();
-                       FillInfoModelList(_referenceInfoDbs, dbs);
-                       FillInfoModelList(_notReferenceInfoDbs, dbs);
-                       _createDbScriptVM.SetDbInfo(dbs, _dbRepository);
+                       OpenScriptCreator(CreatorMode.ScriptCreator);
                    },
                         (obj) => _dbRepository != null
                    ));
             }
         }
 
-        /// <summary>
-        /// Function for preparing a collection for the information input window for creating a script
-        /// </summary>
-        /// <param name="collection">Collection containing the necessary data</param>
-        /// <param name="target">Collection to fill</param>
-        private void FillInfoModelList(ObservableCollection<DbInfo> collection, ObservableCollection<Passage> target)
+        public RellayCommand MergeDbScriptCommand
         {
-            foreach (var item in collection)
+            get
             {
-                if (item.IsConnect)
-                {
-                    Passage passage = new Passage()
+                return _mergeDbScriptCommand ??
+                    (_mergeDbScriptCommand = new RellayCommand(obj =>
                     {
-                        Info = item.DataBase,
-                        IsChecked = false
-                    };
-
-                    target.Add(passage);
-                }
+                        OpenScriptCreator(CreatorMode.ScriptMerger);
+                    },
+                        (obj) => _dbRepository != null
+                    ));
             }
         }
 
+        /// <summary>
+        /// Preparing and transmitting data for the script Creator window
+        /// </summary>
+        /// <param name="mode">Creator Mode</param>
+        private void OpenScriptCreator(CreatorMode mode)
+        {
+            List<DbInfo> tempCollection = new List<DbInfo>();
+            tempCollection.AddRange(_referenceInfoDbs.Where(s => s.IsConnect == true && s.DataBase != null));
+            tempCollection.AddRange(_notReferenceInfoDbs.Where(s => s.IsConnect == true && s.DataBase != null));
+
+            List<Passage> resultCollection = new List<Passage>();
+            foreach (Provider item in Enum.GetValues(typeof(Provider)))
+            {
+                if (item != Provider.All)
+                {
+                    foreach (var db in tempCollection)
+                    {
+                        if (db.DataBase.DbType == item.ToString() && db.DataBase.DbName != null)
+                        {
+                            resultCollection.Add(new Passage() { Info = db.DataBase, IsChecked = false });
+                        }
+                    }
+                }
+            }
+
+            CreateDbScriptViewModel createDbScriptVM = new CreateDbScriptViewModel(_repositoryFactory, resultCollection, mode);
+            createDbScriptVM.CloseHandler += (() => { CurrentPageContent = null; });
+            CurrentPageContent = createDbScriptVM;
+        }
 
         /// <summary>
         /// Updating a database entry
@@ -358,6 +370,8 @@ namespace DbComparator.App.ViewModels
         private async void ChoiseType()
         {
             LoadViewVisibility = true;
+            ReferenceInfoDbs.Clear();
+            NotReferenceInfoDbs.Clear();
             await GetDbInfo(ReferenceInfoDbs, IsReference.Yes);
             await GetDbInfo(NotReferenceInfoDbs, IsReference.No);
             LoadViewVisibility = false;
@@ -391,25 +405,25 @@ namespace DbComparator.App.ViewModels
                 _dbRepository = _repositoryFactory.GetRepository(SelectedDbType);
                 result = _connectionDb.GetAllDbByType(SelectedDbType.ToString(), reference);
                 await GetInfo(result, collection);
-            }            
+            }
         }
 
         /// <summary>
         /// Collecting information from the resulting list of databases
         /// </summary>
-        /// <param name="models"></param>
+        /// <param name="models">Data to connect to the database</param>
         /// <param name="target">Collection to fill</param>
         /// <returns>Task</returns>
         private async Task GetInfo(IEnumerable<DbInfoModel> models, ObservableCollection<DbInfo> target)
         {
             if (SelectedDbType == Provider.All)
             {
-                target.Add(new DbInfo() 
+                target.Add(new DbInfo()
                 {
-                    DataBase = new DbInfoModel() 
+                    DataBase = new DbInfoModel()
                     {
-                        DbType = _dbRepository.DbType 
-                    } 
+                        DbType = _dbRepository.DbType
+                    }
                 });
             }
 
@@ -427,9 +441,9 @@ namespace DbComparator.App.ViewModels
 
             if (target.Count >= 0 && SelectedDbType != Provider.All)
             {
-                target.Add(new DbInfo() 
+                target.Add(new DbInfo()
                 {
-                    DataBase = null 
+                    DataBase = null
                 });
             }
         }
