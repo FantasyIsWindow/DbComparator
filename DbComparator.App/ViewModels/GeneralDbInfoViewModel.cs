@@ -16,7 +16,6 @@ namespace DbComparator.App.ViewModels
     /// </summary>
     public enum DepthOfCleaning { Low, Medium, High }
 
-
     public class GeneralDbInfoViewModel : ModelBase, IGeneralDbInfoVM
     {
         public Action<Property> GetAction => ((x) => ItemSelection(x));
@@ -58,8 +57,6 @@ namespace DbComparator.App.ViewModels
         private string _rightCompared;
 
         private bool _isAuto;
-
-
 
         public DbInfo LsReceiver
         {

@@ -103,6 +103,6 @@
         /// </summary>
         /// <returns>Request to get a list of database triggers</returns>
         public string GetTreggersRequest() => 
-            $"Select r.trigger_name from sys.systable as t join sys.systrigger r on r.table_id = t.table_id";
+            $"SELECT r.trigger_name FROM sys.systable AS t JOIN sys.systrigger r ON r.table_id = t.table_id";
     }
 }

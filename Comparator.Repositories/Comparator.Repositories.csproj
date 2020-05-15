@@ -73,11 +73,11 @@
     <Compile Include="Models\DtoModels\DtoSyBaseConstaintsModel.cs" />
     <Compile Include="Parsers\IDatabaseScriptDesigner.cs" />
     <Compile Include="Parsers\ITableCreator.cs" />
-    <Compile Include="Parsers\MsSql\MsSqlDbScriptCreator.cs" />
+    <Compile Include="Parsers\MsSql\MsSqlDbScriptDesigner.cs" />
     <Compile Include="Parsers\MsSql\MsSqlFieldsInfoParser.cs" />
     <Compile Include="Parsers\MsSql\MsSqlTableCreator.cs" />
     <Compile Include="Parsers\MsSql\MsSqlTriggerScriptParser.cs" />
-    <Compile Include="Parsers\MySql\MySqlDbScriptCreator.cs" />
+    <Compile Include="Parsers\MySql\MySqlDbScriptDesigner.cs" />
     <Compile Include="Parsers\MySql\MySqlFieldsInfoParser.cs" />
     <Compile Include="Parsers\MySql\MySqlScriptParser.cs" />
     <Compile Include="Parsers\MySql\MySqlReservedKeyword.cs" />
@@ -87,7 +87,7 @@
     <Compile Include="Parsers\MySql\MySqlTriggerScriptParser.cs" />
     <Compile Include="Parsers\ReservedKeywordLibrary.cs" />
     <Compile Include="Parsers\ScriptParser.cs" />
-    <Compile Include="Parsers\SyBase\SyBaseDbScriptCreator.cs" />
+    <Compile Include="Parsers\SyBase\SyBaseDbScriptDesigner.cs" />
     <Compile Include="Parsers\SyBase\SyBaseFieldsInfoParser.cs" />
     <Compile Include="Parsers\SyBase\SyBaseScriptParser.cs" />
     <Compile Include="Parsers\SyBase\SyBaseReservedKeyword.cs" />

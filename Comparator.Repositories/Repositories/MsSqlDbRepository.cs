@@ -13,7 +13,7 @@ namespace Comparator.Repositories.Repositories
 
         private readonly MsSqlFieldsInfoParser _fieldsParser;
 
-        private readonly MsSqlDbScriptCreator _dbScriptCreator;
+        private readonly MsSqlDbScriptDesigner _dbScriptCreator;
 
         private readonly MsSqlScriptParser _procedureScriptParser;
 
@@ -37,7 +37,7 @@ namespace Comparator.Repositories.Repositories
         {
             _fieldsParser = new MsSqlFieldsInfoParser();
             _procedureScriptParser = new MsSqlScriptParser();
-            _dbScriptCreator = new MsSqlDbScriptCreator();
+            _dbScriptCreator = new MsSqlDbScriptDesigner();
             _triggerScriptParser = new MsSqlTriggerScriptParser();
             _request = new MicrosoftDbRequests();
         }

@@ -15,7 +15,7 @@ namespace Comparator.Repositories.Parsers.SyBase
         /// <returns>Table script</returns>
         public string GetTableScript(List<DtoFullField> info, string tableName)
         {
-            return ScriptCreate(info, tableName);
+            return ScriptCreate(info, tableName.ToLower());
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Comparator.Repositories.Parsers.SyBase
             for (int i = 0; i < info.Count; i++)
             {
                 string fieldName = info[i].FieldName != "" ? $"{info[i].FieldName}" : "";
-                string typeName = info[i].TypeName != "" ? $" {info[i].TypeName.ToUpper()}" : "";
+                string typeName = info[i].TypeName != "" ? $" {TypeConverter(info[i].TypeName)}" : "";
                 string size = info[i].Size != "" ? $" ({info[i].Size})" : "";
                 string isNull = info[i].IsNullable != "" ? info[i].IsNullable != "N" ? " NULL" : " NOT NULL" : "";
                 string constType = info[i].ConstraintType != "" ? " " + info[i].ConstraintType.Replace("(", "").Replace(")", "").Replace("-", "").ToUpper() : "";
@@ -91,6 +91,26 @@ namespace Comparator.Repositories.Parsers.SyBase
             builder.Append(_foreignKeys.ToString());
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Converting the received data type name
+        /// </summary>
+        /// <param name="value">Type value</param>
+        /// <returns>The formatted name of the type</returns>
+        private string TypeConverter(string value)
+        {
+            var dataType = value.Split(' ')[0];
+
+            if (dataType.ToUpper() == "MEDIUMINT")
+            {
+                dataType = "INT";
+            }
+            else if (dataType.ToUpper() == "MEDIUMTEXT")
+            {
+                dataType = "NVARCHAR";
+            }
+            return dataType;
         }
 
         /// <summary>

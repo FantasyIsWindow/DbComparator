@@ -207,6 +207,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Infrastructure\Commands\RellayCommand.cs" />
+    <Compile Include="Infrastructure\Converters\ChoiseDbFromScriptCreatorTitleConverter.cs" />
     <Compile Include="Infrastructure\Converters\EnabledBtnMultiConverter.cs" />
     <Compile Include="Infrastructure\Converters\LoadViewVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\MessageBoxVisibilityConverter.cs" />

@@ -15,7 +15,7 @@ namespace Comparator.Repositories.Parsers.MsSql
         /// <returns>Table script</returns>
         public string GetTableScript(List<DtoFullField> info, string tableName)
         {
-            return ScriptCreate(info, tableName);
+            return ScriptCreate(info, tableName.ToLower());
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Comparator.Repositories.Parsers.MySql
         /// <returns>Table script</returns>
         public string GetTableScript(List<DtoFullField> info, string tableName)
         {
-            return ScriptCreate(info, tableName);
+            return ScriptCreate(info, tableName.ToLower());
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Comparator.Repositories.Parsers.MySql
             for (int i = 0; i < info.Count; i++)
             {
                 string fieldName = info[i].FieldName != "" ? $"{info[i].FieldName}" : "";
-                string typeName = info[i].TypeName != "" ? $" {info[i].TypeName.ToUpper()}" : "";
+                string typeName = info[i].TypeName != "" ? $" {TypeConverter(info[i].TypeName)}" : "";
                 string size = info[i].Size != "" ? $" ({info[i].Size})" : "";
                 string isNull = info[i].IsNullable != "" ? info[i].IsNullable != "NO" ? " NULL" : " NOT NULL" : "";
                 string constType = info[i].ConstraintType != "" ? " " + info[i].ConstraintType.Replace("(", "").Replace(")", "").Replace("-", "").ToUpper() : "";
@@ -86,6 +86,17 @@ namespace Comparator.Repositories.Parsers.MySql
         }
 
         /// <summary>
+        /// Converting the received data type name
+        /// </summary>
+        /// <param name="value">Type value</param>
+        /// <returns>The formatted name of the type</returns>
+        private string TypeConverter(string value)
+        {
+            var dataType = value.Split(' ')[0];
+            return dataType.ToUpper();
+        }
+
+        /// <summary>
         /// Searches for the field name
         /// </summary>
         /// <param name="fieldsInfo">A list with the metadata of the table</param>
@@ -98,7 +109,8 @@ namespace Comparator.Repositories.Parsers.MySql
                 return "";
             }
 
-            return fieldsInfo[currentIndex].FieldName != "" ? fieldsInfo[currentIndex].FieldName : FindFieldName(fieldsInfo, currentIndex - 1);
+            return fieldsInfo[currentIndex].FieldName != "" ? 
+                fieldsInfo[currentIndex].FieldName : FindFieldName(fieldsInfo, currentIndex - 1);
         }
 
         /// <summary>

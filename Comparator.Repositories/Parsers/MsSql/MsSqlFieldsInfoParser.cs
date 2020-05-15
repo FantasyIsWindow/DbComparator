@@ -81,7 +81,7 @@ namespace Comparator.Repositories.Parsers.MsSql
                 DtoFullField temp = new DtoFullField()
                 {
                     FieldName = field.COLUMN_NAME,
-                    TypeName = field.TYPE_NAME,
+                    TypeName = field.TYPE_NAME, //------------------
                     Size = field.CHAR_OCTET_LENGTH,
                     IsNullable = field.IS_NULLABLE
                 };
@@ -121,6 +121,8 @@ namespace Comparator.Repositories.Parsers.MsSql
             }
             return tempResultCollection;
         }
+
+
 
         /// <summary>
         /// Null to empty string

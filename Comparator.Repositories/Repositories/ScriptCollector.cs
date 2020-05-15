@@ -3,101 +3,158 @@ using Comparator.Repositories.Parsers;
 using Comparator.Repositories.Parsers.MsSql;
 using Comparator.Repositories.Parsers.MySql;
 using Comparator.Repositories.Parsers.SyBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Comparator.Repositories.Repositories
 {
+    /// <summary>
+    /// Data base data entities
+    /// </summary>
+    public enum DataEntities { db, tables, procedures, triggers }
+
     public class ScriptCollector
     {
-        private IRepository _repository;
-
         private IDatabaseScriptDesigner _scriptDesigner;
 
         private ITableCreator _tableCreator;
 
         /// <summary>
-        /// Initializing the repository
+        /// Get the full database script
         /// </summary>
-        /// <param name="repository"></param>
-        public void SetRepository(IRepository repository)
+        /// <param name="name">Returned data base name</param>
+        /// <param name="reps">Repositories collection</param>
+        /// <param name="dType">Data base data entities</param>
+        /// <param name="provider">Returned provider</param>
+        /// <returns></returns>
+        public string GetScript(string name, List<IRepository> reps, DataEntities dType, Provider provider)
         {
-            _repository = repository;
+            if (CanConvert(reps, provider))
+            {
+                GetDesigner(provider);
+                GetCreator(provider);
+
+                if (dType == DataEntities.db)
+                {
+                    return CollectorScriptDb(name, reps);
+                }
+                else if (dType == DataEntities.tables)
+                {
+                    return CollectorScriptTables(reps);
+                }
+                else if (dType == DataEntities.procedures)
+                {
+                    return CollectorScriptProcedures(reps);
+                }
+                else if (dType == DataEntities.triggers)
+                {
+                    return CollectorScriptTriggers(reps);
+                }
+                return "";
+            }
+            else
+            {
+                throw new Exception("     It is very likely that the ability to convert from and " +
+                                    "to a MySql database will be implemented in the next updates.");
+            }            
         }
 
         /// <summary>
-        /// Returns the object of the collector tables
+        /// Stub function for the time when converting from and to a mysql database is implemented
         /// </summary>
-        /// <param name="provider"></param>
-        private void GetCreator(Provider provider)
+        /// <param name="reps">Repositories collection</param>
+        /// <param name="provider">Returned provider</param>
+        /// <returns>Result of checking whether the operation can be performed</returns>
+        private bool CanConvert(List<IRepository> reps, Provider provider)
         {
-            if (provider == Provider.MicrosoftSql)
+            if (reps.Count() == 1)
             {
-                _tableCreator = new MsSqlTableCreator();
+                if (reps[0].DbType == provider.ToString() || 
+                    (reps[0].DbType != Provider.MySql.ToString() && provider != Provider.MySql))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (provider == Provider.MySql)
+            else
             {
-                _tableCreator = new MySqlTableCreator();
-            }
-            else if (provider == Provider.SyBase)
-            {
-                _tableCreator = new SyBaseTableCreator();
-            }
+                var mySql = reps.Exists(r => r.DbType == Provider.MySql.ToString());
+
+                var other = reps.Exists(r => 
+                    r.DbType == Provider.MicrosoftSql.ToString() || 
+                    r.DbType == Provider.SyBase.ToString());
+
+                if (mySql && !other && provider == Provider.MySql || 
+                    !mySql && other && provider != Provider.MySql)
+                {
+                    return true;
+                }
+                else 
+                {
+                    return false;
+                }
+            }           
         }
 
         /// <summary>
-        /// Returns the script designer object
+        /// Building a database script
         /// </summary>
-        /// <param name="provider"></param>
-        private void GetDesigner(Provider provider)
+        /// <param name="name">Returned data base name</param>
+        /// <param name="reps">Repositories collection</param>
+        /// <returns>Full data base script</returns>
+        private string CollectorScriptDb(string name, List<IRepository> reps)
         {
-            if (provider == Provider.MicrosoftSql)
+            List<string> tables = new List<string>();
+            List<string> constraints = new List<string>();
+            List<string> procedures = new List<string>();
+            List<string> triggers = new List<string>();
+
+            foreach (var rep in reps)
             {
-                _scriptDesigner = new MsSqlDbScriptCreator();
+                GetTablesScript(rep, tables, constraints);
+                procedures.AddRange(GetProceduresScript(rep));
+                triggers.AddRange(GetTriggersScript(rep));
             }
-            else if (provider == Provider.MySql)
-            {
-                _scriptDesigner = new MySqlDbScriptCreator();
-            }
-            else if (provider == Provider.SyBase)
-            {
-                _scriptDesigner = new SyBaseDbScriptCreator();
-            }
+
+            return _scriptDesigner.CreateFullDbScript(tables, constraints, procedures, triggers, name);
         }
 
         /// <summary>
-        /// Get the script for the entire database
+        /// Building all tables script
         /// </summary>
-        /// <param name="provider"></param>
-        /// <returns>The generated script</returns>
-        public string GetDbScript(Provider provider)
+        /// <param name="reps">Repositories collection</param>
+        /// <returns>All table script</returns>
+        private string CollectorScriptTables(List<IRepository> reps)
         {
-            string tables = GetTablesScript(provider);
-            string procedures = GetProceduresScript(provider);
-            string triggers = GetTriggersScript(provider);
+            List<string> tables = new List<string>();
+            List<string> constraints = new List<string>();
 
-            return _scriptDesigner.CreateFullDbScript(tables, procedures, triggers, "123");
+            foreach (var rep in reps)
+            {
+                GetTablesScript(rep, tables, constraints);
+            }
+
+            return _scriptDesigner.CreateTablesScript(tables, constraints);
         }
 
         /// <summary>
         /// Get the script for all tables from the database
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="rep">Processed provider</param>
         /// <returns>The generated script</returns>
-        public string GetTablesScript(Provider provider)
+        private void GetTablesScript(IRepository rep, List<string> tables, List<string> constraints)
         {
-            GetCreator(provider);
-            GetDesigner(provider);
-            var tablesNames = _repository.GetTables();
-
-            List<string> tables = new List<string>();
-            List<string> constraints = new List<string>();
+            var tablesNames = rep.GetTables();
 
             foreach (var tableName in tablesNames)
             {
-                List<DtoFullField> temp = _repository.GetFieldsInfo(tableName).ToList();
+                List<DtoFullField> tempFICol = rep.GetFieldsInfo(tableName).ToList();
 
-                var result = _tableCreator.GetTableScript(temp, tableName).Split('$');
+                var result = _tableCreator.GetTableScript(tempFICol, tableName).Split('$');
 
                 if (result.Length >= 2)
                 {
@@ -118,47 +175,118 @@ namespace Comparator.Repositories.Repositories
                     tables.Add(result[0]);
                 }
             }
+        }
 
-            return _scriptDesigner.CreateTablesScript(tables, constraints);
+        /// <summary>
+        /// Building a procedures script
+        /// </summary>
+        /// <param name="reps">Repositories collection</param>
+        /// <returns>All procedures script</returns>
+        private string CollectorScriptProcedures(List<IRepository> reps)
+        {
+            List<string> scripts = new List<string>();
+
+            foreach (var rep in reps)
+            {
+                scripts.AddRange(GetProceduresScript(rep));
+            }
+
+            return _scriptDesigner.CreateProceduresOrTriggersScript(scripts);
         }
 
         /// <summary>
         /// Get the script for all procedures from the database
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="rep">Processed provider</param>
         /// <returns>The generated script</returns>
-        public string GetProceduresScript(Provider provider)
+        private List<string> GetProceduresScript(IRepository rep)
         {
-            GetDesigner(provider);
-            var proceduresNames = _repository.GetProcedures();
+            var proceduresNames = rep.GetProcedures();
             List<string> procedures = new List<string>();
 
             foreach (var procedureName in proceduresNames)
             {
-                string script = _repository.GetProcedureSqript(procedureName);
+                string script = rep.GetProcedureSqript(procedureName);
                 procedures.Add(script);
             }
 
-            return _scriptDesigner.CreateProceduresOrTriggersScript(procedures);
+            return procedures;
+        }
+
+        /// <summary>
+        /// Building a triggers script
+        /// </summary>
+        /// <param name="reps"></param>
+        /// <returns>All triggers script</returns>
+        private string CollectorScriptTriggers(List<IRepository> reps)
+        {
+            List<string> scripts = new List<string>();
+
+            foreach (var rep in reps)
+            {
+                scripts.AddRange(GetTriggersScript(rep));
+            }
+
+            return _scriptDesigner.CreateProceduresOrTriggersScript(scripts);
         }
 
         /// <summary>
         /// Get the script for all triggers from the database
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="rep">Processed provider</param>
         /// <returns>The generated script</returns>
-        public string GetTriggersScript(Provider provider)
+        private List<string> GetTriggersScript(IRepository rep)
         {
-            GetDesigner(provider);
-            var triggersNames = _repository.GetTriggers();
+            var triggersNames = rep.GetTriggers();
             List<string> triggers = new List<string>();
 
             foreach (var triggerName in triggersNames)
             {
-                string script = _repository.GetTriggerSqript(triggerName);
+                string script = rep.GetTriggerSqript(triggerName);
                 triggers.Add(script);
             }
-            return _scriptDesigner.CreateProceduresOrTriggersScript(triggers);
+
+            return triggers;
+        }
+
+        /// <summary>
+        /// Returns the object of the collector tables
+        /// </summary>
+        /// <param name="rep">Processed provider</param>
+        private void GetCreator(Provider rep)
+        {
+            if (rep == Provider.MicrosoftSql)
+            {
+                _tableCreator = new MsSqlTableCreator();
+            }
+            else if (rep == Provider.MySql)
+            {
+                _tableCreator = new MySqlTableCreator();
+            }
+            else if (rep == Provider.SyBase)
+            {
+                _tableCreator = new SyBaseTableCreator();
+            }
+        }
+
+        /// <summary>
+        /// Returns the script designer object
+        /// </summary>
+        /// <param name="rep">Processed provider</param>
+        private void GetDesigner(Provider rep)
+        {
+            if (rep == Provider.MicrosoftSql)
+            {
+                _scriptDesigner = new MsSqlDbScriptDesigner();
+            }
+            else if (rep == Provider.MySql)
+            {
+                _scriptDesigner = new MySqlDbScriptDesigner();
+            }
+            else if (rep == Provider.SyBase)
+            {
+                _scriptDesigner = new SyBaseDbScriptDesigner();
+            }
         }
     }
 }

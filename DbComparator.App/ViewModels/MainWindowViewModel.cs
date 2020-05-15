@@ -302,6 +302,7 @@ namespace DbComparator.App.ViewModels
             }
 
             CreateDbScriptViewModel createDbScriptVM = new CreateDbScriptViewModel(_repositoryFactory, resultCollection, mode);
+            createDbScriptVM.MessageHandler += ((sender, e) => { GetMessage("Warning", sender, e); });
             createDbScriptVM.CloseHandler += (() => { CurrentPageContent = null; });
             CurrentPageContent = createDbScriptVM;
         }
